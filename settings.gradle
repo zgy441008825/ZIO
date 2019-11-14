@@ -1,0 +1,2 @@
+include ':app', ':ziolib'
+rootProject.name='ZIO'
