@@ -1,7 +1,9 @@
 package com.zougy.ziolib.files
 
 import android.text.TextUtils
+import java.io.Closeable
 import java.io.File
+import java.io.InputStream
 
 /**
  * Description:<br>
@@ -10,6 +12,13 @@ import java.io.File
  * Email:441008824@qq.com
  */
 object ZFileTools {
+
+    fun close(closeable: Closeable) {
+        try {
+            closeable.close()
+        } catch (e: Exception) {
+        }
+    }
 
     /**
      * 创建文件，可以是目录或者文件
