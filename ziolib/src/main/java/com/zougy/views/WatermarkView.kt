@@ -1,4 +1,4 @@
-package com.zougy.overtime.ui.View
+package com.zougy.views
 
 import android.content.Context
 import android.graphics.Canvas

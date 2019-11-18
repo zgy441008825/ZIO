@@ -6,7 +6,7 @@ import java.io.File
 import java.io.InputStream
 
 /**
- * Description:<br>
+ * Description:定义文件常见操作<br>
  * Author:邹高原<br>
  * Date:11/14 0014<br>
  * Email:441008824@qq.com
@@ -23,7 +23,7 @@ object ZFileTools {
     /**
      * 创建文件，可以是目录或者文件
      */
-    fun createFile(filePath: String): Boolean {
+    fun createFileOrDir(filePath: String): Boolean {
         if (TextUtils.isEmpty(filePath))
             return false
         val file = File(filePath)
