@@ -9,7 +9,7 @@ android {
 
 
     defaultConfig {
-        minSdkVersion 21
+        minSdkVersion 17
         targetSdkVersion 29
         versionCode 1
         versionName "1.0"
@@ -32,12 +32,12 @@ android {
 
 
 publish {
-    repoName = 'ZIO'                 //bintray仓库名
+    repoName = 'ZLibs'                 //bintray仓库名
     userOrg = 'zgy441008825'         //bintray注册的用户名
     groupId = 'com.zougy'            //compile引用时的第1部分groupId
-    artifactId = 'ziolib'            //compile引用时的第2部分项目名
+    artifactId = 'zlibs'            //compile引用时的第2部分项目名
     publishVersion = '0.0.1'         //compile引用时的第3部分版本号
-    desc = 'This is a simple custom tab library for Android'
+    desc = '集合一些简单的操作'
     website = 'https://github.com/zgy441008825/ZIO'
 }
 
