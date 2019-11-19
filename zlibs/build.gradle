@@ -36,7 +36,7 @@ publish {
     userOrg = 'zgy441008825'         //bintray注册的用户名
     groupId = 'com.zougy'            //compile引用时的第1部分groupId
     artifactId = 'zlibs'            //compile引用时的第2部分项目名
-    publishVersion = '0.0.3'         //compile引用时的第3部分版本号
+    publishVersion = '0.0.4'         //compile引用时的第3部分版本号
     desc = 'test'
     website = 'https://github.com/zgy441008825/ZIO'
 }
