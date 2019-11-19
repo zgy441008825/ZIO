@@ -1,6 +1,9 @@
 package com.zougy.views
 
+import android.content.Context
 import android.view.View
+import android.view.animation.Animation
+import android.widget.Toast
 import com.zougy.views.ViewClickDelay.hash
 import com.zougy.views.ViewClickDelay.lastClickTime
 
@@ -33,4 +36,20 @@ fun <T : View> T.onClickOnShake(block: (T) -> Unit, time: Long = 1000) {
             }
         }
     }
+}
+
+/**
+ * 扩展View的显示和隐藏，同时加载动画。
+ */
+fun View.visibilityWithAnimation(visibility: Int, animation: Animation) {
+    this.visibility = visibility
+    startAnimation(animation)
+}
+
+fun Context.toast(msgId: Int, duration: Int = Toast.LENGTH_SHORT) {
+    Toast.makeText(this, msgId, duration).show()
+}
+
+fun Context.toast(msg: String, duration: Int = Toast.LENGTH_SHORT) {
+    Toast.makeText(this, msg, duration).show()
 }
