@@ -1,2 +1,2 @@
-include ':app', ':ziolib'
+include ':app', ':zlibs'
 rootProject.name='ZIO'
