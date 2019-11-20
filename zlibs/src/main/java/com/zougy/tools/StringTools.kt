@@ -17,16 +17,27 @@ object StringTools {
      * 匹配邮件
      */
     fun matchEmail(email: String?): Boolean {
-        val REGEX_EMAIL = "^\\w+([-+.]\\w+)*@\\w+([-.]\\w+)*\\.\\w+([-.]\\w+)*$"
-        return email != null && email.matches(Regex(REGEX_EMAIL))
+        val regexEmail = "^\\w+([-+.]\\w+)*@\\w+([-.]\\w+)*\\.\\w+([-.]\\w+)*$"
+        return email != null && email.matches(regexEmail.toRegex())
     }
 
     /**
      * 匹配国内座机号码
      */
     fun matchLandPhoneNumber(phone: String?): Boolean {
-        val REGEX_TEL = "^0\\d{2,3}[- ]?\\d{7,8}"
-        return phone != null && phone.matches(Regex(REGEX_TEL))
+        val regexTel = "^0\\d{2,3}[- ]?\\d{7,8}"
+        return phone != null && phone.matches(regexTel.toRegex())
+    }
+
+    /**
+     * 匹配国内手机号码
+     *
+     * @param mobilePhoneNumber 需要匹配的手机号码
+     * @return 匹配返回true，否则返回false
+     */
+    fun matchMobilePhoneNumber(mobilePhoneNumber: String?): Boolean {
+        val regexMobile = "^((13[0-9])|(14[5,7])|(15[0-3,5-9])|(17[0,3,5-8])|(18[0-9])|(147))\\d{8}$"
+        return mobilePhoneNumber != null && mobilePhoneNumber.matches(regexMobile.toRegex())
     }
 
     /**

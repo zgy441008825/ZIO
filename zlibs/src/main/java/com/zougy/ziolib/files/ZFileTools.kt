@@ -15,9 +15,9 @@ import java.security.MessageDigest
  */
 object ZFileTools {
 
-    fun close(closeable: Closeable) {
+    fun close(closeable: Closeable?) {
         try {
-            closeable.close()
+            closeable?.close()
         } catch (e: Exception) {
         }
     }
@@ -63,7 +63,7 @@ object ZFileTools {
                 if (!deleteFileOrDir(f)) return false
             }
         }
-        return true
+        return file.delete()
     }
 
     /**
@@ -120,20 +120,20 @@ object ZFileTools {
     }
 
 
-    fun readFile2String(filePath: String, charset: String = "UTF-8"): String {
+    fun readString(filePath: String, charset: String = "UTF-8"): String {
         if (TextUtils.isEmpty(filePath)) return ""
-        return readFile2String(File(filePath), charset)
+        return readString(File(filePath), charset)
     }
 
-    fun readFile2String(file: File, charset: String = "UTF-8"): String {
+    fun readString(file: File, charset: String = "UTF-8"): String {
         if (!file.exists()) return ""
         val inputStream = FileInputStream(file)
-        val fileContent = readFile2String(inputStream, charset)
+        val fileContent = readString(inputStream, charset)
         close(inputStream)
         return fileContent
     }
 
-    fun readFile2String(inputStream: InputStream?, charset: String = "UTF-8"): String {
+    fun readString(inputStream: InputStream?, charset: String = "UTF-8"): String {
         if (inputStream == null) return ""
         val reader = InputStreamReader(inputStream, charset)
         val sb = StringBuilder()

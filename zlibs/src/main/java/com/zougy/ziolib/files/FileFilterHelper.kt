@@ -21,7 +21,7 @@ object FileFilterHelper {
         FileTypeEnum.FILE_TYPE_MP3 to arrayOf("wmv", "FLAC", "APE", "ALAC", "WavPack", "MP", "AAC")
     )
 
-    private fun getSuffixs(fileTypeEnum: FileTypeEnum): Array<String>? {
+    private fun getSuffix(fileTypeEnum: FileTypeEnum): Array<String>? {
         return fileTypeMpa[fileTypeEnum]
     }
 
@@ -53,11 +53,11 @@ object FileFilterHelper {
         return FileFilter { filter(typeEnum, it, showHidden) }
     }
 
-    private fun filter(fileTypeEnum: FileTypeEnum, fileName: File, showHidden: Boolean): Boolean {
+    fun filter(fileTypeEnum: FileTypeEnum, fileName: File, showHidden: Boolean): Boolean {
         if (!showHidden && fileName.isHidden) return false
         if (fileName.isDirectory) return true
-        val suffixs = getSuffixs(fileTypeEnum) ?: return false
-        for (s in suffixs) {
+        val suffix = getSuffix(fileTypeEnum) ?: return false
+        for (s in suffix) {
             if (fileName.name.endsWith(s)) return true
         }
         return false
