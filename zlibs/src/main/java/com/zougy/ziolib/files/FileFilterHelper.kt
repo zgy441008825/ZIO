@@ -63,21 +63,4 @@ object FileFilterHelper {
         return false
     }
 
-    fun searchFile(path: File?, typeEnum: FileTypeEnum?, child: Boolean = true, showHidden: Boolean = false): List<File>? {
-        if (path == null || !path.exists() || path.isFile) return null
-        val fileList = mutableListOf<File>()
-        val fileFilter = getFileFilter(typeEnum, showHidden)
-        val files = path.listFiles() ?: return null
-        for (f in files) {
-            if (f.isFile) {
-                if (fileFilter.accept(f)) fileList.add(f)
-            } else if (child) {
-                val fList = searchFile(f, typeEnum, true, showHidden)
-                if (fList != null)
-                    fileList.addAll(fList)
-            }
-        }
-        return fileList
-    }
-
 }
