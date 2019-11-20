@@ -1,4 +1,4 @@
-package com.zougy.tools
+package com.zougy.tools.android
 
 import android.content.Context
 import android.content.SharedPreferences
