@@ -7,7 +7,6 @@ android {
     compileSdkVersion 29
     buildToolsVersion "29.0.2"
 
-
     defaultConfig {
         minSdkVersion 17
         targetSdkVersion 29
@@ -28,6 +27,14 @@ android {
     lintOptions {
         abortOnError false
     }
+    compileOptions {
+        sourceCompatibility = 1.8
+        targetCompatibility = 1.8
+    }
+    // 如果有使用kotlin就配置
+    kotlinOptions {
+        jvmTarget = JavaVersion.VERSION_1_8.toString()
+    }
 }
 
 publish {
@@ -35,7 +42,7 @@ publish {
     userOrg = 'zgy441008825'         //bintray注册的用户名
     groupId = 'com.zougy'            //compile引用时的第1部分groupId
     artifactId = 'zlibs'            //compile引用时的第2部分项目名
-    publishVersion = '0.0.5'         //compile引用时的第3部分版本号
+    publishVersion = '0.0.6'         //compile引用时的第3部分版本号
     desc = 'test'
     website = 'https://github.com/zgy441008825/ZIO'
 }
@@ -44,11 +51,11 @@ dependencies {
     implementation fileTree(dir: 'libs', include: ['*.jar'])
     implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"
     implementation 'androidx.appcompat:appcompat:1.1.0'
-    implementation 'androidx.core:core-ktx:1.1.0'
-    testImplementation 'junit:junit:4.12'
+    implementation 'androidx.core:core-ktx:1.2.0'
+    testImplementation 'junit:junit:4.13'
     androidTestImplementation 'androidx.test.ext:junit:1.1.1'
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.2.0'
     api 'com.google.code.gson:gson:2.8.6'
     api 'org.xutils:xutils:3.8.3'
-    implementation 'androidx.recyclerview:recyclerview:1.0.0'
+    implementation 'androidx.recyclerview:recyclerview:1.1.0'
 }

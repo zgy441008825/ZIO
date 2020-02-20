@@ -23,4 +23,9 @@
         <attr name="progressColorStart" format="color" />
         <attr name="progressColorEnd" format="color" />
     </declare-styleable>
+    <declare-styleable name="LabelTextView">
+        <attr name="labelString" format="string" />
+        <attr name="labelPlace" format="boolean" />
+        <attr name="labelColor" format="color"/>
+    </declare-styleable>
 </resources>
