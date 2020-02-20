@@ -37,6 +37,7 @@ android {
     }
 }
 
+//提交代码到bintray仓库：gradle clean build bintrayUpload -PbintrayUser=zgy441008825 -PbintrayKey=Key -PdryRun=false
 publish {
     repoName = 'ZLibs'                 //bintray仓库名
     userOrg = 'zgy441008825'         //bintray注册的用户名
