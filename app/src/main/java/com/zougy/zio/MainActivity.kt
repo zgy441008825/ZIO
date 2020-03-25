@@ -11,7 +11,6 @@ import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import androidx.recyclerview.widget.StaggeredGridLayoutManager
 import com.google.gson.reflect.TypeToken
-import com.zougy.netWork.NetWorkTools
 import com.zougy.tools.JsonTools
 import com.zougy.views.onClickOnShake
 import com.zougy.ziolib.download.DownloadBean
@@ -22,20 +21,17 @@ import kotlinx.android.synthetic.main.activity_main.*
 import org.xutils.common.Callback
 import java.io.File
 import java.io.InputStreamReader
-import java.util.*
 import java.util.concurrent.TimeUnit
 
 class MainActivity : AppCompatActivity() {
 
-    private lateinit var beanList: MutableList<TideDemoBean>
+    private var beanList = mutableListOf<TideDemoBean>()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
         loadingData()
         requestPermission()
-        Log.d("MainActivity", "ZLog onCreate ${NetWorkTools.networkIsOK(this)}")
-        Log.d("MainActivity", "ZLog onCreate ${NetWorkTools.isWiFiConnected(this)}")
     }
 
     private fun requestPermission() {
@@ -46,10 +42,12 @@ class MainActivity : AppCompatActivity() {
 
     private fun loadingData() {
         Thread(Runnable {
-            beanList = JsonTools.getBean(
-                InputStreamReader(resources.assets.open("member_landing_data.json")),
-                object : TypeToken<MutableList<TideDemoBean>>() {}.type
+            val beanS: MutableList<TideDemoBean>? = JsonTools.getBean(
+                InputStreamReader(resources.assets.open("member_landing_data.json"))
             )
+            if (beanS == null || beanS.isEmpty()) return@Runnable
+            beanList.clear()
+            beanList.addAll(beanS)
             runOnUiThread {
                 val adapter = MainViewAdapter(beanList!!)
                 mainRecyclerView.adapter = adapter
@@ -69,7 +67,7 @@ class MainActivity : AppCompatActivity() {
             for (bean in beanList) {
                 val downloadBean = DownloadBean()
                 downloadBean.fileName = bean.name.zhHans + ".mp3"
-                downloadBean.filePath = "$externalCacheDir/demoSound/${downloadBean.fileName}"
+                downloadBean.filePath = "${Environment.getExternalStorageDirectory()}/tide/demoSound/${downloadBean.fileName}"
                 downloadBean.url = bean.demo_sound_url
                 downloadBean.label = bean.demo_sound_url
                 Log.d("MainActivity", "ZLog loadingData $downloadBean")
