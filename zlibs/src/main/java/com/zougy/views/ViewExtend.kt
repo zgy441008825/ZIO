@@ -8,7 +8,7 @@ import com.zougy.views.ViewClickDelay.hash
 import com.zougy.views.ViewClickDelay.lastClickTime
 
 /**
- * Description:<br>
+ * Description:定义View的扩展方法<br>
  * Author:邹高原<br>
  * Date:11/19 0019<br>
  * Email:441008824@qq.com

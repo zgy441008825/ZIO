@@ -1,6 +1,5 @@
 package com.zougy.dao
 
-import android.text.TextUtils
 import org.xutils.DbManager
 import org.xutils.db.Selector
 import org.xutils.db.sqlite.WhereBuilder
@@ -15,7 +14,7 @@ import java.io.File
  */
 abstract class BaseDBMgr(dbName: String, dbVersion: Int, path: String? = null) {
 
-    protected val dbMgr: DbManager
+    val dbMgr: DbManager
 
     init {
         val config = DbManager.DaoConfig()
@@ -52,9 +51,9 @@ abstract class BaseDBMgr(dbName: String, dbVersion: Int, path: String? = null) {
         }
     }
 
-    fun <T> deleteBeanById(clazz: Class<T>, bean: Any) {
+    inline fun <reified T> deleteBeanById(bean: T) {
         try {
-            dbMgr.deleteById(clazz, bean)
+            dbMgr.deleteById(T::class.java, bean)
         } catch (e: Exception) {
         }
     }
@@ -62,28 +61,40 @@ abstract class BaseDBMgr(dbName: String, dbVersion: Int, path: String? = null) {
     /**
      * 获取筛选器
      */
-    private fun <T> selector(clazz: Class<T>, builder: WhereBuilder? = null): Selector<T> {
-        return if (builder == null) {
-            dbMgr.selector(clazz)
+    inline fun <reified T> selector(builder: WhereBuilder?): Selector<T> {
+        return if (builder != null) {
+            dbMgr.selector(T::class.java).where(builder)
         } else {
-            dbMgr.selector(clazz).where(builder)
+            dbMgr.selector(T::class.java)
         }
     }
 
-    fun <T> getBean(clazz: Class<T>, builder: WhereBuilder? = null): T? {
-        return try {
-            selector(clazz, builder).findFirst()
-        } catch (e: Exception) {
-            null
-        }
+    /**
+     * 获取一个实例
+     */
+    inline fun <reified T> getBean(builder: WhereBuilder?): T {
+        return selector<T>(builder).findFirst()
     }
 
-    fun <T> getBeanList(clazz: Class<T>, builder: WhereBuilder? = null): List<T>? {
-        return try {
-            selector(clazz, builder).findAll()
-        } catch (e: Exception) {
-            null
-        }
+    /**
+     * 获取实例列表
+     */
+    inline fun <reified T> getList(builder: WhereBuilder?): MutableList<T> {
+        return selector<T>(builder).findAll()
+    }
+
+    /**
+     * 分页加载
+     */
+    inline fun <reified T> getListLimit(builder: WhereBuilder?, size: Int, offset: Int): MutableList<T> {
+        return selector<T>(builder).limit(size).offset(offset).findAll()
+    }
+
+    /***
+     * 获取List并且通过colName列来排序
+     */
+    inline fun <reified T> getListOrder(builder: WhereBuilder?, desc: Boolean = false, colName: String): MutableList<T> {
+        return selector<T>(builder).orderBy(colName, desc).findAll()
     }
 
     fun dropDb() {

@@ -71,14 +71,14 @@ object StringTools {
     /**
      * 输入格式化时间
      */
-    fun formatDate(format: String, date: Date = Date()): String {
+    fun formatDate(format: String = "yyyy/MM/dd HH:mm:ss", date: Date = Date()): String {
         return SimpleDateFormat(format, Locale.getDefault()).format(date)
     }
 
     /**
      * 输入格式化时间
      */
-    fun formatDate(format: String, date: Long = System.currentTimeMillis()): String {
+    fun formatDate(format: String = "yyyy/MM/dd HH:mm:ss", date: Long = System.currentTimeMillis()): String {
         return SimpleDateFormat(format, Locale.getDefault()).format(date)
     }
 }

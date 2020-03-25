@@ -9,7 +9,17 @@ import androidx.appcompat.widget.AppCompatTextView
 import com.zougy.ziolib.R
 
 /**
- * Description:用于在textView的前、后添加一个标签。例如必填项的*、表格输入的:<br></br>
+ * Description:用于在textView的前、后添加一个标签。例如必填项的*、表格输入的“:”
+ *
+ * 使用自定义属性设置相关信息：
+ *
+ * labelString：要显示的字符，如：* # ：
+ *
+ * labelPlace：标记的位置。true在前面，false 在最后。
+ *
+ * labelColor：标记文本的颜色
+ *
+ *
  * Author:邹高原<br></br>
  * Date:02/20 0020<br></br>
  * Email:441008824@qq.com

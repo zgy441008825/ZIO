@@ -13,7 +13,7 @@ import org.xutils.x
  */
 class SharePreTools private constructor() {
 
-    private val sharedPreferences: SharedPreferences = x.app().getSharedPreferences("ZSharePreferences", Context.MODE_PRIVATE)
+    val sharedPreferences: SharedPreferences = x.app().getSharedPreferences("ZSharePreferences", Context.MODE_PRIVATE)
 
     companion object {
         val instance = ShareHolder.holder
@@ -23,24 +23,16 @@ class SharePreTools private constructor() {
         val holder = SharePreTools()
     }
 
-    fun putString(value: String, key: String) {
-        sharedPreferences.edit { putString(key, value) }
-    }
-
-    fun putInt(value: Int, key: String) {
-        sharedPreferences.edit { putInt(key, value) }
-    }
-
-    fun putBoolean(value: Boolean, key: String) {
-        sharedPreferences.edit { putBoolean(key, value) }
-    }
-
-    fun putFloat(value: Float, key: String) {
-        sharedPreferences.edit { putFloat(key, value) }
-    }
-
-    fun putLong(value: Long, key: String) {
-        sharedPreferences.edit { putLong(key, value) }
+    inline fun <reified T> put(value: T, key: String) {
+        sharedPreferences.edit {
+            when (value) {
+                is String -> putString(key, value)
+                is Int -> putInt(key, value)
+                is Boolean -> putBoolean(key, value)
+                is Float -> putFloat(key, value)
+                is Long -> putLong(key, value)
+            }
+        }
     }
 
     fun remove(key: String) {

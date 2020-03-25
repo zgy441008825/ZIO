@@ -20,12 +20,12 @@ class DownloadDBMgr private constructor() : BaseDBMgr(ConstantValue.DB_DL_NAME, 
 
     fun getDownloadBeanBySavePath(path: String): DownloadBean? {
         val builder = WhereBuilder.b(ConstantValue.TB_COL_DL_PATH, "=", path)
-        return getBean(DownloadBean::class.java, builder)
+        return getBean(builder)
     }
 
     fun getDownloadBeanByLabel(label: String): DownloadBean? {
         val builder = WhereBuilder.b(ConstantValue.TB_COL_DL_LABEL, "=", label)
-        return getBean(DownloadBean::class.java, builder)
+        return getBean(builder)
     }
 
 }

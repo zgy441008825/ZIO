@@ -1,7 +1,6 @@
 package com.zougy.ziolib.files
 
 import android.text.TextUtils
-import com.zougy.ziolib.IDirCallback
 import org.xutils.common.Callback
 import java.io.*
 import java.math.BigInteger

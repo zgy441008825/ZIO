@@ -11,9 +11,38 @@ import java.text.DecimalFormat
 import kotlin.math.min
 
 /**
- * Description:<br>
- * Author:邹高原<br>
- * Date:11/04 0004<br>
+ * Description:圆环进度条。可使用自定义属性进行相关设置
+ *
+ * centerColor：中间圆形区域颜色
+ *
+ * progressRingSize：进度条宽度
+ *
+ * progressBgColor：进度条背景颜色
+ *
+ * progressColor：进度条颜色
+ *
+ * proTextColor：进度文本颜色
+ *
+ * proTextSize：进度文本字体大小
+ *
+ * proValue：当前进度
+ *
+ * progressMax：进度最大值
+ *
+ * infoTextColor：信息文本颜色
+ *
+ * infoTextSize：信息文本字体大小
+ *
+ * infoTextString：信息文本内容
+ *
+ * progressColorStart：进度条渐变色的开始颜色
+ *
+ * progressColorEnd：进度条渐变色的结束颜色，同时设置了开始和结束颜色时，progressColor失效。
+ *
+ * Author:邹高原
+ *
+ * Date:11/04 0004
+ *
  * Email:441008824@qq.com
  */
 class CircleProgressView : View {

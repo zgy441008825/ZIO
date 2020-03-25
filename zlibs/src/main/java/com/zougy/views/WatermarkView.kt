@@ -14,12 +14,24 @@ import kotlin.math.sin
 
 
 /**
- * Description:<br>
- * Author:邹高原<br>
- * Date:10/30 0030<br>
+ * Description:显示标签的View
+ *
+ * 可使用自定义属性
+ *
+ * markViewColor：文本颜色
+ *
+ * markViewTextSize：文本大小
+ *
+ * markViewText：显示的文本
+ *
+ * markViewAngle：旋转角度
+ *
+ * Author:邹高原
+ *
+ * Date:10/30
+ *
  * Email:441008824@qq.com
  */
-
 open class WatermarkView : View {
 
     constructor(context: Context) : this(context, null)

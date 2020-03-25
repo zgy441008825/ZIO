@@ -25,7 +25,6 @@ class DownloadMgr private constructor() {
         val taskMap = LinkedHashMap<String, DownloadRunnable>()
     }
 
-
     companion object {
         val instance: DownloadMgr by lazy(LazyThreadSafetyMode.SYNCHRONIZED) {
             DownloadMgr()
@@ -59,4 +58,9 @@ class DownloadMgr private constructor() {
             taskMap[label]?.cancelable?.cancel()
         }
     }
+
+    /**
+     * 通过label获取一个下载的事例，包含下载的状态及进度。
+     */
+    fun getDownloadBean(label: String): DownloadBean? = DownloadDBMgr.instance.getDownloadBeanBySavePath(label)
 }

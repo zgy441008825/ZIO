@@ -11,6 +11,7 @@ import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import androidx.recyclerview.widget.StaggeredGridLayoutManager
 import com.google.gson.reflect.TypeToken
+import com.zougy.netWork.NetWorkTools
 import com.zougy.tools.JsonTools
 import com.zougy.views.onClickOnShake
 import com.zougy.ziolib.download.DownloadBean
@@ -33,6 +34,8 @@ class MainActivity : AppCompatActivity() {
         setContentView(R.layout.activity_main)
         loadingData()
         requestPermission()
+        Log.d("MainActivity", "ZLog onCreate ${NetWorkTools.networkIsOK(this)}")
+        Log.d("MainActivity", "ZLog onCreate ${NetWorkTools.isWiFiConnected(this)}")
     }
 
     private fun requestPermission() {
