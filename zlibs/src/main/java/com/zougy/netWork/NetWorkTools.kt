@@ -6,7 +6,7 @@ import org.xutils.x
 import java.io.File
 
 /**
- * Description:<br>
+ * Description:网络帮类<br>
  * Author:邹高原<br>
  * Date:03/24 0024<br>
  * Email:441008824@qq.com
