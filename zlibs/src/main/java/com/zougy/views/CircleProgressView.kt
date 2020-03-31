@@ -39,7 +39,7 @@ import kotlin.math.min
  *
  * progressColorEnd：进度条渐变色的结束颜色，同时设置了开始和结束颜色时，progressColor失效。
  *
- * Author:邹高原
+ *  Author:邹高原
  *
  * Date:11/04 0004
  *

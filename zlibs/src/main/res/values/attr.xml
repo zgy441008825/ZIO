@@ -26,6 +26,12 @@
     <declare-styleable name="LabelTextView">
         <attr name="labelString" format="string" />
         <attr name="labelPlace" format="boolean" />
-        <attr name="labelColor" format="color"/>
+        <attr name="labelColor" format="color" />
+    </declare-styleable>
+    <declare-styleable name="StaggeredTextListLayout">
+        <attr name="children" format="reference" />
+        <attr name="childrenStyle" format="reference" />
+        <attr name="childrenBackground" format="reference" />
+        <attr name="childPadding" format="dimension" />
     </declare-styleable>
 </resources>
