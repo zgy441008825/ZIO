@@ -2,7 +2,6 @@ package com.zougy.zio
 
 import android.os.Bundle
 import android.os.Environment
-import android.util.Log
 import androidx.appcompat.app.AppCompatActivity
 import com.zougy.commons.ZLog
 import com.zougy.ziolib.files.FileTypeEnum
@@ -10,7 +9,6 @@ import com.zougy.ziolib.files.ZFileTools
 import com.zougy.ziolib.files.ZFileTools.SearchFileCallback
 import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers
 import io.reactivex.rxjava3.core.Flowable
-import io.reactivex.rxjava3.core.Scheduler
 import io.reactivex.rxjava3.schedulers.Schedulers
 import java.io.File
 
@@ -36,11 +34,9 @@ class MainActivity : AppCompatActivity() {
 
     private val searchMp3Callback = object : SearchFileCallback {
         override fun onFind(file: File) {
-            ZLog.d(file)
         }
 
         override fun onInDir(dir: File) {
-            ZLog.d(dir)
         }
     }
 }
