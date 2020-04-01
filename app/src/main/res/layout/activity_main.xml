@@ -7,12 +7,4 @@
     android:orientation="horizontal"
     tools:context=".MainActivity">
 
-    <com.zougy.views.StaggeredTextListLayout
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:background="@color/colorPrimary"
-        app:childPadding="20dp"
-        app:children="@array/testString"
-        app:childrenStyle="@style/Test" />
-
 </LinearLayout>
