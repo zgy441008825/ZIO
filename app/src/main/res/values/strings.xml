@@ -1,11 +1,4 @@
 <resources>
     <string name="app_name">ZIO</string>
-    <array name="testString">
-        <item>Java</item>
-        <item>Kotlin</item>
-        <item>C++</item>
-        <item>Object C</item>
-        <item>C#</item>
-        <item>Python</item>
-    </array>
+    <string name="mainNoDataFind"><u>这里空空如也,点我开始扫描.</u></string>
 </resources>
