@@ -96,22 +96,30 @@ object ZFileTools {
      * @param showHidden 是否包含隐藏文件和目录
      * @return 返回目录下面的文件和目录，如果child=true则包含子目录中的内容。
      */
-    fun searchFile(path: File?, typeEnum: FileTypeEnum?, child: Boolean = true, showHidden: Boolean = false): List<File>? {
-        if (path == null || !path.exists() || path.isFile) return null
+    fun searchFile(
+        path: File,
+        typeEnum: FileTypeEnum?,
+        filter: FileFilter? = null,
+        child: Boolean = true,
+        showHidden: Boolean = false,
+        callback: SearchFileCallback? = null
+    ): List<File>? {
+        if (!path.exists() || path.isFile) return null
         val fileList = mutableListOf<File>()
-        val fileFilter = FileFilterHelper.getFileFilter(typeEnum, showHidden)
+        val fileFilter: FileFilter = filter ?: FileFilterHelper.getFileFilter(typeEnum, showHidden)
         val files = path.listFiles() ?: return null
         for (f in files) {
-            if (fileFilter.accept(f)) {
-                if (f.isFile) {
+            if (f.isFile) {
+                if (fileFilter.accept(f)) {
                     fileList.add(f)
-                } else {
-                    fileList.add(f)
-                    if (child) {
-                        val fList = searchFile(f, typeEnum, true, showHidden)
-                        if (fList != null)
-                            fileList.addAll(fList)
-                    }
+                    callback?.onFind(f)
+                }
+            } else if (f.isDirectory) {
+                if (child) {
+                    callback?.onInDir(f)
+                    val fList = searchFile(f, typeEnum, fileFilter, true, showHidden, callback)
+                    if (fList != null)
+                        fileList.addAll(fList)
                 }
             }
         }
@@ -252,7 +260,7 @@ object ZFileTools {
             return
         }
         if (!desDir.exists()) createDir(desDir.absolutePath)
-        val fileList = searchFile(srcDir, null, false)
+        val fileList = searchFile(srcDir, null, null, false)
         if (fileList == null || fileList.isEmpty()) {
             callBack?.onFinished()
             return
@@ -260,4 +268,10 @@ object ZFileTools {
         copyFiles(fileList, desDir, override, callBack)
     }
 
+    interface SearchFileCallback {
+
+        fun onFind(file: File)
+
+        fun onInDir(dir: File)
+    }
 }

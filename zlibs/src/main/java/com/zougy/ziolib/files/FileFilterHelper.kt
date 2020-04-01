@@ -18,7 +18,7 @@ object FileFilterHelper {
         FileTypeEnum.FILE_TYPE_VIDEO to arrayOf("rm", "rmvb", "mp4", "3gp", "avi", "wmv", "mtv", "flv", "dat"),
         FileTypeEnum.FILE_TYPE_BIN to arrayOf("bin"),
         FileTypeEnum.FILE_TYPE_PDF to arrayOf("pdf"),
-        FileTypeEnum.FILE_TYPE_MP3 to arrayOf("wmv", "FLAC", "APE", "ALAC", "WavPack", "MP", "AAC")
+        FileTypeEnum.FILE_TYPE_MP3 to arrayOf("flac", "ape", "wav", "mp3", "aac")//alac
     )
 
     private fun getSuffix(fileTypeEnum: FileTypeEnum): Array<String>? {
@@ -55,10 +55,10 @@ object FileFilterHelper {
 
     fun filter(fileTypeEnum: FileTypeEnum, fileName: File, showHidden: Boolean): Boolean {
         if (!showHidden && fileName.isHidden) return false
-        if (fileName.isDirectory) return true
+        if (fileName.isDirectory) return fileTypeEnum == FileTypeEnum.FILE_TYPE_DIR
         val suffix = getSuffix(fileTypeEnum) ?: return false
         for (s in suffix) {
-            if (fileName.name.endsWith(s)) return true
+            if (fileName.name.endsWith(".$s")) return true
         }
         return false
     }

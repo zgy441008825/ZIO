@@ -20,7 +20,7 @@ object ViewClickDelay {
 }
 
 /**
- * 扩展View的点击事件，防止重复点击。
+ * 扩展View的点击事件，防止重复点击。此方法会校验View的hashCode，只有相同的控件才处理防抖。
  */
 fun <T : View> T.onClickOnShake(block: (T) -> Unit, time: Long = 1000) {
     setOnClickListener {
@@ -34,6 +34,19 @@ fun <T : View> T.onClickOnShake(block: (T) -> Unit, time: Long = 1000) {
                 lastClickTime = System.currentTimeMillis()
                 block(it as T)
             }
+        }
+    }
+}
+
+/**
+ * 扩展View的点击事件，防止重复点击。此方法不校验View的hashCode，即任何连续点击不同控件也会进行防抖处理。
+ */
+fun <T : View> T.onClickOnSinge(block: (T) -> Unit, time: Long = 1000) {
+    setOnClickListener {
+        val currentTime = System.currentTimeMillis()
+        if (currentTime - lastClickTime > time) {
+            lastClickTime = System.currentTimeMillis()
+            block(it as T)
         }
     }
 }
