@@ -18,7 +18,7 @@ import androidx.recyclerview.widget.RecyclerView
  */
 class RecyclerViewItemDecoration @JvmOverloads constructor(
     private val context: Context,
-    private val layoutStyle: Int = LAYOUT_STYLE_LINEAR_ORIENTATION_VERTICAL,
+    private val layoutStyle: Int = LAYOUT_STYLE_VERTICAL,
     drawableID: Int = android.R.color.darker_gray
 ) : RecyclerView.ItemDecoration() {
 
@@ -44,8 +44,8 @@ class RecyclerViewItemDecoration @JvmOverloads constructor(
         super.onDraw(c, parent, state)
         when (layoutStyle) {
             LAYOUT_STYLE_GRIDLAYOUT -> drawGrid(c, parent)
-            LAYOUT_STYLE_LINEAR_ORIENTATION_HORIZONTAL -> drawHorizontal(c, parent)
-            LAYOUT_STYLE_LINEAR_ORIENTATION_VERTICAL -> drawVertical(c, parent)
+            LAYOUT_STYLE_HORIZONTAL -> drawHorizontal(c, parent)
+            LAYOUT_STYLE_VERTICAL -> drawVertical(c, parent)
         }
     }
 
@@ -110,8 +110,8 @@ class RecyclerViewItemDecoration @JvmOverloads constructor(
                 outRect.right = if (spaceSize != 0) spaceSize else drawable!!.intrinsicWidth
                 outRect.bottom = if (spaceSize != 0) spaceSize else drawable!!.intrinsicHeight
             }
-            LAYOUT_STYLE_LINEAR_ORIENTATION_HORIZONTAL -> outRect.right = if (spaceSize != 0) spaceSize else drawable!!.intrinsicWidth
-            LAYOUT_STYLE_LINEAR_ORIENTATION_VERTICAL -> outRect.bottom = if (spaceSize != 0) spaceSize else drawable!!.intrinsicHeight
+            LAYOUT_STYLE_HORIZONTAL -> outRect.right = if (spaceSize != 0) spaceSize else drawable!!.intrinsicWidth
+            LAYOUT_STYLE_VERTICAL -> outRect.bottom = if (spaceSize != 0) spaceSize else drawable!!.intrinsicHeight
         }
     }
 
@@ -125,11 +125,11 @@ class RecyclerViewItemDecoration @JvmOverloads constructor(
         /**
          * 线性布局——垂直方向
          */
-        val LAYOUT_STYLE_LINEAR_ORIENTATION_VERTICAL = 1
+        val LAYOUT_STYLE_VERTICAL = 1
 
         /**
          * 线性布局——水平方向
          */
-        val LAYOUT_STYLE_LINEAR_ORIENTATION_HORIZONTAL = 2
+        val LAYOUT_STYLE_HORIZONTAL = 2
     }
 }
