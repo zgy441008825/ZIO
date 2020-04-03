@@ -28,4 +28,7 @@
         <attr name="labelPlace" format="boolean" />
         <attr name="labelColor" format="color" />
     </declare-styleable>
+    <declare-styleable name="CustomFontTextView">
+        <attr name="fontType" format="string"/>
+    </declare-styleable>
 </resources>
