@@ -3,6 +3,7 @@ package com.zougy.views
 import android.content.Context
 import android.graphics.Typeface
 import android.util.AttributeSet
+import androidx.appcompat.widget.AppCompatTextView
 import com.zougy.ziolib.R
 import java.io.File
 
@@ -12,22 +13,27 @@ import java.io.File
  * Date:11/14 0014<br>
  * Email:441008824@qq.com
  */
-class CustomFontTextView : androidx.appcompat.widget.AppCompatTextView {
-    constructor(context: Context) : this(context, null)
-    constructor(context: Context, attributeSet: AttributeSet?) : this(context, attributeSet, 0)
-    constructor(context: Context, attributeSet: AttributeSet?, style: Int) : super(
-        context,
-        attributeSet,
-        style
-    ) {
+class CustomFontTextView @JvmOverloads constructor(
+    context: Context,
+    attributeSet: AttributeSet? = null,
+    styleId: Int = 0
+) : AppCompatTextView(context, attributeSet, styleId) {
+
+    init {
         if (attributeSet != null) {
             val valueType =
                 context.obtainStyledAttributes(attributeSet, R.styleable.CustomFontTextView)
             val font = valueType.getString(R.styleable.CustomFontTextView_fontType)
-            val face = Typeface.createFromAsset(context.assets, font)
-            typeface = face
+            if (font != null) {
+                try {
+                    val face = Typeface.createFromAsset(context.assets, font)
+                    typeface = face
+                } catch (e: Exception) {
+                }
+            }
             valueType.recycle()
         }
+
     }
 
     fun setTypefaceFromAsset(assetsFontName: String) {

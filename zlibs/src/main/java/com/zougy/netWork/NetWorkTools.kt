@@ -19,7 +19,7 @@ import java.io.File
 object NetWorkTools {
 
     /**
-     * 当前网络是否是WiFi
+     * 当前WiFi是否连接
      */
     fun isWiFiConnected(context: Context): Boolean {
         val connectivityManager = context.getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
