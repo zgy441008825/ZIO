@@ -16,10 +16,13 @@ abstract class BaseDBMgr() {
 
     lateinit var dbMgr: DbManager
 
-    fun init(dbName: String, dbVersion: Int, path: String? = null) {
+    fun init(dbName: String, dbVersion: Int = 1, path: String? = null) {
         val config = DbManager.DaoConfig()
         config.dbName = dbName
         config.dbVersion = dbVersion
+        config.setDbUpgradeListener { db, oldVersion, newVersion ->
+            onDbUpgrade(db, oldVersion, newVersion)
+        }
         if (path != null) {
             val file = File(path)
             if (file.exists()) {
@@ -30,6 +33,10 @@ abstract class BaseDBMgr() {
             }
         }
         dbMgr = x.getDb(config)
+    }
+
+    fun onDbUpgrade(db: DbManager, oldVersion: Int, newVersion: Int) {
+
     }
 
     fun saveBean(bean: Any) {
@@ -72,28 +79,28 @@ abstract class BaseDBMgr() {
     /**
      * 获取一个实例
      */
-    inline fun <reified T> getBean(builder: WhereBuilder?): T {
+    inline fun <reified T> getBean(builder: WhereBuilder? = null): T {
         return selector<T>(builder).findFirst()
     }
 
     /**
      * 获取实例列表
      */
-    inline fun <reified T> getList(builder: WhereBuilder?): MutableList<T> {
+    inline fun <reified T> getList(builder: WhereBuilder? = null): MutableList<T> {
         return selector<T>(builder).findAll()
     }
 
     /**
      * 分页加载
      */
-    inline fun <reified T> getListLimit(builder: WhereBuilder?, size: Int, offset: Int): MutableList<T> {
+    inline fun <reified T> getListLimit(builder: WhereBuilder? = null, size: Int, offset: Int): MutableList<T> {
         return selector<T>(builder).limit(size).offset(offset).findAll()
     }
 
     /***
      * 获取List并且通过colName列来排序
      */
-    inline fun <reified T> getListOrder(builder: WhereBuilder?, desc: Boolean = false, colName: String): MutableList<T> {
+    inline fun <reified T> getListOrder(builder: WhereBuilder? = null, desc: Boolean = false, colName: String): MutableList<T> {
         return selector<T>(builder).orderBy(colName, desc).findAll()
     }
 
