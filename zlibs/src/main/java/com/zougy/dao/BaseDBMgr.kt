@@ -12,11 +12,11 @@ import java.io.File
  * Date:03/24 0024<br>
  * Email:441008824@qq.com
  */
-abstract class BaseDBMgr(dbName: String, dbVersion: Int, path: String? = null) {
+abstract class BaseDBMgr() {
 
-    val dbMgr: DbManager
+    lateinit var dbMgr: DbManager
 
-    init {
+    fun init(dbName: String, dbVersion: Int, path: String? = null) {
         val config = DbManager.DaoConfig()
         config.dbName = dbName
         config.dbVersion = dbVersion
