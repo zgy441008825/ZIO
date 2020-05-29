@@ -3,6 +3,7 @@ package com.zougy.views
 import android.content.Context
 import android.view.View
 import android.view.animation.Animation
+import android.widget.CompoundButton
 import android.widget.Toast
 import com.zougy.views.ViewClickDelay.hash
 import com.zougy.views.ViewClickDelay.lastClickTime
@@ -22,7 +23,7 @@ object ViewClickDelay {
 /**
  * 扩展View的点击事件，防止重复点击。此方法会校验View的hashCode，只有相同的控件才处理防抖。
  */
-fun <T : View> T.onClickOnShake(block: (T) -> Unit, time: Long = 1000) {
+fun <T : View> T.onClickOnShake(time: Long = 1000, block: (T) -> Unit) {
     setOnClickListener {
         if (this.hashCode() != hash) {
             hash = hashCode()
@@ -41,12 +42,25 @@ fun <T : View> T.onClickOnShake(block: (T) -> Unit, time: Long = 1000) {
 /**
  * 扩展View的点击事件，防止重复点击。此方法不校验View的hashCode，即任何连续点击不同控件也会进行防抖处理。
  */
-fun <T : View> T.onClickOnSinge(block: (T) -> Unit, time: Long = 1000) {
+fun <T : View> T.onClickOnSinge(time: Long = 1000, block: (T) -> Unit) {
     setOnClickListener {
         val currentTime = System.currentTimeMillis()
         if (currentTime - lastClickTime > time) {
             lastClickTime = System.currentTimeMillis()
             block(it as T)
+        }
+    }
+}
+
+/**
+ * 扩展CompoundButton的点击事件，防止重复点击。此方法不校验View的hashCode，即任何连续点击不同控件也会进行防抖处理。
+ */
+fun CompoundButton.onCheckChangeSinge(time: Long = 500, block: (buttonView: CompoundButton, isChecked: Boolean) -> Unit) {
+    setOnCheckedChangeListener { buttonView, isChecked ->
+        val currentTime = System.currentTimeMillis()
+        if (currentTime - lastClickTime > time) {
+            lastClickTime = System.currentTimeMillis()
+            block(buttonView, isChecked)
         }
     }
 }
