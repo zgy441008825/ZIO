@@ -1,0 +1,157 @@
+<?xml version="1.0" encoding="utf-8"?>
+<merge xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#D8DDE0">
+
+    <Button
+        android:id="@+id/layoutKeyboardACT0"
+        style="@style/Keyboard"
+        android:text="@string/keyboardAct0"
+        app:layout_constraintBottom_toTopOf="@id/layoutKeyboardACT9"
+        app:layout_constraintEnd_toStartOf="@id/layoutKeyboardACT1"
+        app:layout_constraintHorizontal_chainStyle="spread"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_chainStyle="spread" />
+
+    <Button
+        android:id="@+id/layoutKeyboardACT1"
+        style="@style/Keyboard"
+        android:text="@string/keyboardAct1"
+        app:layout_constraintEnd_toStartOf="@id/layoutKeyboardACT2"
+        app:layout_constraintStart_toEndOf="@id/layoutKeyboardACT0"
+        app:layout_constraintTop_toTopOf="@id/layoutKeyboardACT0" />
+
+    <Button
+        android:id="@+id/layoutKeyboardACT2"
+        style="@style/Keyboard"
+        android:text="@string/keyboardAct2"
+        app:layout_constraintEnd_toStartOf="@id/layoutKeyboardACT3"
+        app:layout_constraintStart_toEndOf="@id/layoutKeyboardACT1"
+        app:layout_constraintTop_toTopOf="@id/layoutKeyboardACT0" />
+
+    <Button
+        android:id="@+id/layoutKeyboardACT3"
+        style="@style/Keyboard"
+        android:text="@string/keyboardAct3"
+        app:layout_constraintEnd_toStartOf="@id/layoutKeyboardACT4"
+        app:layout_constraintStart_toEndOf="@id/layoutKeyboardACT2"
+        app:layout_constraintTop_toTopOf="@id/layoutKeyboardACT0" />
+
+    <Button
+        android:id="@+id/layoutKeyboardACT4"
+        style="@style/Keyboard"
+        android:text="@string/keyboardAct4"
+        app:layout_constraintEnd_toStartOf="@id/layoutKeyboardACT5"
+        app:layout_constraintStart_toEndOf="@id/layoutKeyboardACT3"
+        app:layout_constraintTop_toTopOf="@id/layoutKeyboardACT0" />
+
+    <Button
+        android:id="@+id/layoutKeyboardACT5"
+        style="@style/Keyboard"
+        android:text="@string/keyboardAct5"
+        app:layout_constraintEnd_toStartOf="@id/layoutKeyboardACT6"
+        app:layout_constraintStart_toEndOf="@id/layoutKeyboardACT4"
+        app:layout_constraintTop_toTopOf="@id/layoutKeyboardACT0" />
+
+    <Button
+        android:id="@+id/layoutKeyboardACT6"
+        style="@style/Keyboard"
+        android:text="@string/keyboardAct6"
+        app:layout_constraintEnd_toStartOf="@id/layoutKeyboardACT7"
+        app:layout_constraintStart_toEndOf="@id/layoutKeyboardACT5"
+        app:layout_constraintTop_toTopOf="@id/layoutKeyboardACT0" />
+
+    <Button
+        android:id="@+id/layoutKeyboardACT7"
+        style="@style/Keyboard"
+        android:text="@string/keyboardAct7"
+        app:layout_constraintEnd_toStartOf="@id/layoutKeyboardACT8"
+        app:layout_constraintStart_toEndOf="@id/layoutKeyboardACT6"
+        app:layout_constraintTop_toTopOf="@id/layoutKeyboardACT0" />
+
+    <Button
+        android:id="@+id/layoutKeyboardACT8"
+        style="@style/Keyboard"
+        android:text="@string/keyboardAct8"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@id/layoutKeyboardACT7"
+        app:layout_constraintTop_toTopOf="@id/layoutKeyboardACT0" />
+
+
+    <Button
+        android:id="@+id/layoutKeyboardACT9"
+        style="@style/Keyboard"
+        android:text="@string/keyboardAct9"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toStartOf="@id/layoutKeyboardACTA"
+        app:layout_constraintHorizontal_chainStyle="spread"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/layoutKeyboardACT0" />
+
+    <Button
+        android:id="@+id/layoutKeyboardACTA"
+        style="@style/Keyboard"
+        android:text="@string/keyboardActA"
+        app:layout_constraintEnd_toStartOf="@id/layoutKeyboardACTB"
+        app:layout_constraintStart_toEndOf="@id/layoutKeyboardACT9"
+        app:layout_constraintTop_toTopOf="@id/layoutKeyboardACT9" />
+
+    <Button
+        android:id="@+id/layoutKeyboardACTB"
+        style="@style/Keyboard"
+        android:text="@string/keyboardActB"
+        app:layout_constraintEnd_toStartOf="@id/layoutKeyboardACTC"
+        app:layout_constraintStart_toEndOf="@id/layoutKeyboardACTA"
+        app:layout_constraintTop_toTopOf="@id/layoutKeyboardACT9" />
+
+    <Button
+        android:id="@+id/layoutKeyboardACTC"
+        style="@style/Keyboard"
+        android:text="@string/keyboardActC"
+        app:layout_constraintEnd_toStartOf="@id/layoutKeyboardACTD"
+        app:layout_constraintStart_toEndOf="@id/layoutKeyboardACTB"
+        app:layout_constraintTop_toTopOf="@id/layoutKeyboardACT9" />
+
+    <Button
+        android:id="@+id/layoutKeyboardACTD"
+        style="@style/Keyboard"
+        android:text="@string/keyboardActD"
+        app:layout_constraintEnd_toStartOf="@id/layoutKeyboardACTE"
+        app:layout_constraintStart_toEndOf="@id/layoutKeyboardACTC"
+        app:layout_constraintTop_toTopOf="@id/layoutKeyboardACT9" />
+
+    <Button
+        android:id="@+id/layoutKeyboardACTE"
+        style="@style/Keyboard"
+        android:text="@string/keyboardActE"
+        app:layout_constraintEnd_toStartOf="@id/layoutKeyboardACTF"
+        app:layout_constraintStart_toEndOf="@id/layoutKeyboardACTD"
+        app:layout_constraintTop_toTopOf="@id/layoutKeyboardACT9" />
+
+    <Button
+        android:id="@+id/layoutKeyboardACTF"
+        style="@style/Keyboard"
+        android:text="@string/keyboardActF"
+        app:layout_constraintEnd_toStartOf="@id/layoutKeyboardACTDel"
+        app:layout_constraintStart_toEndOf="@id/layoutKeyboardACTE"
+        app:layout_constraintTop_toTopOf="@id/layoutKeyboardACT9" />
+
+    <Button
+        android:id="@+id/layoutKeyboardACTDel"
+        style="@style/Keyboard"
+        android:text="@string/keyboardActDel"
+        app:layout_constraintEnd_toStartOf="@id/layoutKeyboardACTClear"
+        app:layout_constraintStart_toEndOf="@id/layoutKeyboardACTF"
+        app:layout_constraintTop_toTopOf="@id/layoutKeyboardACT9" />
+
+    <Button
+        android:id="@+id/layoutKeyboardACTClear"
+        style="@style/Keyboard"
+        android:text="@string/keyboardActClear"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@id/layoutKeyboardACTDel"
+        app:layout_constraintTop_toTopOf="@id/layoutKeyboardACT9" />
+</merge>

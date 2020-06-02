@@ -23,17 +23,17 @@ object ViewClickDelay {
 /**
  * 扩展View的点击事件，防止重复点击。此方法会校验View的hashCode，只有相同的控件才处理防抖。
  */
-fun <T : View> T.onClickOnShake(time: Long = 1000, block: (T) -> Unit) {
+fun View.onClickOnShake(time: Long = 1000, block: (View) -> Unit) {
     setOnClickListener {
         if (this.hashCode() != hash) {
             hash = hashCode()
             lastClickTime = System.currentTimeMillis()
-            block(it as T)
+            block(it)
         } else {
             val currentTime = System.currentTimeMillis()
             if (currentTime - lastClickTime > time) {
                 lastClickTime = System.currentTimeMillis()
-                block(it as T)
+                block(it)
             }
         }
     }
@@ -42,12 +42,12 @@ fun <T : View> T.onClickOnShake(time: Long = 1000, block: (T) -> Unit) {
 /**
  * 扩展View的点击事件，防止重复点击。此方法不校验View的hashCode，即任何连续点击不同控件也会进行防抖处理。
  */
-fun <T : View> T.onClickOnSinge(time: Long = 1000, block: (T) -> Unit) {
+fun View.onClickOnSinge(time: Long = 1000, block: (View) -> Unit) {
     setOnClickListener {
         val currentTime = System.currentTimeMillis()
         if (currentTime - lastClickTime > time) {
             lastClickTime = System.currentTimeMillis()
-            block(it as T)
+            block(it)
         }
     }
 }

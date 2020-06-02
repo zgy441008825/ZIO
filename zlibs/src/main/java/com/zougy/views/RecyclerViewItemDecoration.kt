@@ -52,6 +52,7 @@ class RecyclerViewItemDecoration @JvmOverloads constructor(
     private fun drawHorizontal(canvas: Canvas, parent: RecyclerView) {
         val height = parent.width
         val childCount = parent.childCount
+        if (childCount < 1) return
         for (i in 0 until childCount) {
             val childView = parent.getChildAt(i)
             val left = ViewCompat.getX(childView).toInt() + childView.width
@@ -63,6 +64,7 @@ class RecyclerViewItemDecoration @JvmOverloads constructor(
     private fun drawVertical(canvas: Canvas, parent: RecyclerView) {
         val width = parent.width
         val childCount = parent.childCount
+        if (childCount < 1) return
         for (i in 0 until childCount) {
             val childView = parent.getChildAt(i)
             val top = ViewCompat.getY(childView).toInt() + childView.height
@@ -73,6 +75,7 @@ class RecyclerViewItemDecoration @JvmOverloads constructor(
 
     private fun drawGrid(canvas: Canvas, parent: RecyclerView) {
         val childCount = parent.childCount
+        if (childCount < 1) return
         val manager = parent.layoutManager as GridLayoutManager?
         val spanCount = manager!!.spanCount
         val itemWidth = (parent.width - parent.paddingLeft - parent.paddingRight) / spanCount

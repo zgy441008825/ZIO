@@ -1,4 +1,24 @@
 <resources>
     <string name="app_name">ZIO</string>
     <string name="mainNoDataFind"><u>这里空空如也,点我开始扫描.</u></string>
+
+
+    <string name="keyboardAct0">0</string>
+    <string name="keyboardAct1">1</string>
+    <string name="keyboardAct2">2</string>
+    <string name="keyboardAct3">3</string>
+    <string name="keyboardAct4">4</string>
+    <string name="keyboardAct5">5</string>
+    <string name="keyboardAct6">6</string>
+    <string name="keyboardAct7">7</string>
+    <string name="keyboardAct8">8</string>
+    <string name="keyboardAct9">9</string>
+    <string name="keyboardActA">A</string>
+    <string name="keyboardActB">B</string>
+    <string name="keyboardActC">C</string>
+    <string name="keyboardActD">D</string>
+    <string name="keyboardActE">E</string>
+    <string name="keyboardActF">F</string>
+    <string name="keyboardActDel">删除</string>
+    <string name="keyboardActClear">清空</string>
 </resources>
