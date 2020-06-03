@@ -40,11 +40,8 @@ jint JNI_OnLoad(JavaVM *vm, void *reserved) {
 void test(const char *abc) {
     JNIEnv *env;
     (*mJavaVM)->GetEnv(mJavaVM, (void **) &env, JNI_VERSION_1_4);
-//    jclass testClass = (*env)->FindClass(env, "java/lang/String");
-//    D_Log("test:%s", testClass);
     D_Log("test mJavaVM:%p  env:%p", mJavaVM, env);
     jstring text = (*env)->NewStringUTF(env, abc);
-//    D_Log("sendMsg2App text:%s", text);
     (*env)->CallVoidMethod(env, mJobj, mIdSubProgramJniTest, text);
     (*env)->DeleteLocalRef(env, text);
 }
