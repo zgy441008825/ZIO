@@ -37,12 +37,14 @@ jint JNI_OnLoad(JavaVM *vm, void *reserved) {
     return JNI_VERSION_1_4;
 }
 
-void test(const char *test) {
+void test(const char *abc) {
     JNIEnv *env;
-    D_Log("test:%s", test);
-    (*mJavaVM)->GetEnv(mJavaVM, (void **) &env, NULL);
-    jstring text = (*env)->NewStringUTF(env, test);
-    D_Log("sendMsg2App text:%s", text);
+    (*mJavaVM)->GetEnv(mJavaVM, (void **) &env, JNI_VERSION_1_4);
+//    jclass testClass = (*env)->FindClass(env, "java/lang/String");
+//    D_Log("test:%s", testClass);
+    D_Log("test mJavaVM:%p  env:%p", mJavaVM, env);
+    jstring text = (*env)->NewStringUTF(env, abc);
+//    D_Log("sendMsg2App text:%s", text);
     (*env)->CallVoidMethod(env, mJobj, mIdSubProgramJniTest, text);
     (*env)->DeleteLocalRef(env, text);
 }
@@ -53,6 +55,5 @@ Java_com_zougy_zio_JniTest_test(JNIEnv *env, jobject thiz) {
     jclass jClass = (*env)->GetObjectClass(env, thiz);
 
     mIdSubProgramJniTest = (*env)->GetMethodID(env, jClass, "jniTest", "(Ljava/lang/String;)V");
-    D_Log("----------------:%p", mIdSubProgramJniTest);
     test("9999999999");
 }
