@@ -68,40 +68,44 @@ abstract class BaseDBMgr() {
     /**
      * 获取筛选器
      */
-    inline fun <reified T> selector(builder: WhereBuilder?): Selector<T> {
-        return if (builder != null) {
-            dbMgr.selector(T::class.java).where(builder)
-        } else {
-            dbMgr.selector(T::class.java)
+    inline fun <reified T> selector(builder: WhereBuilder?): Selector<T>? {
+        return try {
+            if (builder != null) {
+                dbMgr.selector(T::class.java).where(builder)
+            } else {
+                dbMgr.selector(T::class.java)
+            }
+        } catch (e: Exception) {
+            null
         }
     }
 
     /**
      * 获取一个实例
      */
-    inline fun <reified T> getBean(builder: WhereBuilder? = null): T {
-        return selector<T>(builder).findFirst()
+    inline fun <reified T> getBean(builder: WhereBuilder? = null): T? {
+        return selector<T>(builder)?.findFirst()
     }
 
     /**
      * 获取实例列表
      */
-    inline fun <reified T> getList(builder: WhereBuilder? = null): MutableList<T> {
-        return selector<T>(builder).findAll()
+    inline fun <reified T> getList(builder: WhereBuilder? = null): MutableList<T>? {
+        return selector<T>(builder)?.findAll()
     }
 
     /**
      * 分页加载
      */
-    inline fun <reified T> getListLimit(builder: WhereBuilder? = null, size: Int, offset: Int): MutableList<T> {
-        return selector<T>(builder).limit(size).offset(offset).findAll()
+    inline fun <reified T> getListLimit(builder: WhereBuilder? = null, size: Int, offset: Int): MutableList<T>? {
+        return selector<T>(builder)?.limit(size)?.offset(offset)?.findAll()
     }
 
     /***
      * 获取List并且通过colName列来排序
      */
-    inline fun <reified T> getListOrder(builder: WhereBuilder? = null, desc: Boolean = false, colName: String): MutableList<T> {
-        return selector<T>(builder).orderBy(colName, desc).findAll()
+    inline fun <reified T> getListOrder(builder: WhereBuilder? = null, desc: Boolean = false, colName: String): MutableList<T>? {
+        return selector<T>(builder)?.orderBy(colName, desc)?.findAll()
     }
 
     fun dropDb() {

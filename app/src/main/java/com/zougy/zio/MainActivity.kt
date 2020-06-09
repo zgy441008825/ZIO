@@ -12,11 +12,6 @@ class MainActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
-        JniTest.getInstance().test()
-    }
-
-    private val click: (view: View) -> Unit = {
-        Log.d("MainActivity", "ZLog :")
     }
 
 }

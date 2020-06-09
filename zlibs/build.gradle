@@ -42,8 +42,8 @@ publish {
     userOrg = 'zgy441008825'         //bintray注册的用户名
     groupId = 'com.zougy'            //compile引用时的第1部分groupId
     artifactId = 'zlibs'            //compile引用时的第2部分项目名
-    publishVersion = '0.1.18'         //compile引用时的第3部分版本号
-    desc = '修改RecyclerViewItemDecoration为0时死机'
+    publishVersion = '0.1.19'         //compile引用时的第3部分版本号
+    desc = '修改数据库可能返回null'
     website = 'https://github.com/zgy441008825/ZIO'
 }
 
@@ -51,7 +51,7 @@ dependencies {
     implementation fileTree(dir: 'libs', include: ['*.jar'])
     implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"
     implementation 'androidx.appcompat:appcompat:1.1.0'
-    implementation 'androidx.core:core-ktx:1.2.0'
+    implementation 'androidx.core:core-ktx:1.3.0'
     testImplementation 'junit:junit:4.13'
     androidTestImplementation 'androidx.test.ext:junit:1.1.1'
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.2.0'
