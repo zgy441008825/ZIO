@@ -30,23 +30,23 @@ object ZLog {
         return "$className $methodName L:$lineNumber "
     }
 
-    fun d(msg: Any? = null, tag: String = "ZLog", showMethodInfo: Boolean = true) {
+    fun d(tag: String = "ZLog", msg: Any? = null, showMethodInfo: Boolean = true) {
         if (isDebug) Log.d(tag, if (showMethodInfo) "${getMethodInfo()} $msg" else "$msg")
     }
 
-    fun e(msg: Any, tag: String = "ZLog", exception: Exception?, showMethodInfo: Boolean = true) {
+    fun e(tag: String = "ZLog", msg: Any, exception: Exception?, showMethodInfo: Boolean = true) {
         if (isDebug) Log.e(tag, if (showMethodInfo) "${getMethodInfo()} $msg" else msg.toString(), exception)
     }
 
-    fun i(msg: Any? = null, tag: String = "ZLog", showMethodInfo: Boolean = true) {
+    fun i(tag: String = "ZLog", msg: Any? = null, showMethodInfo: Boolean = true) {
         if (isDebug) Log.i(tag, if (showMethodInfo) "${getMethodInfo()} $msg" else msg.toString())
     }
 
-    fun v(msg: Any? = null, tag: String = "ZLog", showMethodInfo: Boolean = true) {
+    fun v(tag: String = "ZLog", msg: Any? = null, showMethodInfo: Boolean = true) {
         if (isDebug) Log.v(tag, if (showMethodInfo) "${getMethodInfo()} $msg" else msg.toString())
     }
 
-    fun w(msg: Any, tag: String = "ZLog", exception: Exception?, showMethodInfo: Boolean = true) {
+    fun w(tag: String = "ZLog", msg: Any, exception: Exception?, showMethodInfo: Boolean = true) {
         if (isDebug) Log.w(tag, if (showMethodInfo) "${getMethodInfo()} $msg" else msg.toString(), exception)
     }
 
