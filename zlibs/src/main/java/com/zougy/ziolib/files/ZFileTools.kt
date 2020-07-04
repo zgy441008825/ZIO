@@ -126,7 +126,6 @@ object ZFileTools {
         return fileList
     }
 
-
     fun readString(filePath: String, charset: String = "UTF-8"): String {
         if (TextUtils.isEmpty(filePath)) return ""
         return readString(File(filePath), charset)

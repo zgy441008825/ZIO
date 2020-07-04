@@ -34,10 +34,12 @@ class LabelTextView @JvmOverloads constructor(
      * 标记字符串
      */
     private var labelString: String? = null
+
     /**
      * 标记的位置。true在前面，false 在最后。
      */
     private var labelPlace = true
+
     /**
      * 标记文字的颜色
      */
@@ -51,8 +53,8 @@ class LabelTextView @JvmOverloads constructor(
         if (attrs != null) {
             val typedArray = context.obtainStyledAttributes(attrs, R.styleable.LabelTextView)
             labelString = typedArray.getString(R.styleable.LabelTextView_labelString)
-            labelColor = typedArray.getColor(R.styleable.LabelTextView_labelColor, Color.RED)
-            labelPlace = typedArray.getBoolean(R.styleable.LabelTextView_labelPlace, true)
+            labelColor = typedArray.getColor(R.styleable.LabelTextView_labelColor, textColors.defaultColor)
+            labelPlace = typedArray.getBoolean(R.styleable.LabelTextView_labelPlace, false)
             if (!TextUtils.isEmpty(labelString)) {
                 text = text
             }

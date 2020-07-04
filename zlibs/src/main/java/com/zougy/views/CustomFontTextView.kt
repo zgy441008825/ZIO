@@ -8,7 +8,8 @@ import com.zougy.ziolib.R
 import java.io.File
 
 /**
- * Description:可以通过fontType属性加载assets中字体<br>
+ * Description:可以通过fontType属性加载assets中字体
+ *
  * Author:邹高原<br>
  * Date:11/14 0014<br>
  * Email:441008824@qq.com
