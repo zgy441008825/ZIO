@@ -170,7 +170,6 @@ class CircleProgressView : View {
         paint.color = centerColor
         val min = min(width, height)
         centerRadius = (min - progressRingSize) / 2f
-        Log.d("CircleProgress", "ZLog drawCenterCircle $width  $centerRadius")
         canvas!!.drawCircle(width / 2f, height / 2f, centerRadius, paint)
     }
 

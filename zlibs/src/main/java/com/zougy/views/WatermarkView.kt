@@ -112,7 +112,6 @@ open class WatermarkView : View {
 
     override fun onDraw(canvas: Canvas?) {
         super.onDraw(canvas)
-        Log.d(this::class.java.name, "onDraw: $viewWidth $viewHeight")
         canvas!!.save()
         canvas.rotate(angle, viewWidth / 2f, viewHeight / 2f)
         paint.textSize = textSize

@@ -42,8 +42,8 @@ publish {
     userOrg = 'zgy441008825'         //bintray注册的用户名
     groupId = 'com.zougy'            //compile引用时的第1部分groupId
     artifactId = 'zlibs'            //compile引用时的第2部分项目名
-    publishVersion = '0.2.01'         //compile引用时的第3部分版本号
-    desc = '跳转ZLog的打印顺序'
+    publishVersion = '0.2.03'         //compile引用时的第3部分版本号
+    desc = '添加CrashHandler'
     website = 'https://github.com/zgy441008825/ZIO'
 }
 

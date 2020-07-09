@@ -1,6 +1,5 @@
 package com.zougy.ziolib.download
 
-import android.util.Log
 import com.zougy.netWork.NetWorkTools
 import org.xutils.common.Callback
 import java.io.File
@@ -32,7 +31,6 @@ class DownloadRunnable(private val downloadBean: DownloadBean, private val callb
         downloadBean.total = total
         downloadBean.current = current
         downloadBean.progress = (current.toFloat() / total.toFloat())
-        Log.d("DownloadRunnable", "ZLog onLoading ${downloadBean.progress}")
         downloadDBMgr.saveOrUpdate(downloadBean)
         callback?.onLoading(total, current, isDownloading, downloadBean)
     }

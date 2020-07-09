@@ -35,7 +35,7 @@ abstract class BaseDBMgr() {
         dbMgr = x.getDb(config)
     }
 
-    fun onDbUpgrade(db: DbManager, oldVersion: Int, newVersion: Int) {
+    open fun onDbUpgrade(db: DbManager, oldVersion: Int, newVersion: Int) {
 
     }
 

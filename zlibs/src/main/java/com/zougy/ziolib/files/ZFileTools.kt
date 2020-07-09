@@ -53,7 +53,7 @@ object ZFileTools {
     fun deleteFileOrDir(file: File): Boolean {
         if (!file.exists()) return false
         if (file.isFile) return file.delete()
-        val fileList = searchFile(file, null, child = false, showHidden = true)
+        val fileList = searchFile(file)
         if (fileList == null || fileList.isEmpty()) return file.delete()
         for (f in fileList) {
             if (f.isFile) {
@@ -98,7 +98,7 @@ object ZFileTools {
      */
     fun searchFile(
         path: File,
-        typeEnum: FileTypeEnum?,
+        typeEnum: FileTypeEnum? = null,
         filter: FileFilter? = null,
         child: Boolean = true,
         showHidden: Boolean = false,

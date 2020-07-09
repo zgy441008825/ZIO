@@ -6,7 +6,7 @@ package com.zougy.ziolib.download
  * Date:03/24 0024<br>
  * Email:441008824@qq.com
  */
-object ConstantValue {
+internal object ConstantValue {
 
     /**
      * 下载数据库名

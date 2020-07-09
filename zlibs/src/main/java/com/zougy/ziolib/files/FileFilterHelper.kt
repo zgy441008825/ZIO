@@ -12,7 +12,7 @@ import java.io.FileFilter
  * Email:441008824@qq.com
  */
 object FileFilterHelper {
-    private val fileTypeMpa = mapOf(
+    private val fileTypeMap = mapOf(
         FileTypeEnum.FILE_TYPE_IMG to arrayOf("jpg", "jpeg", "gif", "png", "bmp"),
         FileTypeEnum.FILE_TYPE_TEXT to arrayOf("txt", "log"),
         FileTypeEnum.FILE_TYPE_VIDEO to arrayOf("rm", "rmvb", "mp4", "3gp", "avi", "wmv", "mtv", "flv", "dat"),
@@ -22,12 +22,12 @@ object FileFilterHelper {
     )
 
     private fun getSuffix(fileTypeEnum: FileTypeEnum): Array<String>? {
-        return fileTypeMpa[fileTypeEnum]
+        return fileTypeMap[fileTypeEnum]
     }
 
     @SuppressLint("DefaultLocale")
     fun getFileType(suffix: String): FileTypeEnum {
-        for ((key, value) in fileTypeMpa) {
+        for ((key, value) in fileTypeMap) {
             for (s in value) {
                 if (TextUtils.equals(s, suffix.toLowerCase()))
                     return key
