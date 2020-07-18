@@ -27,7 +27,7 @@ object ZLog {
         val className = element.className.substring(element.className.lastIndexOf(".") + 1)
         val methodName = element.methodName
         val lineNumber = element.lineNumber
-        return "$className $methodName L:$lineNumber "
+        return "$className $methodName [L:$lineNumber] "
     }
 
     fun d(msg: Any? = null, tag: String = "ZLog", showMethodInfo: Boolean = true) {
