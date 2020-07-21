@@ -1,12 +1,12 @@
-package com.zougy.views
+package com.zougy.ui.views
 
 import android.content.Context
 import android.view.View
 import android.view.animation.Animation
 import android.widget.CompoundButton
 import android.widget.Toast
-import com.zougy.views.ViewClickDelay.hash
-import com.zougy.views.ViewClickDelay.lastClickTime
+import com.zougy.ui.views.ViewClickDelay.hash
+import com.zougy.ui.views.ViewClickDelay.lastClickTime
 
 /**
  * Description:定义View的扩展方法<br>

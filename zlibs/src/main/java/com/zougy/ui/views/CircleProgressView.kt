@@ -1,10 +1,9 @@
-package com.zougy.views
+package com.zougy.ui.views
 
 import android.content.Context
 import android.graphics.*
 import android.text.TextUtils
 import android.util.AttributeSet
-import android.util.Log
 import android.view.View
 import com.zougy.ziolib.R
 import java.text.DecimalFormat

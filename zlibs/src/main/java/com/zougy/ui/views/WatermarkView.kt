@@ -1,11 +1,10 @@
-package com.zougy.views
+package com.zougy.ui.views
 
 import android.content.Context
 import android.graphics.Canvas
 import android.graphics.Color
 import android.text.TextPaint
 import android.util.AttributeSet
-import android.util.Log
 import android.view.View
 import com.zougy.ziolib.R
 import kotlin.math.abs
