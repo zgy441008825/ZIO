@@ -6,10 +6,6 @@ import android.graphics.*
 import android.text.TextUtils
 import android.util.AttributeSet
 import android.view.View
-import android.view.animation.AccelerateDecelerateInterpolator
-import android.view.animation.Animation
-import android.view.animation.DecelerateInterpolator
-import android.view.animation.RotateAnimation
 import com.zougy.ziolib.R
 import java.text.DecimalFormat
 import kotlin.math.min
@@ -131,7 +127,15 @@ class CircleProgressView : View {
     /**
      * 没有进度值，无限循环模式
      */
-    private var proInfiniteMode = false
+    var proInfiniteMode = false
+        set(value) {
+            field = value
+            if (value) {
+                startInfinite()
+            } else {
+                stopInfinite()
+            }
+        }
 
     constructor(context: Context) : this(context, null)
 
@@ -196,16 +200,24 @@ class CircleProgressView : View {
 
     private var startAngle = 0.0f
 
+    private val valueAnimation = ValueAnimator.ofFloat(0f, 360f)
+
     fun startInfinite() {
         progress = 30f
-        val valueAnimation = ValueAnimator.ofFloat(0f, 360f)
-        valueAnimation.duration = 1500
-        valueAnimation.repeatCount = ValueAnimator.INFINITE
-        valueAnimation.addUpdateListener {
-            startAngle = it.animatedValue as Float
-            invalidate()
+        if (!valueAnimation.isRunning) {
+            valueAnimation.duration = 1500
+            valueAnimation.repeatCount = ValueAnimator.INFINITE
+            valueAnimation.addUpdateListener {
+                startAngle = it.animatedValue as Float
+                invalidate()
+            }
+            valueAnimation.start()
         }
-        valueAnimation.start()
+    }
+
+    fun stopInfinite() {
+        if (valueAnimation.isRunning)
+            valueAnimation.cancel()
     }
 
     private fun drawCenterCircle(canvas: Canvas?) {
