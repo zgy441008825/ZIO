@@ -42,8 +42,8 @@ publish {
     userOrg = 'zgy441008825'         //bintray注册的用户名
     groupId = 'com.zougy'            //compile引用时的第1部分groupId
     artifactId = 'zlibs'            //compile引用时的第2部分项目名
-    publishVersion = '0.2.03'         //compile引用时的第3部分版本号
-    desc = '添加CrashHandler'
+    publishVersion = '0.2.04'         //compile引用时的第3部分版本号
+    desc = '圆形进度条增加无进度循环模式'
     website = 'https://github.com/zgy441008825/ZIO'
 }
 

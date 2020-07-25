@@ -1,10 +1,15 @@
 package com.zougy.ui.views
 
+import android.animation.ValueAnimator
 import android.content.Context
 import android.graphics.*
 import android.text.TextUtils
 import android.util.AttributeSet
 import android.view.View
+import android.view.animation.AccelerateDecelerateInterpolator
+import android.view.animation.Animation
+import android.view.animation.DecelerateInterpolator
+import android.view.animation.RotateAnimation
 import com.zougy.ziolib.R
 import java.text.DecimalFormat
 import kotlin.math.min
@@ -123,6 +128,11 @@ class CircleProgressView : View {
      */
     private var proInfoText: String = ""
 
+    /**
+     * 没有进度值，无限循环模式
+     */
+    private var proInfiniteMode = false
+
     constructor(context: Context) : this(context, null)
 
     constructor(context: Context, attrs: AttributeSet?) : this(context, attrs, 0)
@@ -151,17 +161,51 @@ class CircleProgressView : View {
                 type.getColor(R.styleable.CircleProgressView_infoTextColor, Color.BLACK)
             proInfoTextSize = type.getDimension(R.styleable.CircleProgressView_infoTextSize, 20f)
             proInfoText = type.getString(R.styleable.CircleProgressView_infoTextString).toString()
+            proInfiniteMode = type.getBoolean(R.styleable.CircleProgressView_proInfiniteMode, false)
             type.recycle()
         }
         paint.isAntiAlias = true
+        if (proInfiniteMode) startInfinite()
     }
 
     override fun onDraw(canvas: Canvas?) {
         super.onDraw(canvas)
-        drawCenterCircle(canvas)
-        drawProRing(canvas)
-        drawProgress(canvas)
-        drawInfo(canvas)
+        if (proInfiniteMode) {
+            drawInfiniteMode(canvas)
+        } else {
+            drawCenterCircle(canvas)
+            drawProRing(canvas)
+            drawProgress(canvas)
+            drawInfo(canvas)
+        }
+    }
+
+    private fun drawInfiniteMode(canvas: Canvas?) {
+        paint.style = Paint.Style.STROKE
+        paint.color = progressBgColor
+        paint.strokeWidth = progressRingSize
+
+        canvas!!.drawCircle(width / 2f, height / 2f, width / 2f - progressRingSize, paint)
+
+        paint.color = progressColor
+        val progressFloat = (progress / progressMax) * 360f
+        val rectF = RectF(progressRingSize, progressRingSize, width - progressRingSize, height - progressRingSize)
+        canvas.rotate(-90f, width / 2f, height / 2f)
+        canvas.drawArc(rectF, startAngle, progressFloat, false, paint)
+    }
+
+    private var startAngle = 0.0f
+
+    fun startInfinite() {
+        progress = 30f
+        val valueAnimation = ValueAnimator.ofFloat(0f, 360f)
+        valueAnimation.duration = 1500
+        valueAnimation.repeatCount = ValueAnimator.INFINITE
+        valueAnimation.addUpdateListener {
+            startAngle = it.animatedValue as Float
+            invalidate()
+        }
+        valueAnimation.start()
     }
 
     private fun drawCenterCircle(canvas: Canvas?) {

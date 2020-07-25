@@ -22,6 +22,7 @@
         <attr name="infoTextString" format="string" />
         <attr name="progressColorStart" format="color" />
         <attr name="progressColorEnd" format="color" />
+        <attr name="proInfiniteMode" format="boolean"/>
     </declare-styleable>
     <declare-styleable name="LabelTextView">
         <attr name="labelString" format="string" />
