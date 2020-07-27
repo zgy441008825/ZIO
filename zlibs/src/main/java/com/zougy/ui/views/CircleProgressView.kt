@@ -185,24 +185,33 @@ class CircleProgressView : View {
     }
 
     private fun drawInfiniteMode(canvas: Canvas?) {
+        paint.shader = null
         paint.style = Paint.Style.STROKE
         paint.color = progressBgColor
         paint.strokeWidth = progressRingSize
 
         canvas!!.drawCircle(width / 2f, height / 2f, width / 2f - progressRingSize, paint)
 
-        paint.color = progressColor
+//        paint.color = progressColor
+        paint.shader = SweepGradient(
+            width / 2f,
+            height / 2f,
+            intArrayOf(Color.parseColor("#00FFFFFF"), progressColor, progressColor, Color.parseColor("#00FFFFFF")),
+            floatArrayOf(0.0f, 0.2f, 0.6f, 1f)
+        )
         val progressFloat = (progress / progressMax) * 360f
         val rectF = RectF(progressRingSize, progressRingSize, width - progressRingSize, height - progressRingSize)
-        canvas.rotate(-90f, width / 2f, height / 2f)
-        canvas.drawArc(rectF, startAngle, progressFloat, false, paint)
+        canvas.save()
+        canvas.rotate(startAngle, width / 2f, height / 2f)
+        canvas.drawArc(rectF, 0f, progressFloat, false, paint)
+        canvas.restore()
     }
 
     private var startAngle = 0.0f
 
     private val valueAnimation = ValueAnimator.ofFloat(0f, 360f)
 
-    fun startInfinite() {
+    private fun startInfinite() {
         progress = 30f
         if (!valueAnimation.isRunning) {
             valueAnimation.duration = 1500
@@ -215,7 +224,7 @@ class CircleProgressView : View {
         }
     }
 
-    fun stopInfinite() {
+    private fun stopInfinite() {
         if (valueAnimation.isRunning)
             valueAnimation.cancel()
     }
