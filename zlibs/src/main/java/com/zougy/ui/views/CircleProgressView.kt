@@ -209,10 +209,10 @@ class CircleProgressView : View {
 
     private var startAngle = 0.0f
 
-    private val valueAnimation = ValueAnimator.ofFloat(0f, 360f)
+    private val valueAnimation = ValueAnimator.ofFloat(-90f, 270f)
 
     private fun startInfinite() {
-        progress = 30f
+        progress = 25f
         if (!valueAnimation.isRunning) {
             valueAnimation.duration = 1500
             valueAnimation.repeatCount = ValueAnimator.INFINITE
