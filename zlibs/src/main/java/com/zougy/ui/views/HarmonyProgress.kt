@@ -9,8 +9,10 @@ import android.util.AttributeSet
 import android.view.View
 
 /**
- * Description:
+ * Description: Launcher下载样式的进度条
+ *
  * Author:GaoYuanZou
+ *
  * Date:2021/12/20
  */
 class HarmonyProgress : View {

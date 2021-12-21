@@ -30,6 +30,7 @@ class CustomFontTextView @JvmOverloads constructor(
                     val face = Typeface.createFromAsset(context.assets, font)
                     typeface = face
                 } catch (e: Exception) {
+                    e.printStackTrace()
                 }
             }
             valueType.recycle()

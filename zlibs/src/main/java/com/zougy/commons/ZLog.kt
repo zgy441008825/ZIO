@@ -27,14 +27,14 @@ object ZLog {
         val className = element.className.substring(element.className.lastIndexOf(".") + 1)
         val methodName = element.methodName
         val lineNumber = element.lineNumber
-        return "$className $methodName [L:$lineNumber] "
+        return "[$className:$methodName $lineNumber]:"
     }
 
     fun d(msg: Any? = null, tag: String = "ZLog", showMethodInfo: Boolean = true) {
         if (isDebug) Log.d(tag, if (showMethodInfo) "${getMethodInfo()} $msg" else "$msg")
     }
 
-    fun e(msg: Any, tag: String = "ZLog", exception: Exception?, showMethodInfo: Boolean = true) {
+    fun e(msg: Any, tag: String = "ZLog", exception: Throwable?, showMethodInfo: Boolean = true) {
         if (isDebug) Log.e(tag, if (showMethodInfo) "${getMethodInfo()} $msg" else msg.toString(), exception)
     }
 
@@ -46,7 +46,7 @@ object ZLog {
         if (isDebug) Log.v(tag, if (showMethodInfo) "${getMethodInfo()} $msg" else msg.toString())
     }
 
-    fun w(msg: Any, tag: String = "ZLog", exception: Exception?, showMethodInfo: Boolean = true) {
+    fun w(msg: Any, tag: String = "ZLog", exception: Throwable?, showMethodInfo: Boolean = true) {
         if (isDebug) Log.w(tag, if (showMethodInfo) "${getMethodInfo()} $msg" else msg.toString(), exception)
     }
 

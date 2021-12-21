@@ -1,6 +1,5 @@
 package com.zougy.tools.android
 
-import android.app.Notification
 import android.app.NotificationChannel
 import android.app.NotificationChannelGroup
 import android.app.NotificationManager

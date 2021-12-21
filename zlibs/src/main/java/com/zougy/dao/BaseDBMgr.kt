@@ -96,6 +96,10 @@ abstract class BaseDBMgr() {
 
     /**
      * 分页加载
+     *
+     * @param size 每页大小
+     *
+     * @param offset 偏移量
      */
     inline fun <reified T> getListLimit(builder: WhereBuilder? = null, size: Int, offset: Int): MutableList<T>? {
         return selector<T>(builder)?.limit(size)?.offset(offset)?.findAll()

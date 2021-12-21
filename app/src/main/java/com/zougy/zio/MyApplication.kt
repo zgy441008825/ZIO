@@ -16,6 +16,6 @@ class MyApplication : Application() {
         super.onCreate()
         x.Ext.init(this)
         x.Ext.setDebug(true)
-        DefaultApkCrashHandler.getInstance(this).init(Environment.getExternalStorageDirectory().absolutePath + "/ZLog/")
+        DefaultApkCrashHandler.getInstance(this).init()
     }
 }

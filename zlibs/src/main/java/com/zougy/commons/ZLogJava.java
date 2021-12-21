@@ -13,7 +13,7 @@ public final class ZLogJava {
             String className = Thread.currentThread().getStackTrace()[4].getClassName();
             String methodName = Thread.currentThread().getStackTrace()[4].getMethodName();
             int lineNum = Thread.currentThread().getStackTrace()[4].getLineNumber();
-            return className + "." + methodName + " L:" + lineNum + ":";
+            return "["+className + ":" + methodName + " " + lineNum + "]:";
         } catch (Exception e) {
             return "";
         }
@@ -37,6 +37,16 @@ public final class ZLogJava {
         }
     }
 
+    public static void d(String tag, String msg, boolean showMethodInfo) {
+        if (isDebug) {
+            if (showMethodInfo) {
+                d(tag, getMethodInfo() + msg);
+            } else {
+                d(tag, msg);
+            }
+        }
+    }
+
     public static void i(String msg) {
         i(TAG, getMethodInfo() + msg);
     }
@@ -52,6 +62,16 @@ public final class ZLogJava {
     public static void i(String tag, String msg) {
         if (isDebug) {
             Log.i(tag, msg);
+        }
+    }
+
+    public static void i(String tag, String msg, boolean showMethodInfo) {
+        if (isDebug) {
+            if (showMethodInfo) {
+                i(tag, getMethodInfo() + msg);
+            } else {
+                i(tag, msg);
+            }
         }
     }
 
@@ -81,7 +101,6 @@ public final class ZLogJava {
         }
     }
 
-    //
     public static void e(String msg) {
         e(TAG, getMethodInfo() + msg, null);
     }

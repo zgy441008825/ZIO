@@ -14,12 +14,14 @@
         <attr name="progressBgColor" format="color" />
         <attr name="progressColor" format="color" />
         <attr name="proTextColor" format="color" />
+        <attr name="proTextShow" format="boolean" />
         <attr name="proTextSize" format="dimension" />
         <attr name="proValue" format="float" />
         <attr name="progressMax" format="integer" />
         <attr name="infoTextColor" format="color" />
         <attr name="infoTextSize" format="dimension" />
         <attr name="infoTextString" format="string" />
+        <attr name="infoTextShow" format="boolean" />
         <attr name="progressColorStart" format="color" />
         <attr name="progressColorEnd" format="color" />
         <attr name="proInfiniteMode" format="boolean"/>

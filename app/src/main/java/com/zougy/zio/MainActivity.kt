@@ -1,8 +1,6 @@
 package com.zougy.zio
 
-import android.os.Build
 import android.os.Bundle
-import androidx.annotation.RequiresApi
 
 class MainActivity : BaseActivity() {
 
@@ -10,5 +8,4 @@ class MainActivity : BaseActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
     }
-
 }

@@ -10,7 +10,16 @@
     <com.zougy.ui.views.CircleProgressView
         android:layout_width="100dp"
         android:layout_height="100dp"
-        app:proInfiniteMode="true"
         app:proValue="50"
-        app:progressRingSize="30" />
+        app:progressColorEnd="@color/colorAccent"
+        app:progressColorStart="@android:color/transparent"
+        app:progressRingSize="20" />
+
+    <com.zougy.ui.views.LabelTextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/app_name"
+        app:labelColor="@color/colorAccent"
+        app:labelString=":" />
+
 </LinearLayout>
