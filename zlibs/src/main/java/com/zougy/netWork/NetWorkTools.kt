@@ -1,5 +1,6 @@
 package com.zougy.netWork
 
+import android.app.Application
 import android.content.Context
 import android.net.ConnectivityManager
 import android.net.NetworkCapabilities
@@ -22,28 +23,37 @@ object NetWorkTools {
      * 当前WiFi是否连接
      */
     fun isWiFiConnected(context: Context): Boolean {
-        val connectivityManager = context.getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
+        val cMgr = context.getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
         return if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-            val network = connectivityManager.activeNetwork
-            val capabilities = connectivityManager.getNetworkCapabilities(network)
-            capabilities != null && capabilities.hasTransport(NetworkCapabilities.TRANSPORT_WIFI)
+            cMgr.getNetworkCapabilities(cMgr.activeNetwork)?.hasTransport(NetworkCapabilities.TRANSPORT_WIFI) ?: false
         } else {
-            val networkInfo = connectivityManager.activeNetworkInfo
-            networkInfo != null && networkInfo.type == ConnectivityManager.TYPE_WIFI
+            cMgr.activeNetworkInfo?.type == ConnectivityManager.TYPE_WIFI
         }
     }
 
     /**
-     * 检查当前网络是否可用
+     * 当前WiFi是否连接
      */
-    fun networkIsOK(context: Context): Boolean {
-        val connectManager = context.getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
+    fun isMobileConnected(context: Context): Boolean {
+        val cMgr = context.getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
         return if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-            val networkCapabilities = connectManager.getNetworkCapabilities(connectManager.activeNetwork)
-            networkCapabilities != null && networkCapabilities.hasCapability(NetworkCapabilities.NET_CAPABILITY_VALIDATED)
+            cMgr.getNetworkCapabilities(cMgr.activeNetwork)?.hasTransport(NetworkCapabilities.TRANSPORT_CELLULAR) ?: false
         } else {
-            val networkInfo = connectManager.activeNetworkInfo
-            networkInfo != null && networkInfo.isAvailable && networkInfo.isConnected
+            cMgr.activeNetworkInfo?.type == ConnectivityManager.TYPE_MOBILE
+        }
+    }
+
+    /**
+     * 判断网络是否可用
+     */
+    fun isNetworkAvailable(context: Application): Boolean {
+        val cMgr = context.getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
+        return if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+            cMgr.getNetworkCapabilities(cMgr.activeNetwork)?.hasCapability(NetworkCapabilities.NET_CAPABILITY_VALIDATED) ?: false
+        } else {
+            cMgr.activeNetworkInfo?.let {
+                it.isAvailable && it.isConnected
+            } ?: false
         }
     }
 
@@ -66,15 +76,11 @@ object NetWorkTools {
         params.connectTimeout = cTimeout
         params.readTimeout = rTimeout
         params.maxRetryCount = retry
-        if (hPara != null) {
-            for ((k, v) in hPara) {
-                params.addHeader(k, v)
-            }
+        hPara?.forEach {
+            params.addHeader(it.key, it.value)
         }
-        if (para != null) {
-            for ((k, v) in para) {
-                params.addParameter(k, v)
-            }
+        para?.forEach {
+            params.addParameter(it.key, it.value)
         }
         return params
     }
@@ -113,6 +119,15 @@ object NetWorkTools {
 
     fun <T> postSync(url: String, clazz: Class<T>, para: Map<String, Any>? = null): T {
         val params = getRequestParams(url, para = para)
+        return x.http().postSync(params, clazz)
+    }
+
+    fun <T> postSync(url: String, clazz: Class<T>, bodyContent: String): T {
+        val params = getRequestParams(url)
+        params.apply {
+            this.bodyContent = bodyContent
+            isAsJsonContent = true
+        }
         return x.http().postSync(params, clazz)
     }
 
