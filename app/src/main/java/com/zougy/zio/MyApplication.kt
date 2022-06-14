@@ -1,7 +1,6 @@
 package com.zougy.zio
 
 import android.app.Application
-import android.os.Environment
 import com.zougy.tools.DefaultApkCrashHandler
 import org.xutils.x
 

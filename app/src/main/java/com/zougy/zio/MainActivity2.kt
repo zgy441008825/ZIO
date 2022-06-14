@@ -1,7 +1,6 @@
 package com.zougy.zio
 
 import android.content.Intent
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import com.zougy.commons.ZLog
 import com.zougy.receiver.ReceiverMgr

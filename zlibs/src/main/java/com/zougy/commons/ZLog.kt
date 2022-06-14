@@ -12,15 +12,9 @@ import java.lang.Exception
 
 object ZLog {
 
-    private var isDebug = true
+    var isDebug = true
 
-    fun setDebug(debug: Boolean = true) {
-        isDebug = debug
-    }
-
-    fun isDebug(): Boolean {
-        return isDebug
-    }
+    var TAG = "ZLog"
 
     private inline fun getMethodInfo(): String {
         val element: StackTraceElement = Throwable().stackTrace[2]
@@ -30,23 +24,23 @@ object ZLog {
         return "[$className:$methodName $lineNumber]:"
     }
 
-    fun d(msg: Any? = null, tag: String = "ZLog", showMethodInfo: Boolean = true) {
+    fun d(msg: Any? = null, tag: String = TAG, showMethodInfo: Boolean = true) {
         if (isDebug) Log.d(tag, if (showMethodInfo) "${getMethodInfo()} $msg" else "$msg")
     }
 
-    fun e(msg: Any, tag: String = "ZLog", exception: Throwable?, showMethodInfo: Boolean = true) {
+    fun e(msg: Any, tag: String = TAG, exception: Throwable?, showMethodInfo: Boolean = true) {
         if (isDebug) Log.e(tag, if (showMethodInfo) "${getMethodInfo()} $msg" else msg.toString(), exception)
     }
 
-    fun i(msg: Any? = null, tag: String = "ZLog", showMethodInfo: Boolean = true) {
+    fun i(msg: Any? = null, tag: String = TAG, showMethodInfo: Boolean = true) {
         if (isDebug) Log.i(tag, if (showMethodInfo) "${getMethodInfo()} $msg" else msg.toString())
     }
 
-    fun v(msg: Any? = null, tag: String = "ZLog", showMethodInfo: Boolean = true) {
+    fun v(msg: Any? = null, tag: String = TAG, showMethodInfo: Boolean = true) {
         if (isDebug) Log.v(tag, if (showMethodInfo) "${getMethodInfo()} $msg" else msg.toString())
     }
 
-    fun w(msg: Any, tag: String = "ZLog", exception: Throwable?, showMethodInfo: Boolean = true) {
+    fun w(msg: Any, tag: String = TAG, exception: Throwable?, showMethodInfo: Boolean = true) {
         if (isDebug) Log.w(tag, if (showMethodInfo) "${getMethodInfo()} $msg" else msg.toString(), exception)
     }
 

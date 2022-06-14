@@ -2,9 +2,9 @@ package com.zougy.commons;
 
 import android.util.Log;
 
-public final class ZLogJava {
+public final class ZLog4J {
 
-    private static final String TAG = "ZLog";
+    public static String TAG = "ZLog";
 
     public static boolean isDebug = true;
 
@@ -13,7 +13,7 @@ public final class ZLogJava {
             String className = Thread.currentThread().getStackTrace()[4].getClassName();
             String methodName = Thread.currentThread().getStackTrace()[4].getMethodName();
             int lineNum = Thread.currentThread().getStackTrace()[4].getLineNumber();
-            return "["+className + ":" + methodName + " " + lineNum + "]:";
+            return "[" + className + ":" + methodName + " " + lineNum + "]:";
         } catch (Exception e) {
             return "";
         }

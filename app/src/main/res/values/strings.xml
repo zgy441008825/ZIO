@@ -21,4 +21,8 @@
     <string name="keyboardActF">F</string>
     <string name="keyboardActDel">删除</string>
     <string name="keyboardActClear">清空</string>
+
+    <string name="warehouse">这里空空如也</string>
+    <string name="hospital">这里空空如也,点我开始扫描</string>
+    <string name="lorem_ipsum">这里空空如也,点我开始扫描这里空空如也,点我开始扫描这里空空如也,点我开始扫描这里空空如也,点我开始扫描</string>
 </resources>
