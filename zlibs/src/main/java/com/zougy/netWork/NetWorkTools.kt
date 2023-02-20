@@ -3,8 +3,11 @@ package com.zougy.netWork
 import android.app.Application
 import android.content.Context
 import android.net.ConnectivityManager
+import android.net.Network
 import android.net.NetworkCapabilities
+import android.net.NetworkRequest
 import android.os.Build
+import androidx.annotation.RequiresApi
 import org.xutils.common.Callback
 import org.xutils.http.RequestParams
 import org.xutils.x
@@ -55,6 +58,15 @@ object NetWorkTools {
                 it.isAvailable && it.isConnected
             } ?: false
         }
+    }
+
+    /**
+     * 注册网络状态回调
+     */
+    @RequiresApi(Build.VERSION_CODES.LOLLIPOP)
+    fun registerNetworkState(context: Context, networkCallback: ConnectivityManager.NetworkCallback) {
+        val cMgr = context.getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
+        cMgr.requestNetwork(NetworkRequest.Builder().build(), networkCallback)
     }
 
     /**

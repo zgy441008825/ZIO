@@ -4,8 +4,10 @@
     <option name="filePathToZoomLevelMap">
       <map>
         <entry key="..\:/MyAsWorkspace/ZIO/app/src/main/res/layout/activity_main.xml" value="0.33" />
+        <entry key="..\:/MyAsWorkspace/ZIO/app/src/main/res/layout/activity_main2.xml" value="0.2578125" />
+        <entry key="..\:/MyAsWorkspace/ZIO/app/src/main/res/layout/layout_keyboard.xml" value="0.1875" />
       </map>
     </option>
   </component>
-  <component name="ProjectRootManager" version="2" languageLevel="JDK_1_8" default="true" project-jdk-name="1.8" project-jdk-type="JavaSDK" />
+  <component name="ProjectRootManager" version="2" languageLevel="JDK_11" project-jdk-name="1.8" project-jdk-type="JavaSDK" />
 </project>

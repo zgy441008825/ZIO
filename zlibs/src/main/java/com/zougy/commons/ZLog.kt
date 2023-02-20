@@ -12,9 +12,9 @@ import java.lang.Exception
 
 object ZLog {
 
-    var isDebug = true
+    private var isDebug = true
 
-    var TAG = "ZLog"
+    private var TAG = "ZLog"
 
     private inline fun getMethodInfo(): String {
         val element: StackTraceElement = Throwable().stackTrace[2]
