@@ -1,22 +1,41 @@
 package com.zougy.commons;
 
-import android.util.Log;
+import android.text.TextUtils;
 
+/**
+ * 自定义Log，提供给java代码调用。<br>
+ * 通过设置{@link ZLog4J#logger}注入自定义Log方法
+ */
 public final class ZLog4J {
 
-    public static String TAG = "ZLog";
+    private static final String TAG = "ZLog";
 
     public static boolean isDebug = true;
 
+    private static ILog logger = new ZLogger();
+
     private static String getMethodInfo() {
         try {
-            String className = Thread.currentThread().getStackTrace()[4].getClassName();
-            String methodName = Thread.currentThread().getStackTrace()[4].getMethodName();
-            int lineNum = Thread.currentThread().getStackTrace()[4].getLineNumber();
-            return "[" + className + ":" + methodName + " " + lineNum + "]:";
+            for (StackTraceElement element : Thread.currentThread().getStackTrace()) {
+                if (element.isNativeMethod()) {
+                    continue;
+                }
+                if (TextUtils.equals(element.getClassName(), Thread.currentThread().getName())) {
+                    continue;
+                }
+                if (TextUtils.equals(element.getClassName(), ZLog4J.class.getName())) {
+                    continue;
+                }
+                return "[" + element.getClassName() + " :" + element.getMethodName() + " :" + element.getLineNumber() + "]:";
+            }
         } catch (Exception e) {
             return "";
         }
+        return "";
+    }
+
+    public static void setLogger(ILog logger) {
+        ZLog4J.logger = logger;
     }
 
     public static void d(String msg) {
@@ -31,12 +50,6 @@ public final class ZLog4J {
         }
     }
 
-    public static void d(String tag, String msg) {
-        if (isDebug) {
-            Log.d(tag, msg);
-        }
-    }
-
     public static void d(String tag, String msg, boolean showMethodInfo) {
         if (isDebug) {
             if (showMethodInfo) {
@@ -44,6 +57,12 @@ public final class ZLog4J {
             } else {
                 d(tag, msg);
             }
+        }
+    }
+
+    public static void d(String tag, String msg) {
+        if (isDebug) {
+            logger.d(tag, msg);
         }
     }
 
@@ -59,12 +78,6 @@ public final class ZLog4J {
         }
     }
 
-    public static void i(String tag, String msg) {
-        if (isDebug) {
-            Log.i(tag, msg);
-        }
-    }
-
     public static void i(String tag, String msg, boolean showMethodInfo) {
         if (isDebug) {
             if (showMethodInfo) {
@@ -72,6 +85,12 @@ public final class ZLog4J {
             } else {
                 i(tag, msg);
             }
+        }
+    }
+
+    public static void i(String tag, String msg) {
+        if (isDebug) {
+            logger.i(tag, msg);
         }
     }
 
@@ -93,11 +112,7 @@ public final class ZLog4J {
 
     public static void w(String tag, String msg, Throwable throwable) {
         if (isDebug) {
-            if (throwable != null) {
-                Log.w(tag, msg, throwable);
-            } else {
-                Log.w(tag, msg);
-            }
+            logger.w(tag, msg, throwable);
         }
     }
 
@@ -119,11 +134,7 @@ public final class ZLog4J {
 
     public static void e(String tag, String msg, Throwable throwable) {
         if (isDebug) {
-            if (throwable != null) {
-                Log.e(tag, msg, throwable);
-            } else {
-                Log.e(tag, msg);
-            }
+            logger.e(tag, msg, throwable);
         }
     }
 
