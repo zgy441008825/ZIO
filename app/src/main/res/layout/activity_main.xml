@@ -7,19 +7,24 @@
     android:orientation="vertical"
     tools:context=".MainActivity">
 
-    <com.zougy.ui.views.CircleProgressView
-        android:layout_width="100dp"
-        android:layout_height="100dp"
-        app:proValue="50"
-        app:progressColorEnd="@color/colorAccent"
-        app:progressColorStart="@android:color/transparent"
-        app:progressRingSize="20" />
-
-    <com.zougy.ui.views.LabelTextView
+    <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="@string/app_name"
-        app:labelColor="@color/colorAccent"
-        app:labelString=":" />
+        android:text="@string/androidx_startup"
+        tools:ignore="TextContrastCheck" />
+
+    <com.zougy.ui.widget.setting.SettingView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/colorAccent"
+        android:paddingStart="@dimen/dp_10"
+        android:paddingTop="@dimen/dp_10"
+        android:paddingBottom="@dimen/dp_10"
+        app:menuIconGravity="center_vertical"
+        app:menuIconSrc="@android:drawable/ic_dialog_alert"
+        app:subTitleText="@string/androidx_startup"
+        app:titleMarginMenuIcon="@dimen/dp_20"
+        app:titleSize="18dp"
+        app:titleText="@string/androidx_startup" />
 
 </LinearLayout>

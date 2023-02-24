@@ -14,7 +14,7 @@ class MainActivity : BaseActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_main2)
+        setContentView(R.layout.activity_main)
         ZLog.d("onCreate", TAG)
 
         NetWorkTools.registerNetworkState(baseContext, networkCallback)

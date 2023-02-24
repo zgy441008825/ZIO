@@ -24,7 +24,7 @@
         <attr name="infoTextShow" format="boolean" />
         <attr name="progressColorStart" format="color" />
         <attr name="progressColorEnd" format="color" />
-        <attr name="proInfiniteMode" format="boolean"/>
+        <attr name="proInfiniteMode" format="boolean" />
     </declare-styleable>
     <declare-styleable name="LabelTextView">
         <attr name="labelString" format="string" />
@@ -32,6 +32,40 @@
         <attr name="labelColor" format="color" />
     </declare-styleable>
     <declare-styleable name="CustomFontTextView">
-        <attr name="fontType" format="string"/>
+        <attr name="fontType" format="string" />
+    </declare-styleable>
+    <declare-styleable name="SettingView">
+        <!--标题-->
+        <attr name="titleText" format="string" />
+        <!--标题字体大小-->
+        <attr name="titleSize" format="dimension" />
+        <!--标题字体颜色-->
+        <attr name="titleColor" format="color|reference" />
+        <!--标题-->
+        <attr name="subTitleText" format="string" />
+        <!--副标题字体大小-->
+        <attr name="subTitleSize" format="dimension" />
+        <!--副标题字体颜色-->
+        <attr name="subTitleColor" format="color|reference" />
+        <!--主标题和副标题的间距-->
+        <attr name="titlePadding" format="dimension" />
+
+        <!--标题距离左边开始图标的距离-->
+        <attr name="titleMarginMenuIcon" format="dimension" />
+        <!--设置项的图标-->
+        <attr name="menuIconSrc" format="reference" />
+        <!--设置项图标对其方式-->
+        <attr name="menuIconGravity" format="enum">
+            <!--顶部和主标题对其-->
+            <enum name="top" value="1" />
+            <!--垂直居中-->
+            <enum name="center_vertical" value="2" />
+            <!--底部 和副标题对其-->
+            <enum name="bottom" value="3" />
+        </attr>
+
+        <attr name="android:paddingTop" format="dimension" />
+        <attr name="android:paddingBottom" format="dimension" />
+        <attr name="android:paddingStart" format="dimension" />
     </declare-styleable>
 </resources>
