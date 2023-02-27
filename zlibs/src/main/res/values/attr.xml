@@ -67,5 +67,16 @@
         <attr name="android:paddingTop" format="dimension" />
         <attr name="android:paddingBottom" format="dimension" />
         <attr name="android:paddingStart" format="dimension" />
+
+        <!--右侧图标-->
+        <attr name="msgImgIcon" format="reference"/>
+        <!--右侧文字-->
+        <attr name="msgText" format="string"/>
+        <!--右侧文字大小-->
+        <attr name="msgTextSize" format="dimension"/>
+        <!--右侧文字颜色-->
+        <attr name="msgTextColor" format="color|reference" />
+        <!--右侧文字和图标间距-->
+        <attr name="msgImgPaddingText" format="dimension" />
     </declare-styleable>
 </resources>

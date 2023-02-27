@@ -9,10 +9,14 @@ import android.widget.TextView
 import androidx.constraintlayout.widget.ConstraintSet
 import androidx.constraintlayout.widget.Guideline
 import com.zougy.commons.ZLog
+import com.zougy.ui.views.onClickOnShake
 import com.zougy.ziolib.R
 
 /**
  * Description:<br>
+ * 一个可以完全自定义样式和文本的设置项。可设置左侧图标、主标题、副标题、右侧文本、右侧图标。
+ *
+ * 使用此类可快速构建设置项
  * @author GaoYuanZou
  * @email v_gaoyuanzou@tinnove.com.cn
  * @date 2023/02/22
@@ -73,10 +77,38 @@ class SettingView(context: Context, attrs: AttributeSet? = null) : BaseWidgetGro
     private var paddingTop = 0f
     private var paddingBottom = 0f
 
+    /**
+     * 右侧图标
+     */
+    private var infoImgIcon = 0
+
+    /**
+     * 右侧文字
+     */
+    private var infoText: String? = ""
+
+    /**
+     * 右侧文字大小
+     */
+    private var infoTextSize = 10f
+
+    /**
+     * 右侧文字颜色
+     */
+    private var infoTextColor = Color.GRAY
+
+    /**
+     * 右侧文字和图标间距
+     */
+    private var infoImgPaddingText = 0f
+
 
     private var imgStartIcon: ImageView? = null
     private lateinit var tvTitle: TextView
     private var tvSubTitle: TextView? = null
+
+    private var imgInfoIcon: ImageView? = null
+    private var tvInfo: TextView? = null
 
     private val constraintSet = ConstraintSet()
 
@@ -121,9 +153,7 @@ class SettingView(context: Context, attrs: AttributeSet? = null) : BaseWidgetGro
          */
         const val VIEW_ID_TV_MSG = 0x1005
 
-        const val VIEW_ID_GUIDELINE = 0x1006
-
-        const val VIEW_ID_ROOT_LAYOUT = 0x1007
+        const val VIEW_ID_ROOT_LAYOUT = 0x1008
     }
 
     init {
@@ -154,6 +184,12 @@ class SettingView(context: Context, attrs: AttributeSet? = null) : BaseWidgetGro
             menuIconSrc = ty.getResourceId(R.styleable.SettingView_menuIconSrc, menuIconSrc)
             menuIconGravity = ty.getInt(R.styleable.SettingView_menuIconGravity, menuIconGravity)
 
+            infoImgIcon = ty.getResourceId(R.styleable.SettingView_msgImgIcon, infoImgIcon)
+            infoText = ty.getString(R.styleable.SettingView_msgText)
+            infoTextSize = ty.getDimension(R.styleable.SettingView_msgTextSize, infoTextSize)
+            infoTextColor = ty.getColor(R.styleable.SettingView_msgTextColor, infoTextColor)
+            infoImgPaddingText = ty.getDimension(R.styleable.SettingView_msgImgPaddingText, infoImgPaddingText)
+
             ty.recycle()
         }
     }
@@ -161,13 +197,12 @@ class SettingView(context: Context, attrs: AttributeSet? = null) : BaseWidgetGro
     private fun initView() {
         addContentView()
 
-        imgStartIcon?.apply { addView(this) }
-        addView(tvTitle)
-        tvSubTitle?.apply { addView(this) }
-
         setStartIcon()
         setTitle()
         setSubTitle()
+        setMsgImgIcon()
+        setMsgTv()
+
         constraintSet.applyTo(this)
     }
 
@@ -176,12 +211,14 @@ class SettingView(context: Context, attrs: AttributeSet? = null) : BaseWidgetGro
             ImageView(context).apply {
                 imgStartIcon = this
                 id = VIEW_ID_IMG_START_ICON
+                addView(this)
             }
         }
         if (!TextUtils.isEmpty(titleText)) {
             TextView(context).apply {
                 tvTitle = this
                 id = VIEW_ID_TV_TITLE
+                addView(this)
             }
         } else {
             throw NullPointerException("title is null")
@@ -190,6 +227,22 @@ class SettingView(context: Context, attrs: AttributeSet? = null) : BaseWidgetGro
             TextView(context).apply {
                 tvSubTitle = this
                 id = VIEW_ID_TV_SUBTITLE
+                addView(this)
+            }
+        }
+
+        if (infoImgIcon > 0) {
+            ImageView(context).apply {
+                imgInfoIcon = this
+                id = VIEW_ID_IMG_RIGHT_ICON
+                addView(this)
+            }
+        }
+        if (!TextUtils.isEmpty(infoText)) {
+            TextView(context).apply {
+                tvInfo = this
+                id = VIEW_ID_TV_MSG
+                addView(this)
             }
         }
     }
@@ -205,7 +258,6 @@ class SettingView(context: Context, attrs: AttributeSet? = null) : BaseWidgetGro
         tvTitle.textSize = titleSize
         tvTitle.setTextColor(titleColor)
         tvTitle.text = if (TextUtils.isEmpty(titleText)) "" else titleText
-        constraintSet.clear(tvTitle.id)
         constraintSet.constrainWidth(tvTitle.id, LayoutParams.WRAP_CONTENT)
         constraintSet.constrainHeight(tvTitle.id, LayoutParams.WRAP_CONTENT)
         if (imgStartIcon == null) {
@@ -221,21 +273,12 @@ class SettingView(context: Context, attrs: AttributeSet? = null) : BaseWidgetGro
         }
         constraintSet.connect(tvTitle.id, ConstraintSet.TOP, ConstraintSet.PARENT_ID, ConstraintSet.TOP)
 
-        if (tvSubTitle != null) {
-            val line = Guideline(context).apply {
-                id = VIEW_ID_GUIDELINE
-                addView(this)
-                setGuidelinePercent(0.5f)
-            }
-            constraintSet.centerVertically(line.id, VIEW_ID_ROOT_LAYOUT)
-            constraintSet.connect(tvTitle.id, ConstraintSet.BOTTOM, line.id, ConstraintSet.TOP, (titlePadding / 2).toInt())
-        } else {
+        if (tvSubTitle == null) {
             constraintSet.connect(
                 tvTitle.id,
                 ConstraintSet.BOTTOM,
                 ConstraintSet.PARENT_ID,
-                ConstraintSet.BOTTOM,
-                paddingBottom.toInt()
+                ConstraintSet.BOTTOM
             )
         }
     }
@@ -311,16 +354,62 @@ class SettingView(context: Context, attrs: AttributeSet? = null) : BaseWidgetGro
         constraintSet.setMargin(imageView.id, ConstraintSet.BOTTOM, paddingBottom.toInt())
     }
 
-
     private fun setSubTitleLayout(textView: TextView) {
         constraintSet.apply {
             clear(textView.id)
             constrainWidth(textView.id, LayoutParams.WRAP_CONTENT)
             constrainHeight(textView.id, LayoutParams.WRAP_CONTENT)
 
-            connect(textView.id, ConstraintSet.TOP, VIEW_ID_GUIDELINE, ConstraintSet.BOTTOM, (titlePadding / 2).toInt())
+            connect(textView.id, ConstraintSet.TOP, VIEW_ID_TV_TITLE, ConstraintSet.BOTTOM, (titlePadding / 2).toInt())
             connect(textView.id, ConstraintSet.BOTTOM, ConstraintSet.PARENT_ID, ConstraintSet.BOTTOM, paddingBottom.toInt())
-            connect(textView.id, ConstraintSet.START, tvTitle.id, ConstraintSet.START)
+            connect(textView.id, ConstraintSet.START, VIEW_ID_TV_TITLE, ConstraintSet.START)
+        }
+    }
+
+    private fun setMsgImgIcon() {
+        imgInfoIcon?.apply {
+            setImageResource(infoImgIcon)
+            constraintSet.constrainWidth(id, LayoutParams.WRAP_CONTENT)
+            constraintSet.constrainHeight(id, LayoutParams.WRAP_CONTENT)
+
+            constraintSet.connect(id, ConstraintSet.END, ConstraintSet.PARENT_ID, ConstraintSet.END, paddingEnd)
+            constraintSet.connect(id, ConstraintSet.TOP, ConstraintSet.PARENT_ID, ConstraintSet.TOP)
+            constraintSet.connect(id, ConstraintSet.BOTTOM, ConstraintSet.PARENT_ID, ConstraintSet.BOTTOM)
+        }
+    }
+
+    private fun setMsgTv() {
+        tvInfo?.apply {
+            text = infoText
+            setTextColor(infoTextColor)
+            textSize = infoTextSize
+
+            constraintSet.constrainWidth(id, LayoutParams.WRAP_CONTENT)
+            constraintSet.constrainHeight(id, LayoutParams.WRAP_CONTENT)
+
+            constraintSet.connect(id, ConstraintSet.TOP, ConstraintSet.PARENT_ID, ConstraintSet.TOP)
+            constraintSet.connect(id, ConstraintSet.BOTTOM, ConstraintSet.PARENT_ID, ConstraintSet.BOTTOM)
+
+            if (imgInfoIcon == null) {
+                constraintSet.connect(id, ConstraintSet.END, ConstraintSet.PARENT_ID, ConstraintSet.END)
+            } else {
+                constraintSet.connect(id, ConstraintSet.END, imgInfoIcon!!.id, ConstraintSet.START, infoImgPaddingText.toInt())
+            }
+        }
+    }
+
+    /**
+     * 设置点击事件
+     * @param viewFullClick 设备是否整个设置项都可以点击,true：点击当前设置项的任意位置都会触发；false：只能点击右侧图标和文字
+     */
+    fun setOnClickListener(onClickListener: OnClickListener, viewFullClick: Boolean = true) {
+        if (imgInfoIcon == null && tvInfo == null) {
+            return
+        }
+        imgInfoIcon?.onClickOnShake { onClickListener.onClick(this) }
+        tvInfo?.onClickOnShake { onClickListener.onClick(this) }
+        if (viewFullClick) {
+            onClickOnShake { onClickListener.onClick(this) }
         }
     }
 }
