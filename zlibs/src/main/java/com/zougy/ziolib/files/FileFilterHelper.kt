@@ -4,6 +4,7 @@ import android.annotation.SuppressLint
 import android.text.TextUtils
 import java.io.File
 import java.io.FileFilter
+import java.util.*
 
 /**
  * Description:<br>
@@ -28,9 +29,8 @@ object FileFilterHelper {
     @SuppressLint("DefaultLocale")
     fun getFileType(suffix: String): FileTypeEnum {
         for ((key, value) in fileTypeMap) {
-            for (s in value) {
-                if (TextUtils.equals(s, suffix.toLowerCase()))
-                    return key
+            if (suffix in value || suffix.lowercase(Locale.getDefault()) in value) {
+                return key
             }
         }
         return FileTypeEnum.FILE_TYPE_UNKNOWN

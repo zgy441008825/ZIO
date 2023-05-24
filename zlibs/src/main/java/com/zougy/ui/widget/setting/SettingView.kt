@@ -7,8 +7,6 @@ import android.util.AttributeSet
 import android.widget.ImageView
 import android.widget.TextView
 import androidx.constraintlayout.widget.ConstraintSet
-import androidx.constraintlayout.widget.Guideline
-import com.zougy.commons.ZLog
 import com.zougy.ui.views.onClickOnShake
 import com.zougy.ziolib.R
 
@@ -21,7 +19,7 @@ import com.zougy.ziolib.R
  * @email v_gaoyuanzou@tinnove.com.cn
  * @date 2023/02/22
  */
-class SettingView(context: Context, attrs: AttributeSet? = null) : BaseWidgetGroup(context, attrs) {
+open class SettingView(context: Context, attrs: AttributeSet? = null) : BaseWidgetGroup(context, attrs) {
 
     /**
      * 标题文字
@@ -194,7 +192,7 @@ class SettingView(context: Context, attrs: AttributeSet? = null) : BaseWidgetGro
         }
     }
 
-    private fun initView() {
+    protected open fun initView() {
         addContentView()
 
         setStartIcon()

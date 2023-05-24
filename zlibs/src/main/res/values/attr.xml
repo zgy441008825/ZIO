@@ -26,14 +26,17 @@
         <attr name="progressColorEnd" format="color" />
         <attr name="proInfiniteMode" format="boolean" />
     </declare-styleable>
+
     <declare-styleable name="LabelTextView">
         <attr name="labelString" format="string" />
         <attr name="labelPlace" format="boolean" />
         <attr name="labelColor" format="color" />
     </declare-styleable>
+
     <declare-styleable name="CustomFontTextView">
         <attr name="fontType" format="string" />
     </declare-styleable>
+
     <declare-styleable name="SettingView">
         <!--标题-->
         <attr name="titleText" format="string" />
@@ -69,14 +72,23 @@
         <attr name="android:paddingStart" format="dimension" />
 
         <!--右侧图标-->
-        <attr name="msgImgIcon" format="reference"/>
+        <attr name="msgImgIcon" format="reference" />
         <!--右侧文字-->
-        <attr name="msgText" format="string"/>
+        <attr name="msgText" format="string" />
         <!--右侧文字大小-->
-        <attr name="msgTextSize" format="dimension"/>
+        <attr name="msgTextSize" format="dimension" />
         <!--右侧文字颜色-->
         <attr name="msgTextColor" format="color|reference" />
         <!--右侧文字和图标间距-->
         <attr name="msgImgPaddingText" format="dimension" />
+    </declare-styleable>
+
+    <declare-styleable name="PageIndicator">
+        <attr name="itemTotal" format="integer" />
+        <attr name="itemColorNormal" format="color|reference" />
+        <attr name="itemColorCurrent" format="color|reference" />
+        <attr name="itemRadiusNormal" format="float" />
+        <attr name="itemRadiusCurrent" format="float" />
+        <attr name="itemSpace" format="float" />
     </declare-styleable>
 </resources>

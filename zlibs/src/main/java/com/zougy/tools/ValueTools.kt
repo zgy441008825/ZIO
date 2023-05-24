@@ -1,5 +1,6 @@
 package com.zougy.tools
 
+import java.security.MessageDigest
 import java.text.DecimalFormat
 import java.text.NumberFormat
 import java.text.SimpleDateFormat
@@ -99,4 +100,20 @@ fun Float.formatDouble(digits: Int): String {
     nf.maximumFractionDigits = digits
     nf.isGroupingUsed = false
     return nf.format(this)
+}
+
+fun Byte.toHexString(): String = String.format("%02x", this)
+
+/**
+ * String字符串获取MD5
+ */
+fun String.signMD5(): String {
+    val digest = MessageDigest.getInstance("MD5")
+    digest.update(this.toByteArray())
+    val bs = digest.digest()
+    val md5 = StringBuilder()
+    bs.forEach {
+        md5.append(it.toHexString())
+    }
+    return md5.toString()
 }

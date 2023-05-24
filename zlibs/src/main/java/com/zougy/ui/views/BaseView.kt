@@ -29,7 +29,7 @@ abstract class BaseView @JvmOverloads constructor(
      */
     abstract fun getStyleableRes(): IntArray
 
-    private fun initView(context: Context, attrs: AttributeSet?) {
+    open fun initView(context: Context, attrs: AttributeSet?) {
         attrs?.apply {
             val ta = context.obtainStyledAttributes(this, getStyleableRes())
             initAttrs(ta)
