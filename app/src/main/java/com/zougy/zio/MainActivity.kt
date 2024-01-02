@@ -1,10 +1,15 @@
 package com.zougy.zio
 
-import android.net.ConnectivityManager
-import android.net.Network
+import android.content.Context
 import android.os.Bundle
-import com.zougy.commons.ZLog
-import com.zougy.netWork.NetWorkTools
+import android.view.View
+import android.view.ViewGroup
+import android.widget.ImageView
+import android.widget.TextView
+import androidx.viewpager.widget.PagerAdapter
+import androidx.viewpager.widget.ViewPager
+
+import kotlinx.android.synthetic.main.activity_main.*
 
 class MainActivity : BaseActivity() {
 
@@ -12,23 +17,35 @@ class MainActivity : BaseActivity() {
         const val TAG = "MainActivity"
     }
 
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
-        ZLog.d("onCreate", TAG)
+        acMainViewPager.adapter = MyViewPagerAdapter(this)
+        acMainViewPager.indicator = acMainIndicator
 
-        NetWorkTools.registerNetworkState(baseContext, networkCallback)
+        acMainIndicator.setViewPager(acMainViewPager)
     }
 
-    private val networkCallback = object : ConnectivityManager.NetworkCallback() {
-        override fun onAvailable(network: Network) {
-            super.onAvailable(network)
-            ZLog.i("onAvailable", TAG)
+    class MyViewPagerAdapter constructor(private val context: Context) : PagerAdapter() {
+
+        private val params = ViewGroup.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT)
+
+        override fun getCount(): Int = 12
+
+        override fun isViewFromObject(view: View, `object`: Any): Boolean = view == `object`
+
+        override fun instantiateItem(container: ViewGroup, position: Int): Any {
+            val textView = TextView(context)
+            textView.text = "$position:----"
+            container.addView(textView, params)
+            return textView
         }
 
-        override fun onLost(network: Network) {
-            super.onLost(network)
-            ZLog.i("onLost", TAG)
+
+        override fun destroyItem(container: ViewGroup, position: Int, `object`: Any) {
+            container.removeView(`object` as View)
         }
+
     }
 }
