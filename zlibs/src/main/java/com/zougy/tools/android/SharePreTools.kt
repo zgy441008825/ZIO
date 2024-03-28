@@ -39,6 +39,18 @@ class SharePreTools private constructor() {
         sharedPreferences.edit { remove(key) }
     }
 
+    inline fun <reified T : Any> get(key: String, default: T): T? {
+        sharedPreferences.apply {
+            return when (default) {
+                is String -> getString(key, default) as T?
+                is Int -> getInt(key, default) as T?
+                is Boolean -> getBoolean(key, default) as T?
+                is Float -> getFloat(key, default) as T?
+                else -> getLong(key, default as Long) as T?
+            }
+        }
+    }
+
     fun getString(key: String, default: String? = null): String? {
         return sharedPreferences.getString(key, default)
     }

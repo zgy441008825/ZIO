@@ -3,7 +3,7 @@ package com.zougy.tools
 import android.content.Context
 import android.content.pm.PackageManager
 import android.os.Build
-import com.zougy.commons.ZLog
+import com.zougy.log.LogUtils
 import org.xutils.common.util.FileUtil
 import java.io.File
 import java.io.FileWriter
@@ -42,14 +42,14 @@ class DefaultApkCrashHandler private constructor(val context: Context) : Thread.
     }
 
     override fun uncaughtException(t: Thread, e: Throwable) {
-        ZLog.e("uncaughtException:$e", exception = e)
+        LogUtils.e(msg = "uncaughtException:$e", exception = e)
         saveCrashLog(e)
         exceptionToDo?.invoke(e)
         exceptionHandler.uncaughtException(t, e)
     }
 
     private fun saveCrashLog(e: Throwable) {
-        ZLog.e("saveCrashLog:$e", exception = e)
+        LogUtils.e(msg = "saveCrashLog:$e", exception = e)
         getSaveFile()?.let {
             val sb = getSystemAndApkInfo()
             sb.append("\nThrows Info:\n")

@@ -19,7 +19,11 @@ import java.io.File
 
 
 fun Context.getPackageInfo(packageName: String = this.packageName): PackageInfo {
-    return packageManager.getPackageInfo(packageName, PackageManager.GET_ACTIVITIES)
+    return if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+        packageManager.getPackageInfo(packageName, PackageManager.PackageInfoFlags.of(PackageManager.GET_ACTIVITIES.toLong()))
+    } else {
+        packageManager.getPackageInfo(packageName, PackageManager.GET_ACTIVITIES)
+    }
 }
 
 fun Context.getApkVersionName(packageName: String = this.packageName): String {

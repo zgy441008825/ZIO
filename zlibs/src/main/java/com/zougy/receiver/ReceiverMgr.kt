@@ -5,7 +5,7 @@ import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.Intent
 import android.content.IntentFilter
-import com.zougy.commons.ZLog
+import com.zougy.log.LogUtils
 import com.zougy.ui.activity.ZLifecycleBaseActivity
 import com.zougy.ui.callback.SimpleLifecycleCallback
 import java.lang.reflect.Method
@@ -48,7 +48,7 @@ class ReceiverMgr {
     private val callback = object : SimpleLifecycleCallback() {
 
         override fun onDestroy(activity: Activity) {
-            ZLog.d(registerReceiver)
+            LogUtils.d(msg = "registerReceiver:$registerReceiver")
             activity.let {
                 if (registerReceiver) {
                     it.unregisterReceiver(receiver)
