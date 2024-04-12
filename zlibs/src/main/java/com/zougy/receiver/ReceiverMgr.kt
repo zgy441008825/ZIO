@@ -48,7 +48,6 @@ class ReceiverMgr {
     private val callback = object : SimpleLifecycleCallback() {
 
         override fun onDestroy(activity: Activity) {
-            ZLog.d(registerReceiver)
             activity.let {
                 if (registerReceiver) {
                     it.unregisterReceiver(receiver)

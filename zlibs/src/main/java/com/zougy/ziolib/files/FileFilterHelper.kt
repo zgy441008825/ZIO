@@ -16,7 +16,23 @@ object FileFilterHelper {
     private val fileTypeMap = mapOf(
         FileTypeEnum.FILE_TYPE_IMG to arrayOf("jpg", "jpeg", "gif", "png", "bmp"),
         FileTypeEnum.FILE_TYPE_TEXT to arrayOf("txt", "log"),
-        FileTypeEnum.FILE_TYPE_VIDEO to arrayOf("rm", "rmvb", "mp4", "3gp", "avi", "wmv", "mtv", "flv", "dat"),
+        FileTypeEnum.FILE_TYPE_VIDEO to arrayOf(
+            "rm",
+            "rmvb",
+            "mp4",
+            "3gp",
+            "avi",
+            "wmv",
+            "mtv",
+            "flv",
+            "dat",
+            "mkv",
+            "f4v",
+            "mov",
+            "mpg",
+            "ts",
+            "asf"
+        ),
         FileTypeEnum.FILE_TYPE_BIN to arrayOf("bin"),
         FileTypeEnum.FILE_TYPE_PDF to arrayOf("pdf"),
         FileTypeEnum.FILE_TYPE_MP3 to arrayOf("flac", "ape", "wav", "mp3", "aac")//alac

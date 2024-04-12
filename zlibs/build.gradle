@@ -5,7 +5,7 @@ apply plugin: 'kotlin-parcelize'
 
 android {
 
-    ext.ZLibVersion = "1.0.1.10"
+    ext.ZLibVersion = "1.0.1.13"
 
     compileSdkVersion 33
 

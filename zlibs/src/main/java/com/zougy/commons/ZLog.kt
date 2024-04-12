@@ -52,29 +52,29 @@ object ZLog {
         isDebug = enable
     }
 
-    fun d(msg: Any? = null, tag: String = TAG, showMethodInfo: Boolean = true) {
+    fun d(tag: String = TAG, msg: Any? = null, showMethodInfo: Boolean = true) {
         if (isDebug) logger.d(tag, if (showMethodInfo) "${getMethodInfo()} $msg" else "$msg")
     }
 
-    fun i(msg: Any? = null, tag: String = TAG, showMethodInfo: Boolean = true) {
+    fun i(tag: String = TAG, msg: Any? = null, showMethodInfo: Boolean = true) {
         if (isDebug) logger.i(tag, if (showMethodInfo) "${getMethodInfo()} $msg" else msg.toString())
     }
 
-    fun w(msg: Any, tag: String = TAG, exception: Throwable?, showMethodInfo: Boolean = true) {
+    fun w(tag: String = TAG, msg: Any, exception: Throwable?, showMethodInfo: Boolean = true) {
         if (isDebug) logger.w(tag, if (showMethodInfo) "${getMethodInfo()} $msg" else msg.toString(), exception)
     }
 
-    fun e(msg: Any, tag: String = TAG, exception: Throwable?, showMethodInfo: Boolean = true) {
+    fun e(tag: String = TAG, msg: Any, exception: Throwable?, showMethodInfo: Boolean = true) {
         if (isDebug) logger.e(tag, if (showMethodInfo) "${getMethodInfo()} $msg" else msg.toString(), exception)
     }
 
-    fun v(msg: Any? = null, tag: String = TAG, showMethodInfo: Boolean = true, exception: Throwable?) {
+    fun v(tag: String = TAG, msg: Any? = null, showMethodInfo: Boolean = true, exception: Throwable?) {
         if (isDebug) logger.v(tag, if (showMethodInfo) "${getMethodInfo()} $msg" else msg.toString(), exception)
     }
 
 }
 
-class ZLogger : ILog {
+private class ZLogger : ILog {
 
     override fun d(tag: String?, msg: String) {
         Log.d(if (TextUtils.isEmpty(tag)) TAG else tag, msg)
