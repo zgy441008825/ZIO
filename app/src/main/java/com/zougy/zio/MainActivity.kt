@@ -9,7 +9,6 @@ import android.widget.TextView
 import androidx.viewpager.widget.PagerAdapter
 import androidx.viewpager.widget.ViewPager
 
-import kotlinx.android.synthetic.main.activity_main.*
 
 class MainActivity : BaseActivity() {
 
@@ -21,10 +20,6 @@ class MainActivity : BaseActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
-        acMainViewPager.adapter = MyViewPagerAdapter(this)
-        acMainViewPager.indicator = acMainIndicator
-
-        acMainIndicator.setViewPager(acMainViewPager)
     }
 
     class MyViewPagerAdapter constructor(private val context: Context) : PagerAdapter() {

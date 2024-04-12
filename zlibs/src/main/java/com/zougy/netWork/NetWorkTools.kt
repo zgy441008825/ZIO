@@ -35,7 +35,7 @@ object NetWorkTools {
     }
 
     /**
-     * 当前WiFi是否连接
+     * 当前移动网络是否连接
      */
     fun isMobileConnected(context: Context): Boolean {
         val cMgr = context.getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
