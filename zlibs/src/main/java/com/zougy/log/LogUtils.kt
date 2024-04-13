@@ -1,5 +1,8 @@
 package com.zougy.log
 
+import android.text.TextUtils
+import android.util.Log
+
 /**
  * @Description:
  * Log类，用于打印日志。
@@ -35,6 +38,11 @@ object LogUtils {
     var enableLog = true
 
     /**
+     * 是否跟踪显示方法进程相关信息
+     */
+    var showMethodInfo = true
+
+    /**
      * 获取方法信息
      */
     private fun getMethodInfo(): String {
@@ -54,7 +62,7 @@ object LogUtils {
         return ""
     }
 
-    fun d(tag: String? = TAG, msg: Any, showMethodInfo: Boolean = true) {
+    fun d(tag: String? = TAG, msg: Any) {
         if (enableLog && logLevel <= LoggerLevel.LEVEL_D) {
             iLogger.d(tag, if (showMethodInfo) "${getMethodInfo()} $msg" else "$msg")
         }
@@ -63,7 +71,7 @@ object LogUtils {
     /**
      * 会识别msg类型，将数组或者列表的内容展开打印,如果是数组则调用contentToString方法返回string，如果是list，则分行打印列表内容。
      */
-    fun extendD(tag: String? = TAG, msg: Any, showMethodInfo: Boolean = true) {
+    fun extendD(tag: String? = TAG, msg: Any) {
         if (enableLog && logLevel <= LoggerLevel.LEVEL_D) {
             when (msg) {
                 is Array<*> -> {
@@ -90,7 +98,7 @@ object LogUtils {
         }
     }
 
-    fun i(tag: String? = TAG, msg: Any, showMethodInfo: Boolean = true) {
+    fun i(tag: String? = TAG, msg: Any) {
         if (enableLog && logLevel <= LoggerLevel.LEVEL_I) {
             iLogger.i(tag, if (showMethodInfo) "${getMethodInfo()} $msg" else "$msg")
         }
@@ -99,7 +107,7 @@ object LogUtils {
     /**
      * 会识别msg类型，将数组或者列表的内容展开打印,如果是数组则调用contentToString方法返回string，如果是list，则分行打印列表内容。
      */
-    fun extendI(tag: String? = TAG, msg: Any, showMethodInfo: Boolean = true) {
+    fun extendI(tag: String? = TAG, msg: Any) {
         if (enableLog && logLevel <= LoggerLevel.LEVEL_D) {
             when (msg) {
                 is Array<*> -> {
@@ -127,17 +135,47 @@ object LogUtils {
     }
 
 
-    fun w(tag: String? = TAG, msg: Any, exception: Throwable?, showMethodInfo: Boolean = true) {
+    fun w(tag: String? = TAG, msg: Any, exception: Throwable?) {
         if (enableLog && logLevel <= LoggerLevel.LEVEL_I) {
             iLogger.w(tag, if (showMethodInfo) "${getMethodInfo()} $msg" else "$msg", exception)
         }
     }
 
-    fun e(tag: String? = TAG, msg: Any, exception: Throwable?, showMethodInfo: Boolean = true) {
+    fun e(tag: String? = TAG, msg: Any, exception: Throwable?) {
         if (enableLog && logLevel <= LoggerLevel.LEVEL_I) {
             iLogger.e(tag, if (showMethodInfo) "${getMethodInfo()} $msg" else "$msg", exception)
         }
     }
 
+}
 
+private class ZLogger : ILogger {
+
+    companion object {
+        private const val TAG = "ZLogger"
+    }
+
+    override fun d(tag: String?, msg: String) {
+        Log.d(if (TextUtils.isEmpty(tag)) TAG else tag, msg)
+    }
+
+    override fun i(tag: String?, msg: String) {
+        Log.i(if (TextUtils.isEmpty(tag)) TAG else tag, msg)
+    }
+
+    override fun w(tag: String?, msg: String, e: Throwable?) {
+        e?.apply {
+            Log.w(TAG, msg, e)
+        } ?: {
+            Log.w(TAG, msg)
+        }
+    }
+
+    override fun e(tag: String?, msg: String, e: Throwable?) {
+        e?.apply {
+            Log.e(TAG, msg, e)
+        } ?: {
+            Log.e(TAG, msg)
+        }
+    }
 }
