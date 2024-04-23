@@ -91,6 +91,12 @@
     java.lang.Object readResolve();
 }
 
+#只保持本包的类名和内容
+-keep class com.xzt.demotwo.*{*;}
+
+#可以保持本包和子包的类名和内容
+-keep class com.xzt.demotwo.**{*;}
+
 #保存行号
 -renamesourcefileattribute SourceFile
 -keepattributes SourceFile,LineNumberTable

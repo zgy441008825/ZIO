@@ -5,7 +5,6 @@ import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.Intent
 import android.content.IntentFilter
-import com.zougy.commons.ZLog
 import com.zougy.ui.activity.ZLifecycleBaseActivity
 import com.zougy.ui.callback.SimpleLifecycleCallback
 import java.lang.reflect.Method

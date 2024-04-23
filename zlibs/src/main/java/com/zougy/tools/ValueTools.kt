@@ -1,10 +1,16 @@
 package com.zougy.tools
 
+import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers
+import io.reactivex.rxjava3.core.Flowable
+import io.reactivex.rxjava3.disposables.Disposable
+import io.reactivex.rxjava3.schedulers.Schedulers
 import java.security.MessageDigest
 import java.text.DecimalFormat
 import java.text.NumberFormat
 import java.text.SimpleDateFormat
-import java.util.*
+import java.util.Date
+import java.util.Locale
+import java.util.concurrent.TimeUnit
 
 /**
  * 该文件定义一些基本数据类型的扩展方法
@@ -116,4 +122,25 @@ fun String.signMD5(): String {
         md5.append(it.toHexString())
     }
     return md5.toString()
+}
+
+fun Long.countDown(delay: Long = 0, onUpdate: (Int) -> Unit, onEnd: () -> Unit = {}): Disposable {
+    return Flowable.interval(delay, 1L, TimeUnit.SECONDS)
+        .take(this.toLong())
+        .map {
+            this - it
+        }
+        .subscribeOn(Schedulers.single())
+        .observeOn(AndroidSchedulers.mainThread())
+        .subscribe({
+            onUpdate(it.toInt())
+        }, {
+            onEnd()
+        }, {
+            onEnd()
+        })
+}
+
+fun Int.countDown(delay: Long = 0, onUpdate: (Int) -> Unit, onEnd: () -> Unit = {}): Disposable {
+    return this.toLong().countDown(delay, onUpdate, onEnd)
 }

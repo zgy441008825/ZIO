@@ -4,12 +4,7 @@ import android.animation.Animator
 import android.animation.ValueAnimator
 import android.os.Build
 import android.view.View
-import android.view.animation.Animation
-import android.view.animation.AnimationUtils
 import androidx.annotation.RequiresApi
-import androidx.core.animation.addListener
-import androidx.vectordrawable.graphics.drawable.AnimationUtilsCompat
-import java.time.Duration
 
 /**
  * Description: 动画辅助类<br>

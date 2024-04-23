@@ -3,7 +3,6 @@ package com.zougy.tools
 import android.content.Context
 import android.content.pm.PackageManager
 import android.os.Build
-import com.zougy.commons.ZLog
 import org.xutils.common.util.FileUtil
 import java.io.File
 import java.io.FileWriter

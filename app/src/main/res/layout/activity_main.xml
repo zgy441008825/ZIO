@@ -1,24 +1,15 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical"
-    tools:context=".MainActivity">
+    android:orientation="vertical">
 
-    <com.zougy.ui.widget.IndicatorViewPager
-        android:id="@+id/acMainViewPager"
-        android:layout_width="match_parent"
-        android:layout_height="@dimen/dp_300"
-        android:background="@color/colorAccent" />
-
-    <com.zougy.ui.widget.PageIndicator
-        android:id="@+id/acMainIndicator"
-        android:layout_width="match_parent"
-        android:layout_height="@dimen/dp_20"
-        app:itemRadiusCurrent="10"
-        app:itemRadiusNormal="5"
-        app:itemSpace="50"
-        app:itemTotal="5" />
+    <TextView
+        android:id="@+id/acMainTvCountDown"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/app_name"
+        android:textColor="@color/colorPrimaryDark"
+        android:textSize="@dimen/dp_30" />
 </LinearLayout>
