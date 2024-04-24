@@ -8,6 +8,7 @@ import android.widget.ImageView
 import android.widget.TextView
 import androidx.viewpager.widget.PagerAdapter
 import androidx.viewpager.widget.ViewPager
+import com.zougy.log.LogUtils
 import com.zougy.tools.countDown
 import com.zougy.ui.views.onClickOnSinge
 
@@ -23,6 +24,7 @@ class MainActivity : BaseActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
         val acMainTvCountDown = findViewById<TextView>(R.id.acMainTvCountDown)
+        LogUtils.i(TAG,"onCreate ")
         acMainTvCountDown.onClickOnSinge {
             10.countDown(1, {
                 acMainTvCountDown.text = it.toString()

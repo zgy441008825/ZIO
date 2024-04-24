@@ -15,7 +15,7 @@ import android.util.Log
  */
 object LogUtils {
 
-    var TAG = "LogUtils"
+    private const val TAG = "LogUtils"
 
     /**
      * 打印日志的接口，可通过注入的方式设置自己的实现类
@@ -43,6 +43,11 @@ object LogUtils {
     var showMethodInfo = true
 
     /**
+     * TAG的后缀 一般可以用来设置版本号
+     */
+    var tagSuffix = ""
+
+    /**
      * 获取方法信息
      */
     private fun getMethodInfo(): String {
@@ -62,13 +67,17 @@ object LogUtils {
         return ""
     }
 
-    fun d(tag: String? = TAG, msg: Any) {
+    private fun getTag(tag: String = TAG): String {
+        return "${tag}_$tagSuffix"
+    }
+
+    fun d(tag: String = TAG, msg: Any) {
         if (enableLog && logLevel <= LoggerLevel.LEVEL_D) {
-            iLogger.d(tag, if (showMethodInfo) "${getMethodInfo()} $msg" else "$msg")
+            iLogger.d(getTag(tag), if (showMethodInfo) "${getMethodInfo()} $msg" else "$msg")
         }
     }
 
-    private fun print(tag: String? = TAG, msg: String, level: Int = LoggerLevel.LEVEL_D) {
+    private fun print(tag: String = TAG, msg: String, level: Int = LoggerLevel.LEVEL_D) {
         when (level) {
             LoggerLevel.LEVEL_D -> {
                 d(tag, msg)
@@ -88,7 +97,7 @@ object LogUtils {
         }
     }
 
-    fun extend(tag: String? = TAG, msg: Any, level: Int = LoggerLevel.LEVEL_D) {
+    fun extend(tag: String = TAG, msg: Any, level: Int = LoggerLevel.LEVEL_D) {
         if (enableLog && logLevel <= LoggerLevel.LEVEL_D) {
             when (msg) {
                 is Array<*> -> {
@@ -118,33 +127,33 @@ object LogUtils {
     /**
      * 会识别msg类型，将数组或者列表的内容展开打印,如果是数组则调用contentToString方法返回string，如果是list，则分行打印列表内容。
      */
-    fun extendD(tag: String? = TAG, msg: Any) {
+    fun extendD(tag: String = TAG, msg: Any) {
         extend(tag, msg)
     }
 
-    fun i(tag: String? = TAG, msg: Any) {
+    fun i(tag: String = TAG, msg: Any) {
         if (enableLog && logLevel <= LoggerLevel.LEVEL_I) {
-            iLogger.i(tag, if (showMethodInfo) "${getMethodInfo()} $msg" else "$msg")
+            iLogger.i(getTag(tag), if (showMethodInfo) "${getMethodInfo()} $msg" else "$msg")
         }
     }
 
     /**
      * 会识别msg类型，将数组或者列表的内容展开打印,如果是数组则调用contentToString方法返回string，如果是list，则分行打印列表内容。
      */
-    fun extendI(tag: String? = TAG, msg: Any) {
+    fun extendI(tag: String = TAG, msg: Any) {
         extend(tag, msg, LoggerLevel.LEVEL_I)
     }
 
 
-    fun w(tag: String? = TAG, msg: Any, exception: Throwable?) {
+    fun w(tag: String = TAG, msg: Any, exception: Throwable?) {
         if (enableLog && logLevel <= LoggerLevel.LEVEL_I) {
-            iLogger.w(tag, if (showMethodInfo) "${getMethodInfo()} $msg" else "$msg", exception)
+            iLogger.w(getTag(tag), if (showMethodInfo) "${getMethodInfo()} $msg" else "$msg", exception)
         }
     }
 
-    fun e(tag: String? = TAG, msg: Any, exception: Throwable?) {
+    fun e(tag: String = TAG, msg: Any, exception: Throwable?) {
         if (enableLog && logLevel <= LoggerLevel.LEVEL_I) {
-            iLogger.e(tag, if (showMethodInfo) "${getMethodInfo()} $msg" else "$msg", exception)
+            iLogger.e(getTag(tag), if (showMethodInfo) "${getMethodInfo()} $msg" else "$msg", exception)
         }
     }
 

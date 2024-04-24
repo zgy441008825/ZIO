@@ -1,6 +1,7 @@
 package com.zougy.zio
 
 import android.app.Application
+import com.zougy.log.LogUtils
 import com.zougy.tools.DefaultApkCrashHandler
 import org.xutils.x
 
@@ -15,6 +16,7 @@ class MyApplication : Application() {
         super.onCreate()
         x.Ext.init(this)
         x.Ext.setDebug(true)
+        LogUtils.tagSuffix = BuildConfig.VERSION_NAME
         DefaultApkCrashHandler.getInstance(this).init()
     }
 }
