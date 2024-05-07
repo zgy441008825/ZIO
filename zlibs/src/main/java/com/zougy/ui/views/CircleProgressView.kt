@@ -5,6 +5,7 @@ import android.content.Context
 import android.graphics.*
 import android.text.TextUtils
 import android.util.AttributeSet
+import android.util.Log
 import android.view.View
 import com.zougy.ziolib.R
 import java.text.DecimalFormat
@@ -53,6 +54,10 @@ import kotlin.math.min
  */
 class CircleProgressView : View {
 
+    companion object {
+        private const val TAG = "CircleProgressView"
+    }
+
     private val paint = Paint()
 
     /**
@@ -73,12 +78,12 @@ class CircleProgressView : View {
     /**
      * 圆环渐变色开始颜色
      */
-    private var progressColorStart = -1
+    private var progressColorStart = -2
 
     /**
      * 圆环渐变色结束颜色
      */
-    private var progressColorEnd = -1
+    private var progressColorEnd = -2
 
     /**
      * 圆环进度条颜色
@@ -171,8 +176,8 @@ class CircleProgressView : View {
                 Color.parseColor("#E1E1E1")
             )
             progressColor = type.getColor(R.styleable.CircleProgressView_progressColor, Color.RED)
-            progressColorStart = type.getColor(R.styleable.CircleProgressView_progressColorStart, -1)
-            progressColorEnd = type.getColor(R.styleable.CircleProgressView_progressColorEnd, -1)
+            progressColorStart = type.getColor(R.styleable.CircleProgressView_progressColorStart, progressColorStart)
+            progressColorEnd = type.getColor(R.styleable.CircleProgressView_progressColorEnd, progressColorEnd)
             proTextColor = type.getColor(R.styleable.CircleProgressView_proTextColor, Color.BLACK)
             proTextSize = type.getDimension(R.styleable.CircleProgressView_proTextSize, 30f)
             proTextShow = type.getBoolean(R.styleable.CircleProgressView_proTextShow, true)
@@ -187,7 +192,7 @@ class CircleProgressView : View {
             type.recycle()
         }
         paint.isAntiAlias = true
-        if (proInfiniteMode) startInfinite()
+//        if (proInfiniteMode) startInfinite()
     }
 
     override fun onDraw(canvas: Canvas?) {
@@ -209,26 +214,17 @@ class CircleProgressView : View {
         paint.style = Paint.Style.STROKE
         paint.color = progressBgColor
         paint.strokeWidth = progressRingSize
+        paint.strokeCap = Paint.Cap.ROUND
 
         canvas.drawCircle(width / 2f, height / 2f, width / 2f - progressRingSize, paint)
-
-        if (progressColorStart == -1 || progressColorEnd == -1) {
-            paint.color = progressColor
-        } else {
-            paint.shader = SweepGradient(
-                width / 2f,
-                height / 2f,
-                intArrayOf(progressColorStart, progressColorEnd, progressColorEnd),
-                floatArrayOf(0.0f, 0.2f, 1f)
-            )
-        }
-
-        /*paint.shader = SweepGradient(
+        Log.i(TAG, "drawInfiniteMode progressColorStart:$progressColorStart  progressColorEnd:$progressColorEnd")
+        paint.shader = SweepGradient(
             width / 2f,
             height / 2f,
-            intArrayOf(Color.parseColor("#00FFFFFF"), progressColor, progressColor, Color.parseColor("#00FFFFFF")),
-            floatArrayOf(0.0f, 0.2f, 0.6f, 1f)
-        )*/
+            intArrayOf(progressColorStart, progressColorEnd, progressColorEnd,progressColorStart),
+            floatArrayOf(0.0f, 0.2f, 0.8f,1f)
+        )
+
         val progressFloat = (progress / progressMax) * 360f
         val rectF = RectF(progressRingSize, progressRingSize, width - progressRingSize, height - progressRingSize)
         canvas.save()
@@ -239,10 +235,10 @@ class CircleProgressView : View {
 
     private var startAngle = 0.0f
 
-    private val valueAnimation = ValueAnimator.ofFloat(-90f, 270f)
+    private val valueAnimation = ValueAnimator.ofFloat(90f, -270f)
 
     private fun startInfinite() {
-        progress = 25f
+        progress = 80f
         if (!valueAnimation.isRunning) {
             valueAnimation.duration = 1500
             valueAnimation.repeatCount = ValueAnimator.INFINITE

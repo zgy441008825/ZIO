@@ -151,7 +151,7 @@ object LogUtils {
         }
     }
 
-    fun e(tag: String = TAG, msg: Any, exception: Throwable?) {
+    fun e(tag: String = TAG, msg: Any, exception: Throwable? = null) {
         if (enableLog && logLevel <= LoggerLevel.LEVEL_I) {
             iLogger.e(getTag(tag), if (showMethodInfo) "${getMethodInfo()} $msg" else "$msg", exception)
         }

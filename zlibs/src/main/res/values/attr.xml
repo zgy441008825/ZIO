@@ -91,4 +91,17 @@
         <attr name="itemRadiusCurrent" format="float" />
         <attr name="itemSpace" format="float" />
     </declare-styleable>
+
+    <declare-styleable name="ProgressView">
+        <attr name="progressSize" format="dimension|integer" />
+        <attr name="progressGradient" format="string" />
+        <attr name="progressViewBgColor" format="color" />
+        <attr name="progressViewColor" format="color" />
+        <attr name="progressViewIsLoop" format="boolean"/>
+        <attr name="progressViewStyle" format="enum">
+            <enum name="CIRCLE">0</enum>
+            <enum name="BAR_HORIZONTAL">1</enum>
+            <enum name="BAR_VERTICAL">2</enum>
+        </attr>
+    </declare-styleable>
 </resources>

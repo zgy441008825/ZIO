@@ -6,4 +6,7 @@
 
     <color name="colorBaseText">#333</color>
     <color name="cutLine">#CCC</color>
+
+    <color name="transparent">#0000</color>
+    <color name="white">#FFF</color>
 </resources>
