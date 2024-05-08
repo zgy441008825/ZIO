@@ -11,11 +11,13 @@ import android.graphics.Shader
 import android.graphics.SweepGradient
 import android.text.TextPaint
 import android.util.AttributeSet
+import android.view.MotionEvent
 import android.view.View
 import com.zougy.log.LogUtils
 import com.zougy.ziolib.R
 import kotlin.math.PI
 import kotlin.math.cos
+import kotlin.math.max
 import kotlin.math.min
 import kotlin.math.sin
 
@@ -51,20 +53,64 @@ class ProgressView @JvmOverloads constructor(
          */
         const val STYLE_BAR_VERTICAL = 2
 
+        /**
+         * 画笔样式——圆角
+         */
         const val STROKE_CAP_ROUND = 1
 
+        /**
+         * 画笔样式——方形
+         */
         const val STROKE_CAP_SQUARE = 2
-
 
         const val PROGRESS_MAX = 100f
 
         const val PROGRESS_MIN = 0f
+
+        /**
+         * 进度走势方向
+         */
+        object ORIENTATION {
+
+            /**
+             * 顺时针
+             */
+            const val CIRCLE_CLOCKWISE = 0
+
+            /**
+             * 逆时针
+             */
+            const val CIRCLE_ANTICLOCKWISE = 1
+
+            /**
+             * 水平方向——从左往右
+             */
+            const val H_LEFT_TO_RIGHT = 2
+
+            /**
+             * 水平方向——从右往左
+             */
+            const val H_RIGHT_TO_LEFT = 3
+
+            /**
+             * 垂直方向——从上往下
+             */
+            const val V_TOP_TO_BOTTOM = 4
+
+            /**
+             * 垂直方向——从下往上
+             */
+            const val V_BOTTOM_TO_TOP = 5
+
+        }
 
     }
 
     private val paintProgress = Paint()
 
     private val paintText = TextPaint()
+
+    private val paintShadow = Paint()
 
     /**
      * 进度条样式 取值为[STYLE_CIRCLE]和[STYLE_BAR]
@@ -127,6 +173,61 @@ class ProgressView @JvmOverloads constructor(
     private val drawRectF = RectF()
 
     /**
+     * 是否显示进度值
+     */
+    private var showProgressValue = true
+
+    /**
+     * 进度值文字大小
+     */
+    private var valueTextSize = 10f
+
+    /**
+     * 显示的进度值是否采用整数
+     */
+    private var valueTextInt = false
+
+    /**
+     * 进度值文字颜色
+     */
+    private var valueTextColor = Color.BLACK
+
+    /**
+     * 使能滑动进度功能
+     */
+    private var isSeekBar = false
+
+    /**
+     * 是否显示滑块
+     */
+    private var showThumb = false
+
+    /**
+     * 滑块半径
+     */
+    private var thumbRadius = 0f
+
+    /**
+     * 滑块颜色
+     */
+    private var thumbColor = Color.WHITE
+
+    /**
+     * 是否显示滑块阴影
+     */
+    private var thumbShadow = true
+
+    /**
+     * 滑块阴影颜色
+     */
+    private var thumbShadowColor = Color.BLACK
+
+    /**
+     * 滑块阴影大小
+     */
+    private var thumbShadowSize = 2f
+
+    /**
      * 当前的进度
      */
     var progress = 0f
@@ -145,14 +246,14 @@ class ProgressView @JvmOverloads constructor(
         if (attrs != null) {
             val type = context.obtainStyledAttributes(attrs, R.styleable.ProgressView)
             progress = type.getFloat(R.styleable.ProgressView_progressViewValue, progress)
-            progressSize = type.getInt(R.styleable.ProgressView_progressSize, progressSize)
+            progressSize = type.getDimension(R.styleable.ProgressView_progressViewSize, progressSize.toFloat()).toInt()
             progressBgColor = type.getColor(R.styleable.ProgressView_progressViewBgColor, progressBgColor)
             progressColor = type.getColor(R.styleable.ProgressView_progressViewColor, progressColor)
             isLoop = type.getBoolean(R.styleable.ProgressView_progressViewIsLoop, false)
             style = type.getInt(R.styleable.ProgressView_progressViewStyle, style)
-            strokeCap = type.getInt(R.styleable.ProgressView_progressStrokeCap, strokeCap)
+            strokeCap = type.getInt(R.styleable.ProgressView_progressViewStrokeCap, strokeCap)
             isClockwise = type.getBoolean(R.styleable.ProgressView_progressViewIsClockwise, isClockwise)
-            type.getString(R.styleable.ProgressView_progressGradient)?.apply {
+            type.getString(R.styleable.ProgressView_progressViewGradient)?.apply {
                 val array = this.split(",")
                 if (array.isNotEmpty()) {
                     val colors = array.map { Color.parseColor(it) }
@@ -161,14 +262,38 @@ class ProgressView @JvmOverloads constructor(
                 }
             }
 
+            //进度值相关
+            showProgressValue = type.getBoolean(R.styleable.ProgressView_progressViewValueShow, showProgressValue)
+            valueTextSize = type.getDimension(R.styleable.ProgressView_progressViewValueTextSize, valueTextSize)
+            valueTextColor = type.getColor(R.styleable.ProgressView_progressViewValueTextColor, valueTextColor)
+            valueTextInt = type.getBoolean(R.styleable.ProgressView_progressViewValueInt, valueTextInt)
+
+            //滑块相关属性
+            isSeekBar = type.getBoolean(R.styleable.ProgressView_progressViewIsSeekBar, isSeekBar)
+            showThumb = type.getBoolean(R.styleable.ProgressView_progressViewShowThumb, showThumb)
+            thumbRadius = type.getDimension(R.styleable.ProgressView_progressViewThumbRadius, thumbRadius)
+            thumbColor = type.getColor(R.styleable.ProgressView_progressViewThumbColor, thumbColor)
+            if (thumbRadius == 0f) {
+                thumbRadius = progressSize.toFloat()
+            }
+
+            thumbShadow = type.getBoolean(R.styleable.ProgressView_progressViewThumbShowShadow, thumbShadow)
+            thumbShadowColor = type.getColor(R.styleable.ProgressView_progressViewThumbShadowColor, thumbShadowColor)
+            thumbShadowSize = type.getDimension(R.styleable.ProgressView_progressViewThumbShadowSize, thumbShadowSize)
+
             type.recycle()
         }
 
         paintText.isAntiAlias = true
+        paintText.color = valueTextColor
+        paintText.textSize = valueTextSize
 
         paintProgress.isAntiAlias = true
         paintProgress.strokeWidth = progressSize.toFloat()
         paintProgress.color = progressColor
+
+        paintShadow.isAntiAlias = true
+        paintShadow.color = thumbShadowColor
 
         if (strokeCap == STROKE_CAP_ROUND) {
             paintProgress.strokeCap = Paint.Cap.ROUND
@@ -202,13 +327,25 @@ class ProgressView @JvmOverloads constructor(
         }
     }
 
+    private fun initDrawRect(w: Int, h: Int) {
+        if (!showThumb) thumbRadius = 0f
+        val t = max(progressSize / 2f, thumbRadius)
+        if (strokeCap == STROKE_CAP_ROUND) {
+            drawRectF.left = t
+            drawRectF.top = t
+            drawRectF.right = w - t
+            drawRectF.bottom = h - t
+        } else {
+            drawRectF.left = thumbRadius
+            drawRectF.top = thumbRadius
+            drawRectF.right = w - thumbRadius
+            drawRectF.bottom = h - thumbRadius
+        }
+    }
+
     override fun onSizeChanged(w: Int, h: Int, oldw: Int, oldh: Int) {
         super.onSizeChanged(w, h, oldw, oldh)
-        drawRectF.left = progressSize / 2f
-        drawRectF.top = progressSize / 2f
-        drawRectF.right = w - progressSize / 2f
-        drawRectF.bottom = h - progressSize / 2f
-
+        initDrawRect(w, h)
         if (progressColors != null && progressColors!!.isNotEmpty()) {
             progressColors?.apply {
                 if (size > 1) {
@@ -221,8 +358,10 @@ class ProgressView @JvmOverloads constructor(
                     positions.add(1f)
                     shader = if (style == STYLE_CIRCLE)
                         SweepGradient(width / 2f, height / 2f, if (isClockwise) this else this.reversedArray(), positions.toFloatArray())
+                    else if (style == STYLE_BAR_HORIZONTAL)
+                        LinearGradient(0f, h / 2f, w.toFloat(), h / 2f, this, positions.toFloatArray(), Shader.TileMode.CLAMP)
                     else
-                        LinearGradient(0f, 0f, 0f, width.toFloat(), this, positions.toFloatArray(), Shader.TileMode.CLAMP)
+                        LinearGradient(w / 2f, 0f, w / 2f, h.toFloat(), this, positions.toFloatArray(), Shader.TileMode.CLAMP)
                 }
             }
         }
@@ -302,10 +441,18 @@ class ProgressView @JvmOverloads constructor(
             paintProgress.shader = null
             paintProgress.color = this[0]
             paintProgress.style = Paint.Style.FILL
-            canvas.drawCircle(width - progressSize / 2f, height / 2f, progressSize / 2f, paintProgress)
+            canvas.drawCircle(width - drawRectF.left, height / 2f, progressSize / 2f, paintProgress)
         }
 
         canvas.restore()
+
+        if (!showProgressValue) return
+        //绘制进度值
+        val fm = paintText.fontMetrics
+        val showText = if (valueTextInt) "${progress.toInt()}%" else "${progress}%"
+        val x = (drawRectF.width() - paintText.measureText(showText)) / 2f
+        val baseLine = (drawRectF.height() + (fm.bottom - fm.top)) / 2f - fm.descent
+        canvas.drawText(showText, x, baseLine, paintText)
     }
 
     /**
@@ -335,7 +482,18 @@ class ProgressView @JvmOverloads constructor(
         } else {
             paintProgress.color = progressColor
         }
-        canvas.drawLine(drawRectF.left, height / 2f, drawRectF.left + getProgressValue(), height / 2f, paintProgress)
+        val curProgress = drawRectF.left + getProgressValue()
+        canvas.drawLine(drawRectF.left, height / 2f, curProgress, height / 2f, paintProgress)
+
+        if (showThumb) {
+            paintProgress.shader = null
+            paintProgress.color = thumbColor
+            if (thumbShadow) {
+                paintShadow.setShadowLayer(thumbShadowSize, 0f, 0f, thumbShadowColor)
+                canvas.drawCircle(curProgress, height / 2f, thumbRadius, paintShadow)
+            }
+            canvas.drawCircle(curProgress, height / 2f, thumbRadius, paintProgress)
+        }
     }
 
     /**
@@ -354,5 +512,12 @@ class ProgressView @JvmOverloads constructor(
         }
         canvas.drawLine(width / 2f, drawRectF.bottom, width / 2f, drawRectF.bottom - getProgressValue(), paintProgress)
     }
+
+    override fun onTouchEvent(event: MotionEvent?): Boolean {
+        if (style == STYLE_CIRCLE) return super.onTouchEvent(event)
+
+        return super.onTouchEvent(event)
+    }
+
 
 }
