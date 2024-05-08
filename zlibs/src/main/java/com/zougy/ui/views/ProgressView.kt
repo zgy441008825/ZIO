@@ -6,12 +6,18 @@ import android.graphics.Canvas
 import android.graphics.Color
 import android.graphics.LinearGradient
 import android.graphics.Paint
+import android.graphics.RectF
 import android.graphics.Shader
 import android.graphics.SweepGradient
 import android.text.TextPaint
 import android.util.AttributeSet
 import android.view.View
+import com.zougy.log.LogUtils
 import com.zougy.ziolib.R
+import kotlin.math.PI
+import kotlin.math.cos
+import kotlin.math.min
+import kotlin.math.sin
 
 /**
  * @Description:
@@ -45,10 +51,14 @@ class ProgressView @JvmOverloads constructor(
          */
         const val STYLE_BAR_VERTICAL = 2
 
+        const val STROKE_CAP_ROUND = 1
 
-        const val PROGRESS_MAX = 100
+        const val STROKE_CAP_SQUARE = 2
 
-        const val PROGRESS_MIN = 0
+
+        const val PROGRESS_MAX = 100f
+
+        const val PROGRESS_MIN = 0f
 
     }
 
@@ -87,11 +97,6 @@ class ProgressView @JvmOverloads constructor(
     private var shader: Shader? = null
 
     /**
-     * 圆点的渐变shader；如果设置圆环进度，并且进度条是渐变色，会使用这个shader在圆环开始的绘制一个圆形，不然渐变进度显示会有问题
-     */
-    private var circlePointShader: Shader? = null
-
-    /**
      * 旋转角度；当为圆环无限进度时，开启的动画。
      */
     private var degrees = 0f
@@ -99,7 +104,7 @@ class ProgressView @JvmOverloads constructor(
     /**
      * 是否顺时针旋转；当进度条为圆环进度时配置有效
      */
-    private var isClockwise = false
+    private var isClockwise = true
 
     /**
      * 是否开启无限循环动画；当设置进度为圆环进度时可配置
@@ -112,23 +117,41 @@ class ProgressView @JvmOverloads constructor(
     private var loopAnimation: ValueAnimator? = null
 
     /**
+     * 画笔笔头样式
+     */
+    private var strokeCap = STROKE_CAP_SQUARE
+
+    /**
+     * 绘制的矩形区域
+     */
+    private val drawRectF = RectF()
+
+    /**
      * 当前的进度
      */
-    var progress = 0
+    var progress = 0f
         set(value) {
             if (style == STYLE_CIRCLE && isLoop) return
-            field = value
+            if (value > PROGRESS_MAX)
+                field = PROGRESS_MAX
+            else if (value < PROGRESS_MIN)
+                field = PROGRESS_MIN
+            else
+                field = value
             postInvalidate()
         }
 
     init {
         if (attrs != null) {
             val type = context.obtainStyledAttributes(attrs, R.styleable.ProgressView)
+            progress = type.getFloat(R.styleable.ProgressView_progressViewValue, progress)
             progressSize = type.getInt(R.styleable.ProgressView_progressSize, progressSize)
             progressBgColor = type.getColor(R.styleable.ProgressView_progressViewBgColor, progressBgColor)
             progressColor = type.getColor(R.styleable.ProgressView_progressViewColor, progressColor)
             isLoop = type.getBoolean(R.styleable.ProgressView_progressViewIsLoop, false)
             style = type.getInt(R.styleable.ProgressView_progressViewStyle, style)
+            strokeCap = type.getInt(R.styleable.ProgressView_progressStrokeCap, strokeCap)
+            isClockwise = type.getBoolean(R.styleable.ProgressView_progressViewIsClockwise, isClockwise)
             type.getString(R.styleable.ProgressView_progressGradient)?.apply {
                 val array = this.split(",")
                 if (array.isNotEmpty()) {
@@ -141,15 +164,20 @@ class ProgressView @JvmOverloads constructor(
             type.recycle()
         }
 
-        paintProgress.isAntiAlias = true
         paintText.isAntiAlias = true
+
+        paintProgress.isAntiAlias = true
         paintProgress.strokeWidth = progressSize.toFloat()
-        paintProgress.style = Paint.Style.STROKE
-        paintProgress.strokeCap = Paint.Cap.ROUND
         paintProgress.color = progressColor
 
+        if (strokeCap == STROKE_CAP_ROUND) {
+            paintProgress.strokeCap = Paint.Cap.ROUND
+        } else {
+            paintProgress.strokeCap = Paint.Cap.SQUARE
+        }
+
         if (style == STYLE_CIRCLE && isLoop) {
-            progress = 100
+            progress = 100f
             loopAnimation = if (isClockwise) ValueAnimator.ofInt(0, 360) else ValueAnimator.ofInt(0, -360)
                 .apply {
                     duration = 1000L
@@ -159,14 +187,30 @@ class ProgressView @JvmOverloads constructor(
                         postInvalidate()
                     }
                 }
+            startAnimator()
+        }
+    }
+
+    override fun onMeasure(widthMeasureSpec: Int, heightMeasureSpec: Int) {
+        val width = MeasureSpec.getSize(widthMeasureSpec)
+        val height = MeasureSpec.getSize(heightMeasureSpec)
+        if (style == STYLE_CIRCLE) {
+            val size = min(width, height)
+            super.onMeasure(MeasureSpec.makeMeasureSpec(size, MeasureSpec.AT_MOST), MeasureSpec.makeMeasureSpec(size, MeasureSpec.AT_MOST))
+        } else {
+            super.onMeasure(widthMeasureSpec, heightMeasureSpec)
         }
     }
 
     override fun onSizeChanged(w: Int, h: Int, oldw: Int, oldh: Int) {
         super.onSizeChanged(w, h, oldw, oldh)
+        drawRectF.left = progressSize / 2f
+        drawRectF.top = progressSize / 2f
+        drawRectF.right = w - progressSize / 2f
+        drawRectF.bottom = h - progressSize / 2f
+
         if (progressColors != null && progressColors!!.isNotEmpty()) {
             progressColors?.apply {
-                paintProgress.color = this[0]
                 if (size > 1) {
                     val positions = mutableListOf<Float>()
                     positions.add(0f)
@@ -176,14 +220,10 @@ class ProgressView @JvmOverloads constructor(
                     }
                     positions.add(1f)
                     shader = if (style == STYLE_CIRCLE)
-                        SweepGradient(width / 2f, height / 2f, this, positions.toFloatArray())
+                        SweepGradient(width / 2f, height / 2f, if (isClockwise) this else this.reversedArray(), positions.toFloatArray())
                     else
                         LinearGradient(0f, 0f, 0f, width.toFloat(), this, positions.toFloatArray(), Shader.TileMode.CLAMP)
                 }
-                circlePointShader = LinearGradient(
-                    (width - progressSize).toFloat(), height / 2f, (width - progressSize).toFloat(), (height + progressSize) / 2f,
-                    paintProgress.color, Color.TRANSPARENT, Shader.TileMode.CLAMP
-                )
             }
         }
     }
@@ -205,11 +245,11 @@ class ProgressView @JvmOverloads constructor(
             }
 
             STYLE_BAR_HORIZONTAL -> {
-
+                drawHorizontal(canvas)
             }
 
             STYLE_BAR_VERTICAL -> {
-
+                drawVertical(canvas)
             }
         }
 
@@ -218,35 +258,101 @@ class ProgressView @JvmOverloads constructor(
     /**
      * 根据当前的进度值计算实际需要绘制的进度
      */
-    private fun getProgress(): Float {
-        if (style == STYLE_CIRCLE) {
+    private fun getProgressValue(): Float {
+        return if (style == STYLE_CIRCLE) {
             if (isLoop) {
-                return 360f
-            }
-            return 360f / PROGRESS_MAX * progress
+                360f
+            } else
+                360f / PROGRESS_MAX * progress
         } else {
-            return (if (style == STYLE_BAR_HORIZONTAL) width else height).toFloat() / PROGRESS_MAX * progress
+            if (style == STYLE_BAR_HORIZONTAL)
+                (drawRectF.width() / PROGRESS_MAX) * progress
+            else
+                (drawRectF.height() / PROGRESS_MAX) * progress
         }
     }
 
+    /**
+     * 绘制圆环进度条
+     */
     private fun drawCircleProgress(canvas: Canvas) {
+        paintProgress.style = Paint.Style.STROKE
+        paintProgress.strokeCap = Paint.Cap.ROUND
+
+        //绘制背景
+        paintProgress.shader = null
+        paintProgress.color = progressBgColor
+        canvas.drawArc(
+            drawRectF, 0f, 360f, false, paintProgress
+        )
+
+        //绘制进度
         canvas.save()
-        canvas.rotate(degrees, width / 2f, height / 2f)
+        canvas.rotate(if (isLoop) degrees else -90f, width / 2f, height / 2f)
         shader?.apply {
             paintProgress.shader = this
         }
-        paintProgress.style = Paint.Style.STROKE
-        paintProgress.strokeCap = Paint.Cap.ROUND
+        paintProgress.color = progressColor
         canvas.drawArc(
-            0f + progressSize / 2f, 0f + progressSize / 2f, width.toFloat() - progressSize / 2f, height.toFloat() - progressSize / 2f,
-            0f, getProgress(), false, paintProgress
+            drawRectF, 0f, if (isClockwise) getProgressValue() else -getProgressValue(), false, paintProgress
         )
-        circlePointShader?.apply {
-            paintProgress.shader = this
+
+        //绘制最后一个点上的圆点，因为如果有渐变色，收尾相连的地方颜色过度是一条线。
+        progressColors?.apply {
+            paintProgress.shader = null
+            paintProgress.color = this[0]
+            paintProgress.style = Paint.Style.FILL
+            canvas.drawCircle(width - progressSize / 2f, height / 2f, progressSize / 2f, paintProgress)
         }
-        paintProgress.style = Paint.Style.FILL
-        canvas.drawCircle(width - progressSize / 2f, height / 2f, progressSize / 2f, paintProgress)
+
         canvas.restore()
+    }
+
+    /**
+     * 计算弧形终点的位置
+     */
+    private fun calculateArcStartPoint(cx: Float, cy: Float, radius: Float, startAngleDegrees: Float): Pair<Float, Float> {
+        // 确保角度转换为弧度
+        val startAngleRadians = startAngleDegrees * PI / 180.0
+
+        // 计算起始点坐标
+        val startX = cx + radius * cos(startAngleRadians)
+        val startY = cy + radius * sin(startAngleRadians)
+        return Pair(startX.toFloat(), startY.toFloat())
+    }
+
+    /**
+     * 绘制水平进度条
+     */
+    private fun drawHorizontal(canvas: Canvas) {
+        //绘制背景
+        paintProgress.shader = null
+        paintProgress.color = progressBgColor
+        canvas.drawLine(drawRectF.left, height / 2f, drawRectF.right, height / 2f, paintProgress)
+
+        if (shader != null) {
+            paintProgress.shader = shader
+        } else {
+            paintProgress.color = progressColor
+        }
+        canvas.drawLine(drawRectF.left, height / 2f, drawRectF.left + getProgressValue(), height / 2f, paintProgress)
+    }
+
+    /**
+     * 绘制垂直进度条
+     */
+    private fun drawVertical(canvas: Canvas) {
+        //绘制背景
+        paintProgress.shader = null
+        paintProgress.color = progressBgColor
+        canvas.drawLine(width / 2f, drawRectF.top, width / 2f, drawRectF.bottom, paintProgress)
+
+        if (shader != null) {
+            paintProgress.shader = shader
+        } else {
+            paintProgress.color = progressColor
+        }
+        canvas.drawLine(width / 2f, drawRectF.bottom, width / 2f, drawRectF.bottom - getProgressValue(), paintProgress)
     }
 
 }

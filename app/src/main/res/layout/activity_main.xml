@@ -6,9 +6,17 @@
     android:orientation="vertical">
 
     <com.zougy.ui.views.ProgressView
-        android:layout_width="@dimen/dp_100"
-        android:layout_height="@dimen/dp_100"
-        app:proInfiniteMode="true"
-        app:progressGradient="#00FFFF,#FF0000,#00000000"
-        app:progressSize="40" />
+        android:id="@+id/progressLoop"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:progressGradient="#FF0000,#00FF00"
+        app:progressSize="30"
+        app:progressStrokeCap="ROUND"
+        app:progressViewBgColor="#AAA"
+        app:progressViewColor="@color/colorAccent"
+        app:progressViewIsClockwise="false"
+        app:progressViewIsLoop="false"
+        app:progressViewStyle="CIRCLE"
+        app:progressViewValue="40" />
+
 </LinearLayout>

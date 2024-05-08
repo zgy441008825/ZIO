@@ -97,11 +97,17 @@
         <attr name="progressGradient" format="string" />
         <attr name="progressViewBgColor" format="color" />
         <attr name="progressViewColor" format="color" />
-        <attr name="progressViewIsLoop" format="boolean"/>
+        <attr name="progressViewIsLoop" format="boolean" />
+        <attr name="progressViewValue" format="float" />
+        <attr name="progressViewIsClockwise" format="boolean" />
         <attr name="progressViewStyle" format="enum">
-            <enum name="CIRCLE">0</enum>
-            <enum name="BAR_HORIZONTAL">1</enum>
-            <enum name="BAR_VERTICAL">2</enum>
+            <enum name="CIRCLE" value="0" />
+            <enum name="BAR_HORIZONTAL" value="1" />
+            <enum name="BAR_VERTICAL" value="2" />
+        </attr>
+        <attr name="progressStrokeCap" format="enum">
+            <enum name="ROUND" value="1"/>
+            <enum name="SQUARE" value="2"/>
         </attr>
     </declare-styleable>
 </resources>

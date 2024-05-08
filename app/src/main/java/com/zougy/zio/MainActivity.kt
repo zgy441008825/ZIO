@@ -1,6 +1,7 @@
 package com.zougy.zio
 
 import android.os.Bundle
+import com.zougy.ui.views.ProgressView
 
 
 class MainActivity : BaseActivity() {
