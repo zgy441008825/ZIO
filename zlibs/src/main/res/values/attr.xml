@@ -93,21 +93,36 @@
     </declare-styleable>
 
     <declare-styleable name="ProgressView">
-        <attr name="progressSize" format="dimension|integer" />
-        <attr name="progressGradient" format="string" />
+        <!-- 进度条宽度 -->
+        <attr name="progressViewSize" format="dimension|integer" />
+        <attr name="progressViewGradient" format="string" />
         <attr name="progressViewBgColor" format="color" />
         <attr name="progressViewColor" format="color" />
         <attr name="progressViewIsLoop" format="boolean" />
         <attr name="progressViewValue" format="float" />
+        <attr name="progressViewValueInt" format="boolean" />
         <attr name="progressViewIsClockwise" format="boolean" />
         <attr name="progressViewStyle" format="enum">
             <enum name="CIRCLE" value="0" />
             <enum name="BAR_HORIZONTAL" value="1" />
             <enum name="BAR_VERTICAL" value="2" />
         </attr>
-        <attr name="progressStrokeCap" format="enum">
-            <enum name="ROUND" value="1"/>
-            <enum name="SQUARE" value="2"/>
+        <attr name="progressViewStrokeCap" format="enum">
+            <enum name="ROUND" value="1" />
+            <enum name="SQUARE" value="2" />
         </attr>
+
+        <attr name="progressViewValueShow" format="boolean" />
+        <attr name="progressViewValueTextSize" format="dimension" />
+        <attr name="progressViewValueTextColor" format="color" />
+
+        <attr name="progressViewIsSeekBar" format="boolean" />
+        <attr name="progressViewShowThumb" format="boolean" />
+        <attr name="progressViewThumbRadius" format="dimension" />
+        <attr name="progressViewThumbColor" format="color" />
+
+        <attr name="progressViewThumbShowShadow" format="boolean" />
+        <attr name="progressViewThumbShadowColor" format="color" />
+        <attr name="progressViewThumbShadowSize" format="dimension|integer" />
     </declare-styleable>
 </resources>

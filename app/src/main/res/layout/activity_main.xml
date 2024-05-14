@@ -9,14 +9,23 @@
         android:id="@+id/progressLoop"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        app:progressGradient="#FF0000,#00FF00"
-        app:progressSize="30"
-        app:progressStrokeCap="ROUND"
         app:progressViewBgColor="#AAA"
         app:progressViewColor="@color/colorAccent"
+        app:progressViewGradient="#FF0000,#00FF00,#0000FF"
         app:progressViewIsClockwise="false"
         app:progressViewIsLoop="false"
+        app:progressViewShowThumb="true"
+        app:progressViewSize="@dimen/dp_10"
+        app:progressViewStrokeCap="SQUARE"
         app:progressViewStyle="CIRCLE"
-        app:progressViewValue="40" />
+        app:progressViewThumbColor="@color/white"
+        app:progressViewThumbRadius="@dimen/dp_20"
+        app:progressViewThumbShadowColor="@color/colorBaseText"
+        app:progressViewThumbShadowSize="1"
+        app:progressViewThumbShowShadow="true"
+        app:progressViewValue="30"
+        app:progressViewValueInt="true"
+        app:progressViewValueShow="true"
+        app:progressViewValueTextSize="@dimen/dp_100" />
 
 </LinearLayout>
