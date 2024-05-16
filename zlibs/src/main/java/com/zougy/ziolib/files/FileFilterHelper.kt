@@ -69,7 +69,7 @@ object FileFilterHelper {
         return FileFilter { filter(typeEnum, it, showHidden) }
     }
 
-    fun filter(fileTypeEnum: FileTypeEnum, fileName: File, showHidden: Boolean): Boolean {
+    private fun filter(fileTypeEnum: FileTypeEnum, fileName: File, showHidden: Boolean): Boolean {
         if (!showHidden && fileName.isHidden) return false
         if (fileName.isDirectory) return fileTypeEnum == FileTypeEnum.FILE_TYPE_DIR
         val suffix = getSuffix(fileTypeEnum) ?: return false

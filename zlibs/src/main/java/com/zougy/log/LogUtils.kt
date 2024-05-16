@@ -101,24 +101,24 @@ object LogUtils {
         if (enableLog && logLevel <= LoggerLevel.LEVEL_D) {
             when (msg) {
                 is Array<*> -> {
-                    print(tag, msg.contentToString())
+                    print(tag, msg.contentToString(), level)
                 }
 
                 is List<*> -> {
                     if (msg.isEmpty()) {
-                        print(tag, "msg is null")
+                        print(tag, "msg is null", level)
                         return
                     }
-                    print(tag, "start print list ${msg[0]?.javaClass}")
+                    print(tag, "start print list ${msg[0]?.javaClass}", level)
                     msg.forEach {
                         iLogger.d(tag, if (showMethodInfo) "${getMethodInfo()} $it" else "$it")
-                        print(tag, it.toString())
+                        print(tag, it.toString(), level)
                     }
-                    print(tag, "end print list ${msg[0]?.javaClass}")
+                    print(tag, "end print list ${msg[0]?.javaClass}", level)
                 }
 
                 else -> {
-                    print(tag, msg.toString())
+                    print(tag, msg.toString(), level)
                 }
             }
         }
