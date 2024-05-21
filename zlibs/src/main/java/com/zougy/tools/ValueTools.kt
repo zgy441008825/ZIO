@@ -124,9 +124,12 @@ fun String.signMD5(): String {
     return md5.toString()
 }
 
+/**
+ * 开启倒计时
+ */
 fun Long.countDown(delay: Long = 0, onUpdate: (Int) -> Unit, onEnd: () -> Unit = {}): Disposable {
     return Flowable.interval(delay, 1L, TimeUnit.SECONDS)
-        .take(this.toLong())
+        .take(this)
         .map {
             this - it
         }
@@ -141,6 +144,9 @@ fun Long.countDown(delay: Long = 0, onUpdate: (Int) -> Unit, onEnd: () -> Unit =
         })
 }
 
+/**
+ * 开启倒计时
+ */
 fun Int.countDown(delay: Long = 0, onUpdate: (Int) -> Unit, onEnd: () -> Unit = {}): Disposable {
     return this.toLong().countDown(delay, onUpdate, onEnd)
 }

@@ -7,7 +7,7 @@ import com.zougy.tools.JsonTools
 import org.xutils.x
 
 /**
- * @Description:
+ * @Description: 获取、设置系统设置值相关方法
  *
  * @Author: GaoYuanZou
  *

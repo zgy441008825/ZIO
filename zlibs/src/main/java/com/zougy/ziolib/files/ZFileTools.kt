@@ -113,11 +113,11 @@ object ZFileTools {
         child: Boolean = true,
         showHidden: Boolean = false,
         callback: SearchFileCallback? = null
-    ): List<File>? {
-        if (!path.exists() || path.isFile) return null
+    ): List<File> {
         val fileList = mutableListOf<File>()
+        if (!path.exists() || path.isFile) return fileList
         val fileFilter: FileFilter = filter ?: FileFilterHelper.getFileFilter(typeEnum, showHidden)
-        val files = path.listFiles() ?: return null
+        val files = path.listFiles() ?: return fileList
         for (f in files) {
             if (f.isFile) {
                 if (fileFilter.accept(f)) {
@@ -128,7 +128,7 @@ object ZFileTools {
                 if (child) {
                     callback?.onInDir(f)
                     val fList = searchFile(f, typeEnum, fileFilter, true, showHidden, callback)
-                    if (fList != null)
+                    if (fList.isNotEmpty())
                         fileList.addAll(fList)
                 }
             }
@@ -211,6 +211,7 @@ object ZFileTools {
                 if (!desFile.delete())
                     callback?.onError(IOException("delete $desFile error"), false)
             } else {
+                callback?.onSuccess(desFile)
                 return
             }
         } else if (!createFile(desFile.absolutePath)) {

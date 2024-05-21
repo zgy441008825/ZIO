@@ -13,7 +13,7 @@ import kotlin.math.log
  * @Author:ZouGaoYuan
  * @Email:441008825@qq.com
  */
-class ZLogSaver constructor(private var logRootDir: String) : ILogSaver {
+internal class ZLogSaver constructor(private var logRootDir: String) : ILogSaver {
 
     /**
      * 日志文件命名的前缀

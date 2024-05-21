@@ -10,7 +10,7 @@ import org.xutils.db.sqlite.WhereBuilder
  * Email:441008824@qq.com
  */
 
-class DownloadDBMgr private constructor() : BaseDBMgr() {
+internal class DownloadDBMgr private constructor() : BaseDBMgr() {
 
     init {
         init(ConstantValue.DB_DL_NAME, ConstantValue.DB_DL_VERSION)

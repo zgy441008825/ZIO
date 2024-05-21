@@ -209,6 +209,9 @@ class CircleProgressView : View {
         }
     }
 
+    /**
+     * 绘制无限循环的圆形进度条
+     */
     private fun drawInfiniteMode(canvas: Canvas) {
         paint.shader = null
         paint.style = Paint.Style.STROKE
@@ -237,6 +240,9 @@ class CircleProgressView : View {
 
     private val valueAnimation = ValueAnimator.ofFloat(90f, -270f)
 
+    /**
+     * 开启无限循环的动画
+     */
     private fun startInfinite() {
         progress = 80f
         if (!valueAnimation.isRunning) {

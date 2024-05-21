@@ -77,75 +77,13 @@ object LogUtils {
         }
     }
 
-    private fun print(tag: String = TAG, msg: String, level: Int = LoggerLevel.LEVEL_D) {
-        when (level) {
-            LoggerLevel.LEVEL_D -> {
-                d(tag, msg)
-            }
-
-            LoggerLevel.LEVEL_I -> {
-                i(tag, msg)
-            }
-
-            LoggerLevel.LEVEL_E -> {
-                e(tag, msg, null)
-            }
-
-            LoggerLevel.LEVEL_W -> {
-                w(tag, msg, null)
-            }
-        }
-    }
-
-    fun extend(tag: String = TAG, msg: Any, level: Int = LoggerLevel.LEVEL_D) {
-        if (enableLog && logLevel <= LoggerLevel.LEVEL_D) {
-            when (msg) {
-                is Array<*> -> {
-                    print(tag, msg.contentToString(), level)
-                }
-
-                is List<*> -> {
-                    if (msg.isEmpty()) {
-                        print(tag, "msg is null", level)
-                        return
-                    }
-                    print(tag, "start print list ${msg[0]?.javaClass}", level)
-                    msg.forEach {
-                        iLogger.d(tag, if (showMethodInfo) "${getMethodInfo()} $it" else "$it")
-                        print(tag, it.toString(), level)
-                    }
-                    print(tag, "end print list ${msg[0]?.javaClass}", level)
-                }
-
-                else -> {
-                    print(tag, msg.toString(), level)
-                }
-            }
-        }
-    }
-
-    /**
-     * 会识别msg类型，将数组或者列表的内容展开打印,如果是数组则调用contentToString方法返回string，如果是list，则分行打印列表内容。
-     */
-    fun extendD(tag: String = TAG, msg: Any) {
-        extend(tag, msg)
-    }
-
     fun i(tag: String = TAG, msg: Any) {
         if (enableLog && logLevel <= LoggerLevel.LEVEL_I) {
             iLogger.i(getTag(tag), if (showMethodInfo) "${getMethodInfo()} $msg" else "$msg")
         }
     }
 
-    /**
-     * 会识别msg类型，将数组或者列表的内容展开打印,如果是数组则调用contentToString方法返回string，如果是list，则分行打印列表内容。
-     */
-    fun extendI(tag: String = TAG, msg: Any) {
-        extend(tag, msg, LoggerLevel.LEVEL_I)
-    }
-
-
-    fun w(tag: String = TAG, msg: Any, exception: Throwable?) {
+    fun w(tag: String = TAG, msg: Any, exception: Throwable? = null) {
         if (enableLog && logLevel <= LoggerLevel.LEVEL_I) {
             iLogger.w(getTag(tag), if (showMethodInfo) "${getMethodInfo()} $msg" else "$msg", exception)
         }
