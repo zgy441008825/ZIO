@@ -3,6 +3,7 @@ package com.zougy.zio
 import android.app.Application
 import com.zougy.log.LogUtils
 import com.zougy.tools.DefaultApkCrashHandler
+import org.xutils.x
 
 /**
  * Description:<br>
@@ -13,5 +14,6 @@ import com.zougy.tools.DefaultApkCrashHandler
 class MyApplication : Application() {
     override fun onCreate() {
         super.onCreate()
+        x.Ext.init(this)
     }
 }

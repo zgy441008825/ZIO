@@ -13,6 +13,10 @@ import android.view.ViewGroup
 import android.widget.TextView
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import androidx.viewpager.widget.PagerAdapter
+import androidx.viewpager.widget.ViewPager
+import com.bm.library.PhotoView
+import com.bumptech.glide.Glide
 import com.chad.library.adapter4.BaseQuickAdapter
 import com.chad.library.adapter4.QuickAdapterHelper
 import com.chad.library.adapter4.loadState.LoadState
@@ -22,9 +26,37 @@ import com.zougy.log.LogUtils
 import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers
 import io.reactivex.rxjava3.core.Flowable
 import io.reactivex.rxjava3.schedulers.Schedulers
+import org.xutils.x
 import java.io.File
 import java.util.concurrent.Executors
 
+class MyViewPagerAdapter : PagerAdapter() {
+
+    override fun instantiateItem(container: ViewGroup, position: Int): Any {
+        val photoView = PhotoView(x.app())
+        photoView.enable()
+        photoView.maxScale = 3f
+        container.addView(photoView)
+        Glide.with(photoView)
+            .load(R.drawable.img_test)
+            .into(photoView)
+        return photoView
+    }
+
+
+    override fun destroyItem(container: ViewGroup, position: Int, `object`: Any) {
+        container.removeView(`object` as PhotoView)
+    }
+
+    override fun getCount(): Int {
+        return 10
+    }
+
+    override fun isViewFromObject(view: View, `object`: Any): Boolean {
+        return view.equals(`object`)
+    }
+
+}
 
 class MainActivity : BaseActivity() {
 
@@ -48,6 +80,11 @@ class MainActivity : BaseActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
+        val viewPager = findViewById<ViewPager>(R.id.viewPager)
+        viewPager.adapter = MyViewPagerAdapter()
+    }
+
+    private fun initFiles() {
         val p = cacheDir
         filePath = File(p, "第1回.mp4")
         if (checkSelfPermission(Manifest.permission.READ_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
@@ -97,9 +134,9 @@ class MainActivity : BaseActivity() {
 
         LogUtils.e(TAG, "onCreate path:${Environment.getExternalStorageDirectory()}")
 
-        val acMainRecyclerView = findViewById<RecyclerView>(R.id.acMainRecyclerView)
-        acMainRecyclerView.adapter = adapterHelper.adapter
-        acMainRecyclerView.layoutManager = LinearLayoutManager(this)
+//        val acMainRecyclerView = findViewById<RecyclerView>(R.id.acMainRecyclerView)
+//        acMainRecyclerView.adapter = adapterHelper.adapter
+//        acMainRecyclerView.layoutManager = LinearLayoutManager(this)
     }
 
     override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<out String>, grantResults: IntArray) {
