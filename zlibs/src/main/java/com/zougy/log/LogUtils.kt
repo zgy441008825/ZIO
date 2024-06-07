@@ -43,9 +43,9 @@ object LogUtils {
     var showMethodInfo = true
 
     /**
-     * TAG的后缀 一般可以用来设置版本号
+     * TAG的前缀 一般设置应用的模块名称
      */
-    var tagSuffix = ""
+    var tagPrefix = ""
 
     /**
      * 获取方法信息
@@ -68,7 +68,7 @@ object LogUtils {
     }
 
     private fun getTag(tag: String = TAG): String {
-        return "${tag}_$tagSuffix"
+        return "$tagPrefix $tag"
     }
 
     fun d(tag: String = TAG, msg: Any) {
@@ -84,13 +84,13 @@ object LogUtils {
     }
 
     fun w(tag: String = TAG, msg: Any, exception: Throwable? = null) {
-        if (enableLog && logLevel <= LoggerLevel.LEVEL_I) {
+        if (enableLog && logLevel <= LoggerLevel.LEVEL_W) {
             iLogger.w(getTag(tag), if (showMethodInfo) "${getMethodInfo()} $msg" else "$msg", exception)
         }
     }
 
     fun e(tag: String = TAG, msg: Any, exception: Throwable? = null) {
-        if (enableLog && logLevel <= LoggerLevel.LEVEL_I) {
+        if (enableLog && logLevel <= LoggerLevel.LEVEL_E) {
             iLogger.e(getTag(tag), if (showMethodInfo) "${getMethodInfo()} $msg" else "$msg", exception)
         }
     }

@@ -1,12 +1,26 @@
 <resources>
 
     <!-- Base application theme. -->
-    <style name="AppTheme" parent="Theme.AppCompat.Light.NoActionBar">
-        <!-- Customize your theme here. -->
-        <item name="colorPrimary">@color/colorPrimary</item>
-        <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
-        <item name="colorAccent">@color/colorAccent</item>
-<!--        <item name="android:windowNoTitle">true</item>-->
+    <style name="AppTheme" parent="Theme.AppCompat.NoActionBar">
+        <item name="android:windowBackground">@android:color/transparent</item> <!-- 背景色透明 -->
+        <item name="android:windowIsTranslucent">true</item> <!-- 是否有透明属性 -->
+        <item name="android:backgroundDimEnabled">false</item> <!-- 背景是否半透明 -->
+        <item name="android:statusBarColor">@android:color/transparent</item> <!-- 状态栏透明 -->
+        <item name="android:windowAnimationStyle">@android:style/Animation.Translucent</item> <!-- activity窗口切换效果 -->
+    </style>
+
+    <!-- 修改后的透明主题，确保继承自 AppCompat -->
+    <style name="TransparentAppCompatTheme" parent="Theme.AppCompat.Dialog">Theme.DeviceDefault.Dialog
+        <!-- 设置透明背景 -->
+        <item name="android:windowIsTranslucent">true</item>
+        <item name="android:windowBackground">@android:color/transparent</item>
+        <item name="android:windowContentOverlay">@null</item>
+        <!-- 移除标题栏 -->
+        <item name="android:windowNoTitle">true</item>
+        <!-- 设置浮动，可选，根据需要调整 -->
+        <item name="android:windowIsFloating">true</item>
+        <!-- 禁止背景变暗效果 -->
+        <item name="android:backgroundDimEnabled">false</item>
     </style>
 
     <style name="Keyboard">

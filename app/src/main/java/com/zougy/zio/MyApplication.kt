@@ -14,6 +14,7 @@ import org.xutils.x
 class MyApplication : Application() {
     override fun onCreate() {
         super.onCreate()
+        LogUtils.tagPrefix = "ZIO-${BuildConfig.VERSION_NAME}"
         x.Ext.init(this)
     }
 }

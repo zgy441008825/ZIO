@@ -1,7 +1,14 @@
+plugins {
+    id "com.vanniktech.maven.publish" version "0.28.0"
+}
+
+import com.vanniktech.maven.publish.SonatypeHost
+
 apply plugin: 'com.android.library'
 apply plugin: 'kotlin-android'
 apply plugin: 'kotlin-parcelize'
-
+//apply plugin: 'maven-publish'
+//apply plugin: 'signing'
 
 android {
 
@@ -85,4 +92,42 @@ dependencies {
     implementation 'io.reactivex.rxjava3:rxjava:3.1.8'
     implementation 'io.reactivex.rxjava3:rxkotlin:3.0.1'
     implementation 'io.reactivex.rxjava3:rxandroid:3.0.2'
+}
+
+mavenPublishing {
+//    publishToMavenCentral(SonatypeHost.DEFAULT)
+    // or when publishing to https://s01.oss.sonatype.org
+//    publishToMavenCentral(SonatypeHost.S01)
+    // or when publishing to https://central.sonatype.com/
+    publishToMavenCentral(SonatypeHost.CENTRAL_PORTAL)
+
+    coordinates("io.github.zgy441008825", "zlibs", "1.0.1.15")
+
+    pom {
+        name = "ZTools"
+        description = "A description of what my library does."
+        inceptionYear = "2024"
+        url = "https://github.com/zgy441008825/ZIO"
+        licenses {
+            license {
+                name = "The Apache License, Version 2.0"
+                url = "http://www.apache.org/licenses/LICENSE-2.0.txt"
+                distribution = "http://www.apache.org/licenses/LICENSE-2.0.txt"
+            }
+        }
+        developers {
+            developer {
+                id = "zgy441008825"
+                name = "zgy441008825"
+                url = "https://github.com/zgy441008825/"
+            }
+        }
+        scm {
+            url = "https://github.com/zgy441008825/ZIO"
+            connection = "scm:git:https://github.com/zgy441008825/ZIO.git"
+            developerConnection = "scm:git:https://github.com/zgy441008825/ZIO.git"
+        }
+    }
+
+    signAllPublications()
 }
