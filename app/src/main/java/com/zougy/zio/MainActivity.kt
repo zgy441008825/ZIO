@@ -7,22 +7,23 @@ import android.content.pm.PackageManager
 import android.media.MediaMetadataRetriever
 import android.os.Bundle
 import android.os.Environment
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.RadioGroup
 import android.widget.TextView
-import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import androidx.viewpager.widget.PagerAdapter
-import androidx.viewpager.widget.ViewPager
 import com.bm.library.PhotoView
-import com.bumptech.glide.Glide
 import com.chad.library.adapter4.BaseQuickAdapter
 import com.chad.library.adapter4.QuickAdapterHelper
 import com.chad.library.adapter4.loadState.LoadState
 import com.chad.library.adapter4.loadState.trailing.TrailingLoadStateAdapter
 import com.chad.library.adapter4.viewholder.QuickViewHolder
 import com.zougy.log.LogUtils
+import com.zougy.ui.widget.setting.IOnItemClick
+import com.zougy.ui.widget.setting.SettingTabControl
 import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers
 import io.reactivex.rxjava3.core.Flowable
 import io.reactivex.rxjava3.schedulers.Schedulers
@@ -37,9 +38,9 @@ class MyViewPagerAdapter : PagerAdapter() {
         photoView.enable()
         photoView.maxScale = 3f
         container.addView(photoView)
-        Glide.with(photoView)
+        /*Glide.with(photoView)
             .load(R.drawable.img_test)
-            .into(photoView)
+            .into(photoView)*/
         return photoView
     }
 
@@ -79,9 +80,14 @@ class MainActivity : BaseActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
-
-        val viewPager = findViewById<ViewPager>(R.id.viewPager)
-        viewPager.adapter = MyViewPagerAdapter()
+        val tab = findViewById<SettingTabControl>(R.id.acMainSettingTabControl)
+        val tv = findViewById<TextView>(R.id.acMainTv)
+        Log.i(TAG, "onCreate tab:$tab  tv:$tv")
+        tab.onItemClick = object : IOnItemClick {
+            override fun onItemClick(group: RadioGroup, index: Int) {
+                Log.i(TAG, "onItemClick index:$index")
+            }
+        }
     }
 
     private fun initFiles() {

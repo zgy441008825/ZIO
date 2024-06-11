@@ -101,7 +101,7 @@ mavenPublishing {
     // or when publishing to https://central.sonatype.com/
     publishToMavenCentral(SonatypeHost.CENTRAL_PORTAL)
 
-    coordinates("io.github.zgy441008825", "zlibs", "1.0.1.15")
+    coordinates("io.github.zgy441008825", "zlibs", "1.0.1.16")
 
     pom {
         name = "ZTools"

@@ -102,7 +102,7 @@ open class SettingView(context: Context, attrs: AttributeSet? = null) : BaseWidg
 
 
     private var imgStartIcon: ImageView? = null
-    private lateinit var tvTitle: TextView
+    private var tvTitle: TextView? = null
     private var tvSubTitle: TextView? = null
 
     private var imgInfoIcon: ImageView? = null
@@ -192,7 +192,7 @@ open class SettingView(context: Context, attrs: AttributeSet? = null) : BaseWidg
         }
     }
 
-    protected open fun initView() {
+    private fun initView() {
         addContentView()
 
         setStartIcon()
@@ -253,31 +253,33 @@ open class SettingView(context: Context, attrs: AttributeSet? = null) : BaseWidg
     }
 
     private fun setTitle() {
-        tvTitle.textSize = titleSize
-        tvTitle.setTextColor(titleColor)
-        tvTitle.text = if (TextUtils.isEmpty(titleText)) "" else titleText
-        constraintSet.constrainWidth(tvTitle.id, LayoutParams.WRAP_CONTENT)
-        constraintSet.constrainHeight(tvTitle.id, LayoutParams.WRAP_CONTENT)
-        if (imgStartIcon == null) {
-            constraintSet.connect(tvTitle.id, ConstraintSet.START, ConstraintSet.PARENT_ID, ConstraintSet.START, paddingStart.toInt())
-        } else {
-            constraintSet.connect(
-                tvTitle.id,
-                ConstraintSet.START,
-                VIEW_ID_IMG_START_ICON,
-                ConstraintSet.END,
-                titleMarginMenuIcon.toInt()
-            )
-        }
-        constraintSet.connect(tvTitle.id, ConstraintSet.TOP, ConstraintSet.PARENT_ID, ConstraintSet.TOP)
+        tvTitle?.apply {
+            textSize = titleSize
+            setTextColor(titleColor)
+            text = if (TextUtils.isEmpty(titleText)) "" else titleText
+            constraintSet.constrainWidth(id, LayoutParams.WRAP_CONTENT)
+            constraintSet.constrainHeight(id, LayoutParams.WRAP_CONTENT)
+            if (imgStartIcon == null) {
+                constraintSet.connect(id, ConstraintSet.START, ConstraintSet.PARENT_ID, ConstraintSet.START, paddingStart.toInt())
+            } else {
+                constraintSet.connect(
+                    id,
+                    ConstraintSet.START,
+                    VIEW_ID_IMG_START_ICON,
+                    ConstraintSet.END,
+                    titleMarginMenuIcon.toInt()
+                )
+            }
+            constraintSet.connect(id, ConstraintSet.TOP, ConstraintSet.PARENT_ID, ConstraintSet.TOP)
 
-        if (tvSubTitle == null) {
-            constraintSet.connect(
-                tvTitle.id,
-                ConstraintSet.BOTTOM,
-                ConstraintSet.PARENT_ID,
-                ConstraintSet.BOTTOM
-            )
+            if (tvSubTitle == null) {
+                constraintSet.connect(
+                    id,
+                    ConstraintSet.BOTTOM,
+                    ConstraintSet.PARENT_ID,
+                    ConstraintSet.BOTTOM
+                )
+            }
         }
     }
 
@@ -298,19 +300,22 @@ open class SettingView(context: Context, attrs: AttributeSet? = null) : BaseWidg
 
         when (menuIconGravity) {
             MENU_ICON_GRAVITY_TOP -> {
-                constraintSet.connect(
-                    imageView.id,
-                    ConstraintSet.TOP,
-                    tvTitle.id,
-                    ConstraintSet.TOP
-                )
-                constraintSet.connect(
-                    imageView.id,
-                    ConstraintSet.BOTTOM,
-                    tvTitle.id,
-                    ConstraintSet.BOTTOM
-                )
+                tvTitle?.also {
+                    constraintSet.connect(
+                        imageView.id,
+                        ConstraintSet.TOP,
+                        it.id,
+                        ConstraintSet.TOP
+                    )
+                    constraintSet.connect(
+                        imageView.id,
+                        ConstraintSet.BOTTOM,
+                        it.id,
+                        ConstraintSet.BOTTOM
+                    )
+                }
             }
+
             MENU_ICON_GRAVITY_TOP_CENTER_VERTICAL -> {
                 constraintSet.connect(
                     imageView.id,
@@ -325,19 +330,22 @@ open class SettingView(context: Context, attrs: AttributeSet? = null) : BaseWidg
                     ConstraintSet.BOTTOM
                 )
             }
+
             MENU_ICON_GRAVITY_TOP_BOTTOM -> {
-                constraintSet.connect(
-                    imageView.id,
-                    ConstraintSet.TOP,
-                    tvSubTitle!!.id,
-                    ConstraintSet.TOP
-                )
-                constraintSet.connect(
-                    imageView.id,
-                    ConstraintSet.BOTTOM,
-                    tvSubTitle!!.id,
-                    ConstraintSet.BOTTOM
-                )
+                tvSubTitle?.also {
+                    constraintSet.connect(
+                        imageView.id,
+                        ConstraintSet.TOP,
+                        it.id,
+                        ConstraintSet.TOP
+                    )
+                    constraintSet.connect(
+                        imageView.id,
+                        ConstraintSet.BOTTOM,
+                        it.id,
+                        ConstraintSet.BOTTOM
+                    )
+                }
             }
         }
 

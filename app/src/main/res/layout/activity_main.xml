@@ -5,8 +5,19 @@
     android:layout_height="match_parent"
     android:orientation="vertical">
 
-    <androidx.viewpager.widget.ViewPager
-        android:id="@+id/viewPager"
+    <com.zougy.ui.widget.setting.SettingTabControl
+        android:id="@+id/acMainSettingTabControl"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"/>
+        android:layout_height="80dp"
+        android:background="@drawable/drawable_tab_def_bg"
+        app:tabItemBg="@drawable/drawable_tab_def_item_bg"
+        app:tabItemTextColorStateList="@color/color_tab_def_item"
+        app:tabItemTextSize="@dimen/dp_10"
+        app:tabItems="@array/items" />
+
+    <TextView
+        android:id="@+id/acMainTv"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"/>
+
 </LinearLayout>
