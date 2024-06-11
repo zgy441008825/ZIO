@@ -8,8 +8,13 @@
     <com.zougy.ui.widget.setting.SettingTabControl
         android:id="@+id/acMainSettingTabControl"
         android:layout_width="match_parent"
-        android:layout_height="80dp"
+        android:layout_height="match_parent"
         android:background="@drawable/drawable_tab_def_bg"
+        android:orientation="vertical"
+        app:itemDefCheck="1"
+        app:itemHeight="120dp"
+        app:itemMargin="@dimen/dp_10"
+        app:itemWidth="-1"
         app:tabItemBg="@drawable/drawable_tab_def_item_bg"
         app:tabItemTextColorStateList="@color/color_tab_def_item"
         app:tabItemTextSize="@dimen/dp_10"
@@ -18,6 +23,6 @@
     <TextView
         android:id="@+id/acMainTv"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"/>
+        android:layout_height="wrap_content" />
 
 </LinearLayout>

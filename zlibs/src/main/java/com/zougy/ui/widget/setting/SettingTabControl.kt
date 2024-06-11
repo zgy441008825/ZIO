@@ -31,6 +31,10 @@ class SettingTabControl @JvmOverloads constructor(
     private var tabItemTextColorStateList: ColorStateList? = null
     private var tabItemBg = 0
     private var tabLayoutBg = 0
+    private var itemMargin = 0
+    private var itemDefCheck = -1
+    private var itemWidth = -2
+    private var itemHeight = -2
 
     companion object {
 
@@ -59,19 +63,20 @@ class SettingTabControl @JvmOverloads constructor(
             tabItemTextColorStateList = typedArray.getColorStateList(R.styleable.SettingTabControl_tabItemTextColorStateList)
             tabItemBg = typedArray.getResourceId(R.styleable.SettingTabControl_tabItemBg, tabItemBg)
             tabLayoutBg = typedArray.getResourceId(R.styleable.SettingTabControl_tabLayoutBg, tabLayoutBg)
+            itemMargin = typedArray.getDimension(R.styleable.SettingTabControl_itemMargin, itemMargin.toFloat()).toInt()
+            itemDefCheck = typedArray.getInt(R.styleable.SettingTabControl_itemDefCheck, itemDefCheck)
+            itemWidth = typedArray.getDimension(R.styleable.SettingTabControl_itemWidth, itemWidth.toFloat()).toInt()
+            itemHeight = typedArray.getDimension(R.styleable.SettingTabControl_itemHeight, itemHeight.toFloat()).toInt()
 
             typedArray.recycle()
         }
-        orientation = LinearLayout.HORIZONTAL
 
         setOnCheckedChangeListener { group, checkedId ->
-            Log.i(TAG, "initAttrs onClick checkedId:$checkedId")
             onItemClick?.onItemClick(group, checkedId - VIEW_ID_RADIO_BUTTON_START)
         }
     }
 
     private fun addViews() {
-        Log.i(TAG, "addViews tabItems:${tabItems.contentToString()}")
         if (tabItems.isEmpty()) return
         for ((cnt, menu) in tabItems.withIndex()) {
             RadioButton(context).apply {
@@ -86,13 +91,25 @@ class SettingTabControl @JvmOverloads constructor(
                 setTextSize(TypedValue.COMPLEX_UNIT_SP, tabItemTextSize)
                 setBackgroundResource(tabItemBg)
                 buttonDrawable = null
-                val lp = LayoutParams(0, ViewGroup.LayoutParams.WRAP_CONTENT)
-                lp.weight = 1f
-                lp.gravity = Gravity.CENTER_VERTICAL
+                val lp = LayoutParams(itemWidth, itemHeight)
+                lp.also {
+                    if (orientation == LinearLayout.HORIZONTAL) {
+                        if (cnt < tabItems.size - 1)
+                            it.rightMargin = itemMargin
+                    } else {
+                        if (cnt != 0)
+                            it.topMargin = itemMargin
+                    }
+                    it.gravity = Gravity.CENTER
+                }
+                isChecked = cnt == itemDefCheck
                 addView(this, lp)
             }
-            Log.i(TAG, "addViews cnt:$cnt menu:$menu")
         }
+    }
+
+    fun checkIndex(index: Int) {
+        check(VIEW_ID_RADIO_BUTTON_START + index)
     }
 }
 
