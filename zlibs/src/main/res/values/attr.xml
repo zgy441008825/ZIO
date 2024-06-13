@@ -85,20 +85,53 @@
 
     <declare-styleable name="SettingTabControl">
         <!-- 菜单项 设置数组资源 -->
-        <attr name="tabItems" format="reference|integer" />
-        <!-- 菜单每项的文字大小 -->
-        <attr name="tabItemTextSize" format="dimension" />
-        <!-- 菜单每项的文字颜色 -->
-        <attr name="tabItemTextColor" format="color|reference" />
-        <attr name="tabItemTextColorStateList" format="reference" />
+        <attr name="tabItemsTexts" format="reference|integer" />
+        <!-- 菜单项 设置图标数组资源 -->
+        <attr name="tabItemIcons" format="reference" />
         <!-- 整个菜单布局的背景 -->
         <attr name="tabLayoutBg" format="dimension" />
+        <!-- 菜单每项的文字大小 -->
+        <attr name="itemTextSize" format="dimension" />
+        <!-- 菜单每项的文字颜色 单色-->
+        <attr name="itemTextColor" format="color|reference" />
+        <!-- 菜单每项的文字颜色 各种状态的颜色-->
+        <attr name="itemTextColorStateList" format="reference" />
         <!-- 单个菜单的背景 -->
-        <attr name="tabItemBg" format="reference" />
+        <attr name="itemBackground" format="reference" />
+        <!-- 每个item的间距 -->
         <attr name="itemMargin" format="dimension" />
+        <!-- 默认选中项 -->
         <attr name="itemDefCheck" format="integer" />
-        <attr name="itemWidth" format="dimension|reference" />
-        <attr name="itemHeight" format="dimension|reference" />
+        <!-- item宽，默认为wrap_parent -->
+        <attr name="itemWidth" format="dimension">
+            <enum name="match_parent" value="-1" />
+            <enum name="wrap_content" value="-2" />
+        </attr>
+        <!-- item高，默认为wrap_parent -->
+        <attr name="itemHeight" format="dimension">
+            <enum name="match_parent" value="-1" />
+            <enum name="wrap_content" value="-2" />
+        </attr>
+        <!-- item文字和图标边距 -->
+        <attr name="itemDrawablePadding" format="dimension|integer" />
+        <!-- item对齐方式 -->
+        <attr name="itemGravity">
+            <flag name="left" value="0x03" />
+            <flag name="right" value="0x05" />
+            <flag name="center" value="0x11" />
+            <flag name="start" value="0x00800003" />
+            <flag name="end" value="0x00800005" />
+            <flag name="center_vertical" value="0x10" />
+            <flag name="center_horizontal" value="0x01" />
+        </attr>
+        <!-- item图标显示位置 -->
+        <attr name="itemDrawableLocation" format="enum">
+            <enum name="left" value="0" />
+            <enum name="top" value="1" />
+            <enum name="right" value="2" />
+            <enum name="bottom" value="3" />
+        </attr>
+
     </declare-styleable>
 
     <declare-styleable name="PageIndicator">

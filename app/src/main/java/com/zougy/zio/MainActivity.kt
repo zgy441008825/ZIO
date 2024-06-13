@@ -7,11 +7,9 @@ import android.content.pm.PackageManager
 import android.media.MediaMetadataRetriever
 import android.os.Bundle
 import android.os.Environment
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.RadioGroup
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import androidx.viewpager.widget.PagerAdapter
@@ -22,7 +20,6 @@ import com.chad.library.adapter4.loadState.LoadState
 import com.chad.library.adapter4.loadState.trailing.TrailingLoadStateAdapter
 import com.chad.library.adapter4.viewholder.QuickViewHolder
 import com.zougy.log.LogUtils
-import com.zougy.ui.widget.setting.IOnItemClick
 import com.zougy.ui.widget.setting.SettingTabControl
 import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers
 import io.reactivex.rxjava3.core.Flowable
@@ -30,6 +27,7 @@ import io.reactivex.rxjava3.schedulers.Schedulers
 import org.xutils.x
 import java.io.File
 import java.util.concurrent.Executors
+
 
 class MyViewPagerAdapter : PagerAdapter() {
 
@@ -80,14 +78,24 @@ class MainActivity : BaseActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
-        val tab = findViewById<SettingTabControl>(R.id.acMainSettingTabControl)
-        val tv = findViewById<TextView>(R.id.acMainTv)
-        Log.i(TAG, "onCreate tab:$tab  tv:$tv")
-        tab.onItemClick = object : IOnItemClick {
-            override fun onItemClick(group: RadioGroup, index: Int) {
-                Log.i(TAG, "onItemClick index:$index")
-            }
+        val acMainTabControl = findViewById<SettingTabControl>(R.id.acMainTabControl)
+
+        /*val list = mutableListOf<FileBean>()
+        for (i in 0..10) {
+            list.add(FileBean(File("123.txt"), 0, 0, 0))
         }
+        val recyclerView = findViewById<RecyclerView>(R.id.acMainRecyclerView)
+        myAdapter.submitList(list)
+        recyclerView.adapter = myAdapter
+        val de = RecyclerViewItemDecoration(this)
+        de.apply {
+            setDrawable(R.color.colorAccent)
+            setPadding(10, 10, 10, 10)
+            spaceSize = 1
+        }
+        recyclerView.addItemDecoration(de)
+//        recyclerView.layoutManager = LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false)
+        recyclerView.layoutManager = GridLayoutManager(this, 4)*/
     }
 
     private fun initFiles() {
@@ -189,12 +197,12 @@ class MyAdapter : BaseQuickAdapter<FileBean, QuickViewHolder>() {
     override fun onBindViewHolder(holder: QuickViewHolder, position: Int, item: FileBean?) {
         item?.apply {
             val showText = "${position + 1}:${file.name}"
-            holder.getView<TextView>(android.R.id.text1).text = showText
+            holder.getView<TextView>(R.id.layoutItemTvMsg).text = showText
         }
     }
 
     override fun onCreateViewHolder(context: Context, parent: ViewGroup, viewType: Int): QuickViewHolder {
-        return QuickViewHolder(android.R.layout.simple_list_item_1, parent)
+        return QuickViewHolder(R.layout.layout_item_lin, parent)
     }
 
 }

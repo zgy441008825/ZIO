@@ -5,8 +5,9 @@ import android.graphics.Canvas
 import android.graphics.Rect
 import android.graphics.drawable.Drawable
 import android.view.View
-import androidx.core.view.ViewCompat
+import androidx.core.content.res.ResourcesCompat
 import androidx.recyclerview.widget.GridLayoutManager
+import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 
 
@@ -24,57 +25,75 @@ class RecyclerViewItemDecoration @JvmOverloads constructor(
 
     private var drawable: Drawable? = null
 
-    private var spaceSize = 1
+    /**
+     * 绘制分割线的宽度
+     */
+    var spaceSize = 1
+
+    private val rect = Rect()
 
     init {
-        drawable = context.resources.getDrawable(drawableID)
+        drawable = ResourcesCompat.getDrawable(context.resources, drawableID, context.theme)
     }
 
-    fun setDrawable(id: Int): RecyclerViewItemDecoration {
-        drawable = context.resources.getDrawable(id)
-        return this
+    fun setDrawable(id: Int) {
+        drawable = ResourcesCompat.getDrawable(context.resources, id, context.theme)
     }
 
-    fun setSpaceSize(spaceSize: Int): RecyclerViewItemDecoration {
-        this.spaceSize = spaceSize
-        return this
+    /**
+     * 设置间距
+     */
+    fun setPadding(left: Int, top: Int, right: Int, bottom: Int) {
+        rect.left = left
+        rect.top = top
+        rect.right = right
+        rect.bottom = bottom
     }
 
     override fun onDraw(c: Canvas, parent: RecyclerView, state: RecyclerView.State) {
         super.onDraw(c, parent, state)
-        when (layoutStyle) {
-            LAYOUT_STYLE_GRIDLAYOUT -> drawGrid(c, parent)
-            LAYOUT_STYLE_HORIZONTAL -> drawHorizontal(c, parent)
-            LAYOUT_STYLE_VERTICAL -> drawVertical(c, parent)
+        if (spaceSize == 0) return
+        when (val manager = parent.layoutManager) {
+            is GridLayoutManager -> {
+                drawGrid(c, parent)
+            }
+
+            is LinearLayoutManager -> {
+                if (manager.orientation == LinearLayoutManager.VERTICAL) {
+                    drawVertical(c, parent)
+                } else {
+                    drawHorizontal(c, parent)
+                }
+            }
         }
     }
 
     private fun drawHorizontal(canvas: Canvas, parent: RecyclerView) {
-        val height = parent.width
         val childCount = parent.childCount
         if (childCount < 1) return
         for (i in 0 until childCount) {
             val childView = parent.getChildAt(i)
-            val left = ViewCompat.getX(childView).toInt() + childView.width
-            drawable!!.setBounds(left, 0, left + spaceSize, height)
+            val top = (childView.y + rect.top).toInt()
+            val start = (childView.x + childView.width).toInt()
+            drawable!!.setBounds(start + rect.left, top, start + rect.left + spaceSize, top + childView.height - rect.bottom * 2)
             drawable!!.draw(canvas)
         }
     }
 
     private fun drawVertical(canvas: Canvas, parent: RecyclerView) {
-        val width = parent.width
         val childCount = parent.childCount
         if (childCount < 1) return
         for (i in 0 until childCount) {
             val childView = parent.getChildAt(i)
-            val top = ViewCompat.getY(childView).toInt() + childView.height
-            drawable!!.setBounds(0, top, width, top + spaceSize)
+            val top = childView.y.toInt() + childView.height
+            val width = childView.width
+            drawable!!.setBounds(rect.left, top + rect.top, width - rect.right, top + rect.top + spaceSize)
             drawable!!.draw(canvas)
         }
     }
 
     private fun drawGrid(canvas: Canvas, parent: RecyclerView) {
-        val childCount = parent.childCount
+        /*val childCount = parent.childCount
         if (childCount < 1) return
         val manager = parent.layoutManager as GridLayoutManager?
         val spanCount = manager!!.spanCount
@@ -103,18 +122,25 @@ class RecyclerViewItemDecoration @JvmOverloads constructor(
                 )
                 drawable!!.draw(canvas)
             }
-        }
+        }*/
     }
 
     override fun getItemOffsets(outRect: Rect, view: View, parent: RecyclerView, state: RecyclerView.State) {
         super.getItemOffsets(outRect, view, parent, state)
-        when (layoutStyle) {
-            LAYOUT_STYLE_GRIDLAYOUT -> {
-                outRect.right = if (spaceSize != 0) spaceSize else drawable!!.intrinsicWidth
-                outRect.bottom = if (spaceSize != 0) spaceSize else drawable!!.intrinsicHeight
+        when (parent.layoutManager) {
+            is GridLayoutManager -> {
+                outRect.left = rect.left
+                outRect.top = rect.top
+                outRect.right = rect.right
+                outRect.bottom = rect.bottom
             }
-            LAYOUT_STYLE_HORIZONTAL -> outRect.right = if (spaceSize != 0) spaceSize else drawable!!.intrinsicWidth
-            LAYOUT_STYLE_VERTICAL -> outRect.bottom = if (spaceSize != 0) spaceSize else drawable!!.intrinsicHeight
+
+            is LinearLayoutManager -> {
+                outRect.left = rect.left
+                outRect.top = rect.top
+                outRect.right = rect.right
+                outRect.bottom = rect.bottom
+            }
         }
     }
 

@@ -10,7 +10,7 @@
     </style>
 
     <!-- 修改后的透明主题，确保继承自 AppCompat -->
-    <style name="TransparentAppCompatTheme" parent="Theme.AppCompat.Dialog">Theme.DeviceDefault.Dialog
+    <style name="TransparentAppCompatTheme" parent="Theme.AppCompat.Dialog">
         <!-- 设置透明背景 -->
         <item name="android:windowIsTranslucent">true</item>
         <item name="android:windowBackground">@android:color/transparent</item>

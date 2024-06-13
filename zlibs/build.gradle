@@ -12,7 +12,7 @@ apply plugin: 'kotlin-parcelize'
 
 android {
 
-    ext.ZLibVersion = "1.0.1.15"
+    ext.ZLibVersion = "1.0.1.17"
 
     compileSdkVersion 33
 
@@ -101,11 +101,11 @@ mavenPublishing {
     // or when publishing to https://central.sonatype.com/
     publishToMavenCentral(SonatypeHost.CENTRAL_PORTAL)
 
-    coordinates("io.github.zgy441008825", "zlibs", "1.0.1.16")
+    coordinates("io.github.zgy441008825", "zlibs", "1.0.1.17")
 
     pom {
         name = "ZTools"
-        description = "A description of what my library does."
+        description = "工具类"
         inceptionYear = "2024"
         url = "https://github.com/zgy441008825/ZIO"
         licenses {

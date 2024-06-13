@@ -3,26 +3,26 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="#EFEFEF"
     android:orientation="vertical">
 
-    <com.zougy.ui.widget.setting.SettingTabControl
-        android:id="@+id/acMainSettingTabControl"
+    <!--<androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/acMainRecyclerView"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:background="@drawable/drawable_tab_def_bg"
-        android:orientation="vertical"
-        app:itemDefCheck="1"
-        app:itemHeight="120dp"
-        app:itemMargin="@dimen/dp_10"
-        app:itemWidth="-1"
-        app:tabItemBg="@drawable/drawable_tab_def_item_bg"
-        app:tabItemTextColorStateList="@color/color_tab_def_item"
-        app:tabItemTextSize="@dimen/dp_10"
-        app:tabItems="@array/items" />
+        android:layout_height="match_parent" />-->
 
-    <TextView
-        android:id="@+id/acMainTv"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content" />
+    <com.zougy.ui.widget.setting.SettingTabControl
+        android:id="@+id/acMainTabControl"
+        android:layout_width="300dp"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        app:itemBackground="@drawable/drawable_tab_def_item_bg"
+        app:itemDefCheck="0"
+        app:itemDrawableLocation="left"
+        app:itemDrawablePadding="@dimen/dp_10"
+        app:itemGravity="start|center_vertical"
+        app:itemWidth="match_parent"
+        app:tabItemIcons="@array/itemIcon"
+        app:tabItemsTexts="@array/items" />
 
 </LinearLayout>
