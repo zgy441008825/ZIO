@@ -36,11 +36,6 @@ class SettingTabControl @JvmOverloads constructor(
     private var tabItemIcons = mutableListOf<Int>()
 
     /**
-     * 整个菜单的背景
-     */
-    private var tabLayoutBackground = 0
-
-    /**
      * 每项Item文字的大小
      */
     private var itemTextSize = 20f
@@ -145,11 +140,11 @@ class SettingTabControl @JvmOverloads constructor(
             itemTextColor = typedArray.getColor(R.styleable.SettingTabControl_itemTextColor, itemTextColor)
             itemTextColorStateList = typedArray.getColorStateList(R.styleable.SettingTabControl_itemTextColorStateList)
             itemBackground = typedArray.getResourceId(R.styleable.SettingTabControl_itemBackground, itemBackground)
-            tabLayoutBackground = typedArray.getResourceId(R.styleable.SettingTabControl_tabLayoutBg, tabLayoutBackground)
             itemMargin = typedArray.getDimension(R.styleable.SettingTabControl_itemMargin, itemMargin.toFloat()).toInt()
             itemDefCheck = typedArray.getInt(R.styleable.SettingTabControl_itemDefCheck, itemDefCheck)
-            itemWidth = typedArray.getDimension(R.styleable.SettingTabControl_itemWidth, itemWidth.toFloat()).toInt()
-            itemHeight = typedArray.getDimension(R.styleable.SettingTabControl_itemHeight, itemHeight.toFloat()).toInt()
+            itemWidth = typedArray.getLayoutDimension(R.styleable.SettingTabControl_itemWidth, itemWidth)
+            itemHeight = typedArray.getLayoutDimension(R.styleable.SettingTabControl_itemHeight, itemHeight)
+            LogUtils.i(TAG, "initAttrs itemWidth:$itemWidth itemHeight:$itemHeight")
             itemDrawablePadding = typedArray.getDimension(R.styleable.SettingTabControl_itemDrawablePadding, itemDrawablePadding.toFloat()).toInt()
             itemGravity = typedArray.getInt(R.styleable.SettingTabControl_itemGravity, itemGravity)
             itemDrawableLocation = typedArray.getInt(R.styleable.SettingTabControl_itemDrawableLocation, itemDrawableLocation)

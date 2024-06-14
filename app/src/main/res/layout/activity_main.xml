@@ -21,6 +21,7 @@
         app:itemDrawableLocation="left"
         app:itemDrawablePadding="@dimen/dp_10"
         app:itemGravity="start|center_vertical"
+        app:itemHeight="@dimen/dp_40"
         app:itemWidth="match_parent"
         app:tabItemIcons="@array/itemIcon"
         app:tabItemsTexts="@array/items" />

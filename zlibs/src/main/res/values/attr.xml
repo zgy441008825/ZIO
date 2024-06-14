@@ -88,8 +88,6 @@
         <attr name="tabItemsTexts" format="reference|integer" />
         <!-- 菜单项 设置图标数组资源 -->
         <attr name="tabItemIcons" format="reference" />
-        <!-- 整个菜单布局的背景 -->
-        <attr name="tabLayoutBg" format="dimension" />
         <!-- 菜单每项的文字大小 -->
         <attr name="itemTextSize" format="dimension" />
         <!-- 菜单每项的文字颜色 单色-->
