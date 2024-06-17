@@ -12,8 +12,6 @@ apply plugin: 'kotlin-parcelize'
 
 android {
 
-    ext.ZLibVersion = "1.0.1.17"
-
     compileSdkVersion 33
 
     defaultConfig {
@@ -29,7 +27,7 @@ android {
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
 
-            manifestPlaceholders += [ZLibVersion: "$ZLibVersion"]
+            manifestPlaceholders += [ZLibVersion: "${project.property('ZLibVersion')}"]
         }
     }
 
@@ -47,7 +45,7 @@ android {
 
     libraryVariants.all { variant ->
         variant.outputs.all {
-            def apkName = "ZLib_$ZLibVersion"
+            def apkName = "ZLib_${project.property('ZLibVersion')}"
             outputFileName = apkName + ".aar"
         }
     }
@@ -101,7 +99,7 @@ mavenPublishing {
     // or when publishing to https://central.sonatype.com/
     publishToMavenCentral(SonatypeHost.CENTRAL_PORTAL)
 
-    coordinates("io.github.zgy441008825", "zlibs", "1.0.1.17")
+    coordinates("io.github.zgy441008825", "zlibs", project.property('ZLibVersion'))
 
     pom {
         name = "ZTools"

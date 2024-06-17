@@ -1,11 +1,10 @@
 package com.zougy.ui.views
 
 import android.content.Context
-import android.graphics.BitmapFactory
-import android.graphics.ImageDecoder
 import android.graphics.Matrix
 import android.graphics.RectF
 import android.graphics.drawable.AnimatedImageDrawable
+import android.graphics.drawable.BitmapDrawable
 import android.graphics.drawable.Drawable
 import android.os.Build
 import android.util.AttributeSet
@@ -14,7 +13,6 @@ import android.view.MotionEvent
 import android.view.ScaleGestureDetector
 import androidx.core.view.GestureDetectorCompat
 import com.zougy.log.LogUtils
-import com.zougy.ziolib.R
 import java.io.File
 import kotlin.math.abs
 import kotlin.math.min
@@ -119,6 +117,11 @@ class RotateScaleImageView @JvmOverloads constructor(
     private val matrixValues = FloatArray(9)
 
     /**
+     * 图片加载状态  true:加载成功   false:加载失败
+     */
+    var loadState = true
+
+    /**
      * 图片地址
      */
     var imageFilePath: String? = null
@@ -160,6 +163,7 @@ class RotateScaleImageView @JvmOverloads constructor(
                 scaleEndWithAnimator()
             }
         })
+        scaleType = ScaleType.CENTER_INSIDE
     }
 
     private var drawable: Drawable? = null
@@ -174,28 +178,25 @@ class RotateScaleImageView @JvmOverloads constructor(
                 showError()
                 return
             }
-            scaleType = ScaleType.FIT_CENTER
 
+            drawable = Drawable.createFromPath(imageFilePath)
+            setImageDrawable(drawable)
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P) {
-                val source = ImageDecoder.createSource(File(imageFilePath!!))
-                drawable = ImageDecoder.decodeDrawable(source) { _, info, _ ->
-                    bitmapWidth = info.size.width.toFloat()
-                    bitmapHeight = info.size.height.toFloat()
-                }
-                setImageDrawable(drawable)
                 (drawable as? AnimatedImageDrawable)?.start()
-            } else {
-                val bitmap = BitmapFactory.decodeFile(imageFilePath)
-                bitmapWidth = bitmap.width.toFloat()
-                bitmapHeight = bitmap.height.toFloat()
-                setImageBitmap(bitmap)
             }
             postDelayed({
+                (drawable as? BitmapDrawable)?.bitmap?.apply {
+                    bitmapWidth = width.toFloat()
+                    bitmapHeight = height.toFloat()
+                }
+
                 scaleType = ScaleType.MATRIX
                 imageMatrix.getValues(initImageMatrixValues)
                 scaleMin = initImageMatrixValues[0]
             }, 100)
+            loadState = true
         } catch (e: Exception) {
+            e.printStackTrace()
             showError()
             return
         }
@@ -203,7 +204,7 @@ class RotateScaleImageView @JvmOverloads constructor(
 
     private fun showError() {
         isEnabled = false
-        setImageResource(R.drawable.drawable_picture_error)
+        loadState = false
     }
 
     override fun onSizeChanged(w: Int, h: Int, oldw: Int, oldh: Int) {
@@ -379,6 +380,7 @@ class RotateScaleImageView @JvmOverloads constructor(
      * 获取最小缩放比例
      */
     private fun getMinScaling(): Float {
+        if (height > bitmapHeight && width > bitmapWidth) return 1f
         return if (rotateAngle.toInt() % 180 == 0) { //水平放置
             min(height.toFloat() / bitmapHeight, width.toFloat() / bitmapWidth)
         } else {
@@ -427,10 +429,10 @@ class RotateScaleImageView @JvmOverloads constructor(
             }
 
             MotionEvent.ACTION_POINTER_UP, MotionEvent.ACTION_UP -> { //手指抬起后 根据当前按下的手指数量判断当前状态
-                touchMode = if (event.pointerCount > 1) {
-                    TOUCH_MODE_SCALE
+                if (event.pointerCount > 1) {
+                    touchMode = TOUCH_MODE_SCALE
                 } else {
-                    TOUCH_MODE_NORMAL
+                    touchMode = TOUCH_MODE_NORMAL
                 }
             }
         }
@@ -457,8 +459,39 @@ class RotateScaleImageView @JvmOverloads constructor(
     }
 
     fun release() {
+        LogUtils.i(TAG, "release drawable:$drawable")
         isEnabled = false
-        setImageResource(android.R.color.transparent)
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P) {
+            (drawable as? AnimatedImageDrawable)?.stop()
+        }
+        (drawable as? BitmapDrawable)?.bitmap?.recycle()
+    }
+
+    override fun toString(): String {
+        return "RotateScaleImageView(imageFilePath=$imageFilePath)"
+    }
+
+    override fun equals(other: Any?): Boolean {
+        if (this === other) return true
+        if (javaClass != other?.javaClass) return false
+
+        other as RotateScaleImageView
+
+        return imageFilePath == other.imageFilePath
+    }
+
+    override fun hashCode(): Int {
+        return (imageFilePath?.hashCode() ?: 0)
+    }
+
+    override fun onDetachedFromWindow() {
+        super.onDetachedFromWindow()
+        LogUtils.i(TAG, "onDetachedFromWindow drawable:$drawable imageFilePath:$imageFilePath")
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P) {
+            (drawable as? AnimatedImageDrawable)?.stop()
+        }
+        (drawable as? BitmapDrawable)?.bitmap?.recycle()
+        drawable = null
     }
 
 }
