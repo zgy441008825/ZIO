@@ -78,7 +78,7 @@ class MainActivity : BaseActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
-        val acMainTabControl = findViewById<SettingTabControl>(R.id.acMainTabControl)
+//        val acMainTabControl = findViewById<SettingTabControl>(R.id.acMainTabControl)
 
         /*val list = mutableListOf<FileBean>()
         for (i in 0..10) {

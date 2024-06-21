@@ -144,34 +144,57 @@
     <declare-styleable name="ProgressView">
         <!-- 进度条宽度 -->
         <attr name="progressViewSize" format="dimension|integer" />
+        <!-- 进度条渐变色 -->
         <attr name="progressViewGradient" format="string" />
+        <!-- 进度条背景色 -->
         <attr name="progressViewBgColor" format="color" />
+        <!-- 进度条颜色 -->
         <attr name="progressViewColor" format="color" />
+        <!-- 环形进度条时是否开启无限循环 -->
         <attr name="progressViewIsLoop" format="boolean" />
+        <!-- 环形进度条时是否开启无限循环 -->
         <attr name="progressViewValue" format="float" />
-        <attr name="progressViewValueInt" format="boolean" />
+        <!-- 是否顺时针旋转；当进度条为圆环进度时配置有效 -->
         <attr name="progressViewIsClockwise" format="boolean" />
+        <!-- 进度条样式 圆环、水平、垂直 -->
         <attr name="progressViewStyle" format="enum">
             <enum name="CIRCLE" value="0" />
-            <enum name="BAR_HORIZONTAL" value="1" />
-            <enum name="BAR_VERTICAL" value="2" />
+            <enum name="HORIZONTAL" value="1" />
+            <enum name="VERTICAL" value="2" />
         </attr>
+        <!-- 进度条绘制时的笔头样式 圆形、矩形 -->
         <attr name="progressViewStrokeCap" format="enum">
             <enum name="ROUND" value="1" />
             <enum name="SQUARE" value="2" />
         </attr>
 
+        <!-- 是否显示进度值 -->
         <attr name="progressViewValueShow" format="boolean" />
+        <!-- 显示的进度条值文本大小 -->
         <attr name="progressViewValueTextSize" format="dimension" />
+        <!-- 显示的进度条值文本颜色 -->
         <attr name="progressViewValueTextColor" format="color" />
+        <!-- 显示的进度值是否使用整数形式 -->
+        <attr name="progressViewValueInt" format="boolean" />
 
+        <!-- 进度条是否是可以滑动的 -->
         <attr name="progressViewIsSeekBar" format="boolean" />
+        <!-- 是否显示滑块 -->
         <attr name="progressViewShowThumb" format="boolean" />
+        <!-- 滑块半径 -->
         <attr name="progressViewThumbRadius" format="dimension" />
+        <!-- 滑块颜色 -->
         <attr name="progressViewThumbColor" format="color" />
-
+        <!-- 滑块是否显示阴影 -->
         <attr name="progressViewThumbShowShadow" format="boolean" />
+        <!-- 滑块阴影颜色 -->
         <attr name="progressViewThumbShadowColor" format="color" />
+        <!-- 滑块阴影大小 -->
         <attr name="progressViewThumbShadowSize" format="dimension|integer" />
+
+        <!-- 最大值 -->
+        <attr name="android:max" format="integer" />
+        <!-- 最小值 -->
+        <attr name="android:min" format="integer" />
     </declare-styleable>
 </resources>

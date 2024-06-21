@@ -19,6 +19,7 @@ import kotlin.math.PI
 import kotlin.math.cos
 import kotlin.math.max
 import kotlin.math.min
+import kotlin.math.roundToInt
 import kotlin.math.sin
 
 /**
@@ -62,10 +63,6 @@ class ProgressView @JvmOverloads constructor(
          * 画笔样式——方形
          */
         const val STROKE_CAP_SQUARE = 2
-
-        const val PROGRESS_MAX = 100f
-
-        const val PROGRESS_MIN = 0f
 
         /**
          * 进度走势方向
@@ -195,7 +192,7 @@ class ProgressView @JvmOverloads constructor(
     /**
      * 使能滑动进度功能
      */
-    private var isSeekBar = false
+    var isSeekBar = false
 
     /**
      * 是否显示滑块
@@ -228,19 +225,21 @@ class ProgressView @JvmOverloads constructor(
     private var thumbShadowSize = 2f
 
     /**
+     * 进度最大值
+     */
+    private var progressMax = 100f
+
+    /**
+     * 进度最小值
+     */
+    private var progressMin = 0f
+
+    val onProgressChange: IOnProgressChange? = null
+
+    /**
      * 当前的进度
      */
-    var progress = 0f
-        set(value) {
-            if (style == STYLE_CIRCLE && isLoop) return
-            if (value > PROGRESS_MAX)
-                field = PROGRESS_MAX
-            else if (value < PROGRESS_MIN)
-                field = PROGRESS_MIN
-            else
-                field = value
-            postInvalidate()
-        }
+    private var progress = 0f
 
     init {
         if (attrs != null) {
@@ -281,6 +280,9 @@ class ProgressView @JvmOverloads constructor(
             thumbShadowColor = type.getColor(R.styleable.ProgressView_progressViewThumbShadowColor, thumbShadowColor)
             thumbShadowSize = type.getDimension(R.styleable.ProgressView_progressViewThumbShadowSize, thumbShadowSize)
 
+            progressMax = type.getInt(R.styleable.ProgressView_android_max, progressMax.toInt()).toFloat()
+            progressMin = type.getInt(R.styleable.ProgressView_android_min, progressMin.toInt()).toFloat()
+
             type.recycle()
         }
 
@@ -317,34 +319,60 @@ class ProgressView @JvmOverloads constructor(
     }
 
     override fun onMeasure(widthMeasureSpec: Int, heightMeasureSpec: Int) {
+        LogUtils.i(TAG, "onMeasure ")
         val width = MeasureSpec.getSize(widthMeasureSpec)
         val height = MeasureSpec.getSize(heightMeasureSpec)
         if (style == STYLE_CIRCLE) {
             val size = min(width, height)
             super.onMeasure(MeasureSpec.makeMeasureSpec(size, MeasureSpec.AT_MOST), MeasureSpec.makeMeasureSpec(size, MeasureSpec.AT_MOST))
         } else {
-            super.onMeasure(widthMeasureSpec, heightMeasureSpec)
+            var w = MeasureSpec.getSize(widthMeasureSpec)
+            var h = MeasureSpec.getSize(heightMeasureSpec)
+
+            if (!showThumb) {
+                thumbRadius = 0f
+                if (!thumbShadow)
+                    thumbShadowSize = 0f
+            }
+            val t = max(progressSize.toFloat(), thumbRadius * 2 + thumbShadowSize * 2).toInt()
+
+            if (style == STYLE_BAR_HORIZONTAL) {
+                h = t
+            } else {
+                w = t
+            }
+            super.onMeasure(
+                MeasureSpec.makeMeasureSpec(w, MeasureSpec.getMode(widthMeasureSpec)),
+                MeasureSpec.makeMeasureSpec(h, MeasureSpec.getMode(heightMeasureSpec))
+            )
         }
     }
 
     private fun initDrawRect(w: Int, h: Int) {
-        if (!showThumb) thumbRadius = 0f
-        val t = max(progressSize / 2f, thumbRadius)
-        if (strokeCap == STROKE_CAP_ROUND) {
+        if (!showThumb) {
+            thumbRadius = 0f
+            if (!thumbShadow)
+                thumbShadowSize = 0f
+        }
+        val thumbSize = thumbRadius + thumbShadowSize
+        val t = max(progressSize / 2f, thumbSize)
+
+        if (style == STYLE_CIRCLE || strokeCap == STROKE_CAP_ROUND) {
             drawRectF.left = t
             drawRectF.top = t
             drawRectF.right = w - t
             drawRectF.bottom = h - t
         } else {
-            drawRectF.left = thumbRadius
-            drawRectF.top = thumbRadius
-            drawRectF.right = w - thumbRadius
-            drawRectF.bottom = h - thumbRadius
+            drawRectF.left = thumbSize
+            drawRectF.top = thumbSize
+            drawRectF.right = w - thumbSize
+            drawRectF.bottom = h - thumbSize
         }
     }
 
     override fun onSizeChanged(w: Int, h: Int, oldw: Int, oldh: Int) {
         super.onSizeChanged(w, h, oldw, oldh)
+        LogUtils.i(TAG, "onSizeChanged ")
         initDrawRect(w, h)
         if (progressColors != null && progressColors!!.isNotEmpty()) {
             progressColors?.apply {
@@ -365,6 +393,22 @@ class ProgressView @JvmOverloads constructor(
                 }
             }
         }
+    }
+
+    fun setProgress(value: Int) {
+        setProgress(value, false)
+    }
+
+    private fun setProgress(value: Int, fromUser: Boolean) {
+        if (style == STYLE_CIRCLE && isLoop) return
+        progress = if (value > progressMax)
+            progressMax
+        else if (value < progressMin)
+            progressMin
+        else
+            value.toFloat()
+        postInvalidate()
+        onProgressChange?.onProgressChange(this, value, fromUser)
     }
 
     fun startAnimator() {
@@ -402,12 +446,12 @@ class ProgressView @JvmOverloads constructor(
             if (isLoop) {
                 360f
             } else
-                360f / PROGRESS_MAX * progress
+                360f / progressMax * progress
         } else {
             if (style == STYLE_BAR_HORIZONTAL)
-                (drawRectF.width() / PROGRESS_MAX) * progress
+                (drawRectF.width() / progressMax) * progress
             else
-                (drawRectF.height() / PROGRESS_MAX) * progress
+                (drawRectF.height() / progressMax) * progress
         }
     }
 
@@ -450,8 +494,8 @@ class ProgressView @JvmOverloads constructor(
         //绘制进度值
         val fm = paintText.fontMetrics
         val showText = if (valueTextInt) "${progress.toInt()}%" else "${progress}%"
-        val x = (drawRectF.width() - paintText.measureText(showText)) / 2f
-        val baseLine = (drawRectF.height() + (fm.bottom - fm.top)) / 2f - fm.descent
+        val x = drawRectF.left + (drawRectF.width() - paintText.measureText(showText)) / 2f
+        val baseLine = drawRectF.top + (drawRectF.height() + (fm.bottom - fm.top)) / 2f - fm.descent
         canvas.drawText(showText, x, baseLine, paintText)
     }
 
@@ -503,6 +547,7 @@ class ProgressView @JvmOverloads constructor(
         //绘制背景
         paintProgress.shader = null
         paintProgress.color = progressBgColor
+        paintProgress.clearShadowLayer()
         canvas.drawLine(width / 2f, drawRectF.top, width / 2f, drawRectF.bottom, paintProgress)
 
         if (shader != null) {
@@ -510,14 +555,49 @@ class ProgressView @JvmOverloads constructor(
         } else {
             paintProgress.color = progressColor
         }
-        canvas.drawLine(width / 2f, drawRectF.bottom, width / 2f, drawRectF.bottom - getProgressValue(), paintProgress)
+        val curProgress = drawRectF.bottom - getProgressValue()
+        canvas.drawLine(width / 2f, drawRectF.bottom, width / 2f, curProgress, paintProgress)
+        if (showThumb) {
+            paintProgress.shader = null
+            paintProgress.color = thumbColor
+            if (thumbShadow) {
+                paintProgress.setShadowLayer(thumbShadowSize, 0f, 0f, thumbShadowColor)
+//                canvas.drawCircle(width / 2f, curProgress, thumbRadius, paintShadow)
+            }
+            canvas.drawCircle(width / 2f, curProgress, thumbRadius, paintProgress)
+        }
     }
 
     override fun onTouchEvent(event: MotionEvent?): Boolean {
         if (style == STYLE_CIRCLE) return super.onTouchEvent(event)
+        if (!isSeekBar) return super.onTouchEvent(event)
 
-        return super.onTouchEvent(event)
+        event?.also {
+            calculateTouchProgress(if (style == STYLE_BAR_HORIZONTAL) it.x else it.y)
+        }
+
+        return true
     }
 
+    /**
+     * 计算当前点击的位置进度
+     */
+    private fun calculateTouchProgress(touchPoint: Float) {
+        val range = progressMax - progressMin
+        val tp = if (style == STYLE_BAR_HORIZONTAL) {
+            val step = drawRectF.width() / range
+            (touchPoint - drawRectF.left) / step
+        } else {
+            val step = drawRectF.height() / range
+            (drawRectF.height() - touchPoint - drawRectF.top) / step
+        }
+        val p = (tp + 0.5f).roundToInt()
+        LogUtils.i(TAG, "calculateTouchProgress p:$p tp:$tp")
+        setProgress(p, true)
+    }
 
+}
+
+interface IOnProgressChange {
+    fun onProgressChange(view: ProgressView, progress: Int, fromUser: Boolean)
 }

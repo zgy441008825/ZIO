@@ -23,11 +23,6 @@ object LogUtils {
     var iLogger: ILogger = ZLogger()
 
     /**
-     * 日志保存接口
-     */
-    var iLogSaver: ILogSaver? = null
-
-    /**
      * 设置日志打印的等级
      */
     var logLevel = LoggerLevel.LEVEL_D

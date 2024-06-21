@@ -4,25 +4,67 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="#EFEFEF"
-    android:orientation="vertical">
+    android:orientation="horizontal"
+    android:padding="@dimen/dp_10">
 
     <!--<androidx.recyclerview.widget.RecyclerView
         android:id="@+id/acMainRecyclerView"
         android:layout_width="match_parent"
         android:layout_height="match_parent" />-->
 
-    <com.zougy.ui.widget.setting.SettingTabControl
-        android:id="@+id/acMainTabControl"
-        android:layout_width="300dp"
-        android:layout_height="wrap_content"
-        android:gravity="center"
-        app:itemBackground="@drawable/drawable_tab_def_item_bg"
-        app:itemDefCheck="0"
-        app:itemDrawableLocation="left"
-        app:itemDrawablePadding="@dimen/dp_10"
-        app:itemGravity="start|center_vertical"
-        app:itemHeight="@dimen/dp_40"
-        app:itemWidth="match_parent"
-        app:tabItemsTexts="@array/items" />
+    <com.zougy.ui.views.ProgressView
+        android:layout_width="wrap_content"
+        android:layout_height="500dp"
+        app:progressViewBgColor="@color/cutLine"
+        app:progressViewGradient="#F00F00,#0F00F0,#00F00F"
+        app:progressViewIsClockwise="true"
+        app:progressViewIsSeekBar="true"
+        app:progressViewShowThumb="true"
+        app:progressViewSize="10dp"
+        app:progressViewStrokeCap="SQUARE"
+        app:progressViewStyle="VERTICAL"
+        app:progressViewThumbShadowSize="5dp"
+        app:progressViewThumbShowShadow="true"
+        app:progressViewValue="90" />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical">
+
+        <com.zougy.ui.views.ProgressView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:max="10"
+            app:progressViewBgColor="@color/cutLine"
+            app:progressViewColor="@color/colorAccent"
+            app:progressViewIsClockwise="true"
+            app:progressViewIsSeekBar="true"
+            app:progressViewShowThumb="true"
+            app:progressViewSize="10dp"
+            app:progressViewStrokeCap="ROUND"
+            app:progressViewStyle="HORIZONTAL"
+            app:progressViewThumbShadowSize="5dp"
+            app:progressViewThumbShowShadow="true"
+            app:progressViewValue="5" />
+
+        <com.zougy.ui.views.ProgressView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:max="100"
+            app:progressViewBgColor="@color/cutLine"
+            app:progressViewGradient="#F00F00,#0F00F0,#00F00F"
+            app:progressViewIsClockwise="true"
+            app:progressViewIsSeekBar="true"
+            app:progressViewShowThumb="true"
+            app:progressViewSize="20dp"
+            app:progressViewStrokeCap="ROUND"
+            app:progressViewStyle="CIRCLE"
+            app:progressViewThumbShadowSize="5dp"
+            app:progressViewThumbShowShadow="true"
+            app:progressViewValue="60"
+            app:progressViewValueInt="true"
+            app:progressViewValueTextSize="@dimen/dp_30" />
+    </LinearLayout>
 
 </LinearLayout>
