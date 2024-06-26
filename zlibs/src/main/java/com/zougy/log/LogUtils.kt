@@ -107,18 +107,18 @@ private class ZLogger : ILogger {
     }
 
     override fun w(tag: String?, msg: String, e: Throwable?) {
-        e?.apply {
-            Log.w(TAG, msg, e)
-        } ?: {
+        if (e == null) {
             Log.w(TAG, msg)
+        } else {
+            Log.w(TAG, msg, e)
         }
     }
 
     override fun e(tag: String?, msg: String, e: Throwable?) {
-        e?.apply {
-            Log.e(TAG, msg, e)
-        } ?: {
+        if (e == null) {
             Log.e(TAG, msg)
+        } else {
+            Log.e(TAG, msg, e)
         }
     }
 }
