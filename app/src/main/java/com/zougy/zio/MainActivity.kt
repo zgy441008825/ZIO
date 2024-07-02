@@ -20,6 +20,7 @@ import com.chad.library.adapter4.loadState.LoadState
 import com.chad.library.adapter4.loadState.trailing.TrailingLoadStateAdapter
 import com.chad.library.adapter4.viewholder.QuickViewHolder
 import com.zougy.log.LogUtils
+import com.zougy.tools.ThreadUtils
 import com.zougy.ui.widget.setting.SettingTabControl
 import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers
 import io.reactivex.rxjava3.core.Flowable
@@ -27,6 +28,7 @@ import io.reactivex.rxjava3.schedulers.Schedulers
 import org.xutils.x
 import java.io.File
 import java.util.concurrent.Executors
+import java.util.concurrent.TimeUnit
 
 
 class MyViewPagerAdapter : PagerAdapter() {
@@ -78,6 +80,20 @@ class MainActivity : BaseActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
+
+        ThreadUtils.runMainThread {
+            LogUtils.i(TAG, "onCreate thread:${Thread.currentThread()}")
+        }
+
+        ThreadUtils.runHighThread(5000) {
+            LogUtils.i(TAG, "onCreate thread:${Thread.currentThread()}")
+            TimeUnit.SECONDS.sleep(5)
+        }
+
+        ThreadUtils.runBackgroundThread {
+            LogUtils.i(TAG, "onCreate thread:${Thread.currentThread()}")
+            TimeUnit.SECONDS.sleep(5)
+        }
 //        val acMainTabControl = findViewById<SettingTabControl>(R.id.acMainTabControl)
 
         /*val list = mutableListOf<FileBean>()
