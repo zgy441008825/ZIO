@@ -1,12 +1,12 @@
 package com.zougy.ui.views
 
 import android.content.Context
+import android.graphics.ImageDecoder
 import android.graphics.Matrix
 import android.graphics.RectF
 import android.graphics.drawable.AnimatedImageDrawable
 import android.graphics.drawable.BitmapDrawable
 import android.graphics.drawable.Drawable
-import android.os.Build
 import android.util.AttributeSet
 import android.view.GestureDetector
 import android.view.MotionEvent
@@ -121,6 +121,8 @@ class RotateScaleImageView @JvmOverloads constructor(
      */
     var loadState = true
 
+    private var imageDecoder: ImageDecoder? = null
+
     /**
      * 图片地址
      */
@@ -135,11 +137,11 @@ class RotateScaleImageView @JvmOverloads constructor(
 
             override fun onScroll(e1: MotionEvent, e2: MotionEvent, distanceX: Float, distanceY: Float): Boolean {
                 move(distanceX, distanceY)
-                return super.onScroll(e1, e2, distanceX, distanceY)
+                return false
             }
 
             override fun onFling(e1: MotionEvent, e2: MotionEvent, velocityX: Float, velocityY: Float): Boolean {
-                return super.onFling(e1, e2, velocityX, velocityY)
+                return true
             }
 
             override fun onDoubleTap(e: MotionEvent): Boolean {
@@ -179,17 +181,16 @@ class RotateScaleImageView @JvmOverloads constructor(
                 return
             }
 
-            drawable = Drawable.createFromPath(imageFilePath)
-            setImageDrawable(drawable)
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P) {
-                (drawable as? AnimatedImageDrawable)?.start()
+            val source = ImageDecoder.createSource(File(imageFilePath!!))
+            drawable = ImageDecoder.decodeDrawable(source) { _, info, _ ->
+                bitmapWidth = info.size.width.toFloat()
+                bitmapHeight = info.size.height.toFloat()
+                LogUtils.i(TAG, "initShowFile imageFilePath:$imageFilePath bitmapWidth:$bitmapWidth bitmapHeight:$bitmapHeight")
             }
-            postDelayed({
-                (drawable as? BitmapDrawable)?.bitmap?.apply {
-                    bitmapWidth = width.toFloat()
-                    bitmapHeight = height.toFloat()
-                }
 
+            setImageDrawable(drawable)
+            (drawable as? AnimatedImageDrawable)?.start()
+            postDelayed({
                 scaleType = ScaleType.MATRIX
                 imageMatrix.getValues(initImageMatrixValues)
                 scaleMin = initImageMatrixValues[0]
@@ -269,7 +270,7 @@ class RotateScaleImageView @JvmOverloads constructor(
         scaleMin = getMinScaling()
         val curScaling = getScale(matrixValues)
         val endMatrix = Matrix()
-        if (abs(curScaling) <= scaleMin) {
+        if (abs(curScaling - scaleMin) < 0.00001 || abs(curScaling) <= scaleMin) {
             endMatrix.postScale(SCALE_MAX, SCALE_MAX, x, y)
         } else {
             endMatrix.postScale(scaleMin, scaleMin, width / 2f, height / 2f)
@@ -437,7 +438,9 @@ class RotateScaleImageView @JvmOverloads constructor(
             }
         }
         gestureDetector.onTouchEvent(event)
-        scaleGestureDetector.onTouchEvent(event)
+        if (event.pointerCount > 1) {
+            scaleGestureDetector.onTouchEvent(event)
+        }
         return true
     }
 
@@ -461,9 +464,7 @@ class RotateScaleImageView @JvmOverloads constructor(
     fun release() {
         LogUtils.i(TAG, "release drawable:$drawable")
         isEnabled = false
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P) {
-            (drawable as? AnimatedImageDrawable)?.stop()
-        }
+        (drawable as? AnimatedImageDrawable)?.stop()
         (drawable as? BitmapDrawable)?.bitmap?.recycle()
     }
 
@@ -486,10 +487,8 @@ class RotateScaleImageView @JvmOverloads constructor(
 
     override fun onDetachedFromWindow() {
         super.onDetachedFromWindow()
-        LogUtils.i(TAG, "onDetachedFromWindow drawable:$drawable imageFilePath:$imageFilePath")
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P) {
-            (drawable as? AnimatedImageDrawable)?.stop()
-        }
+        imageDecoder?.close()
+        (drawable as? AnimatedImageDrawable)?.stop()
         (drawable as? BitmapDrawable)?.bitmap?.recycle()
         drawable = null
     }

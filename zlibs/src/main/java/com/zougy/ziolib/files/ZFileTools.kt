@@ -98,6 +98,18 @@ object ZFileTools {
         }
     }
 
+    fun searchFile(
+        path: String,
+        typeEnum: FileTypeEnum? = null,
+        filter: FileFilter? = null,
+        child: Boolean = true,
+        showHidden: Boolean = false,
+        containNoMedia: Boolean = false,
+        callback: SearchFileCallback? = null
+    ): List<File> {
+        return searchFile(File(path), typeEnum, filter, child, showHidden, containNoMedia, callback)
+    }
+
     /**
      * 搜索目录path下的文件
      * @param path 要搜索的目录
@@ -112,10 +124,18 @@ object ZFileTools {
         filter: FileFilter? = null,
         child: Boolean = true,
         showHidden: Boolean = false,
+        containNoMedia: Boolean = false,
         callback: SearchFileCallback? = null
     ): List<File> {
         val fileList = mutableListOf<File>()
         if (!path.exists() || path.isFile) return fileList
+
+        val noMediaFile = path.listFiles { _, name ->
+            TextUtils.equals(name.lowercase(), ".nomedia")
+        }
+        if (!containNoMedia && !noMediaFile.isNullOrEmpty())
+            return fileList
+
         val fileFilter: FileFilter = filter ?: FileFilterHelper.getFileFilter(typeEnum, showHidden)
         val files = path.listFiles() ?: return fileList
         for (f in files) {
@@ -127,7 +147,7 @@ object ZFileTools {
             } else if (f.isDirectory) {
                 if (child) {
                     callback?.onInDir(f)
-                    val fList = searchFile(f, typeEnum, fileFilter, true, showHidden, callback)
+                    val fList = searchFile(f, typeEnum, fileFilter, true, showHidden, containNoMedia, callback)
                     if (fList.isNotEmpty())
                         fileList.addAll(fList)
                 }

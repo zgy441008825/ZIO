@@ -22,6 +22,8 @@ import com.chad.library.adapter4.viewholder.QuickViewHolder
 import com.zougy.log.LogUtils
 import com.zougy.tools.ThreadUtils
 import com.zougy.ui.widget.setting.SettingTabControl
+import com.zougy.ziolib.files.FileTypeEnum
+import com.zougy.ziolib.files.ZFileTools
 import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers
 import io.reactivex.rxjava3.core.Flowable
 import io.reactivex.rxjava3.schedulers.Schedulers
@@ -81,18 +83,12 @@ class MainActivity : BaseActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
-        ThreadUtils.runMainThread {
-            LogUtils.i(TAG, "onCreate thread:${Thread.currentThread()}")
-        }
-
-        ThreadUtils.runHighThread(5000) {
-            LogUtils.i(TAG, "onCreate thread:${Thread.currentThread()}")
-            TimeUnit.SECONDS.sleep(5)
-        }
-
         ThreadUtils.runBackgroundThread {
-            LogUtils.i(TAG, "onCreate thread:${Thread.currentThread()}")
-            TimeUnit.SECONDS.sleep(5)
+            val fileList = ZFileTools.searchFile("/storage/emulated/0/Pictures", FileTypeEnum.FILE_TYPE_IMG, null, true, true)
+            LogUtils.i(TAG, "onCreate fileList:${fileList.size}")
+            fileList.forEach {
+                LogUtils.i(TAG, "onCreate file:$it")
+            }
         }
 //        val acMainTabControl = findViewById<SettingTabControl>(R.id.acMainTabControl)
 
