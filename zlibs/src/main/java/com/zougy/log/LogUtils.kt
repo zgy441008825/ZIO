@@ -108,17 +108,17 @@ private class ZLogger : ILogger {
 
     override fun w(tag: String?, msg: String, e: Throwable?) {
         if (e == null) {
-            Log.w(TAG, msg)
+            Log.w(if (TextUtils.isEmpty(tag)) TAG else tag, msg)
         } else {
-            Log.w(TAG, msg, e)
+            Log.w(if (TextUtils.isEmpty(tag)) TAG else tag, msg, e)
         }
     }
 
     override fun e(tag: String?, msg: String, e: Throwable?) {
         if (e == null) {
-            Log.e(TAG, msg)
+            Log.e(if (TextUtils.isEmpty(tag)) TAG else tag, msg)
         } else {
-            Log.e(TAG, msg, e)
+            Log.e(if (TextUtils.isEmpty(tag)) TAG else tag, msg, e)
         }
     }
 }
