@@ -1,6 +1,7 @@
 package com.zougy.ziolib.files
 
 import android.text.TextUtils
+import com.zougy.log.LogUtils
 import org.xutils.common.Callback
 import java.io.Closeable
 import java.io.File
@@ -23,6 +24,8 @@ import java.security.MessageDigest
  * Email:441008824@qq.com
  */
 object ZFileTools {
+
+    private const val TAG = "ZFileTools"
 
     fun close(closeable: Closeable?) {
         try {
@@ -105,9 +108,16 @@ object ZFileTools {
         child: Boolean = true,
         showHidden: Boolean = false,
         containNoMedia: Boolean = false,
+        log: Boolean = false,
         callback: SearchFileCallback? = null
     ): List<File> {
-        return searchFile(File(path), typeEnum, filter, child, showHidden, containNoMedia, callback)
+        return searchFile(File(path), typeEnum, filter, child, showHidden, containNoMedia, log, callback)
+    }
+
+    private fun printSearchFile(msg: String, log: Boolean) {
+        if (log) {
+            LogUtils.i(TAG, msg)
+        }
     }
 
     /**
@@ -125,19 +135,26 @@ object ZFileTools {
         child: Boolean = true,
         showHidden: Boolean = false,
         containNoMedia: Boolean = false,
+        log: Boolean = false,
         callback: SearchFileCallback? = null
     ): List<File> {
         val fileList = mutableListOf<File>()
-        if (!path.exists() || path.isFile) return fileList
+        if (!path.exists() || path.isFile) {
+            printSearchFile("searchFile path is not exists or path is File:$path", log)
+            return fileList
+        }
 
         val noMediaFile = path.listFiles { _, name ->
             TextUtils.equals(name.lowercase(), ".nomedia")
         }
-        if (!containNoMedia && !noMediaFile.isNullOrEmpty())
+        if (!containNoMedia && !noMediaFile.isNullOrEmpty()) {
+            printSearchFile("searchFile has no mediaFile:$path", log)
             return fileList
+        }
 
         val fileFilter: FileFilter = filter ?: FileFilterHelper.getFileFilter(typeEnum, showHidden)
         val files = path.listFiles() ?: return fileList
+        printSearchFile("searchFile $path files:${files.size}", log)
         for (f in files) {
             if (f.isFile) {
                 if (fileFilter.accept(f)) {
@@ -147,7 +164,7 @@ object ZFileTools {
             } else if (f.isDirectory) {
                 if (child) {
                     callback?.onInDir(f)
-                    val fList = searchFile(f, typeEnum, fileFilter, true, showHidden, containNoMedia, callback)
+                    val fList = searchFile(f, typeEnum, fileFilter, true, showHidden, containNoMedia, log, callback)
                     if (fList.isNotEmpty())
                         fileList.addAll(fList)
                 }

@@ -3,6 +3,7 @@ package com.zougy.ui.views
 import android.content.Context
 import android.graphics.ImageDecoder
 import android.graphics.Matrix
+import android.graphics.Rect
 import android.graphics.RectF
 import android.graphics.drawable.AnimatedImageDrawable
 import android.graphics.drawable.BitmapDrawable
@@ -11,6 +12,7 @@ import android.util.AttributeSet
 import android.view.GestureDetector
 import android.view.MotionEvent
 import android.view.ScaleGestureDetector
+import android.view.View
 import androidx.core.view.GestureDetectorCompat
 import com.zougy.log.LogUtils
 import java.io.File
@@ -121,8 +123,6 @@ class RotateScaleImageView @JvmOverloads constructor(
      */
     var loadState = true
 
-    private var imageDecoder: ImageDecoder? = null
-
     /**
      * 图片地址
      */
@@ -169,6 +169,16 @@ class RotateScaleImageView @JvmOverloads constructor(
     }
 
     private var drawable: Drawable? = null
+
+    fun reset() {
+        try {
+            rotateAngle = 0f
+            mMatrix.setValues(initImageMatrixValues)
+            updateImage()
+        } catch (e: Exception) {
+            showError()
+        }
+    }
 
     private fun initShowFile() {
         try {
@@ -220,6 +230,7 @@ class RotateScaleImageView @JvmOverloads constructor(
         resetDrawableRectF()
         mMatrix.mapRect(drawableRectF)
         mMatrix.postTranslate(w / 2f - (drawableRectF.left + drawableRectF.width() / 2), h / 2f - (drawableRectF.top + drawableRectF.height() / 2f))
+        mMatrix.getValues(initImageMatrixValues)
         updateImage()
     }
 
@@ -227,6 +238,19 @@ class RotateScaleImageView @JvmOverloads constructor(
      * 移动 会判断边界
      */
     private fun move(distanceX: Float, distanceY: Float) {
+        resetDrawableRectF()
+        imageMatrix.mapRect(drawableRectF)
+        val curImgRect = RectF(drawableRectF)
+        if (distanceX > 0) {
+            if (drawableRectF.right.toInt() <= viewRect.right.toInt()) {
+                return
+            }
+        } else if (distanceX < 0) {
+            if (drawableRectF.left.toInt() >= viewRect.left.toInt()) {
+                return
+            }
+        }
+
         var dx = distanceX
         var dy = distanceY
         val tMatrix = Matrix(imageMatrix)
@@ -234,16 +258,13 @@ class RotateScaleImageView @JvmOverloads constructor(
         tMatrix.postTranslate(-distanceX, -distanceY)
         tMatrix.getValues(matrixValues)
 
-        //获取缩放过后的图片矩形
         resetDrawableRectF()
         tMatrix.mapRect(drawableRectF)
-
-        if (distanceX > 0 && drawableRectF.right < width) { //左移 //如果移动后右边超过了边界 则不移动
-            dx = 0f
-        } else { //右移
-            if (distanceX < 0 && drawableRectF.left > 0) {//如果移动后左边边超过了边界 则不移动
-                dx = 0f
-            }
+        LogUtils.i(TAG, "move drawableRectF:$drawableRectF width:$width distanceX:$distanceX")
+        if (distanceX > 0 && drawableRectF.right <= width) { //左移 //如果移动后右边超过了边界 则不移动
+            dx = curImgRect.right - viewRect.right
+        } else if (distanceX < 0 && drawableRectF.left > viewRect.left) { //右移
+            dx = curImgRect.left - viewRect.left
         }
 
         if (distanceY > 0 && drawableRectF.bottom < height) { //往上移
@@ -256,6 +277,7 @@ class RotateScaleImageView @JvmOverloads constructor(
         if (dx == 0f && dy == 0f) {
             return
         }
+        LogUtils.i(TAG, "move dx:$dx dy:$dy")
         mMatrix.set(imageMatrix)
         mMatrix.postTranslate(-dx, -dy)
         updateImage()
@@ -430,10 +452,10 @@ class RotateScaleImageView @JvmOverloads constructor(
             }
 
             MotionEvent.ACTION_POINTER_UP, MotionEvent.ACTION_UP -> { //手指抬起后 根据当前按下的手指数量判断当前状态
-                if (event.pointerCount > 1) {
-                    touchMode = TOUCH_MODE_SCALE
+                touchMode = if (event.pointerCount > 1) {
+                    TOUCH_MODE_SCALE
                 } else {
-                    touchMode = TOUCH_MODE_NORMAL
+                    TOUCH_MODE_NORMAL
                 }
             }
         }
@@ -452,13 +474,23 @@ class RotateScaleImageView @JvmOverloads constructor(
      * 判断是否能进行水平滚动，在嵌套ViewPager时判断是否可以水平滑动，返回true时，不可用滑动;false 可滑动
      */
     override fun canScrollHorizontally(direction: Int): Boolean {
+        if (touchMode == TOUCH_MODE_SCALE) {
+            return true
+        }
         resetDrawableRectF()
         imageMatrix.mapRect(drawableRectF)
-        return touchMode != TOUCH_MODE_NORMAL
+        LogUtils.i(TAG, "canScrollHorizontally drawableRectF:$drawableRectF viewRect:$viewRect")
+        if (direction > 0) {
+            return drawableRectF.right - viewRect.right > 1f
+        } else if (direction < 0) {
+            return drawableRectF.left - viewRect.left < -1f
+        }
+
+        return false
     }
 
     override fun canScrollVertically(direction: Int): Boolean {
-        return canScrollHorizontally(direction)
+        return super.canScrollVertically(direction)
     }
 
     fun release() {
@@ -487,7 +519,6 @@ class RotateScaleImageView @JvmOverloads constructor(
 
     override fun onDetachedFromWindow() {
         super.onDetachedFromWindow()
-        imageDecoder?.close()
         (drawable as? AnimatedImageDrawable)?.stop()
         (drawable as? BitmapDrawable)?.bitmap?.recycle()
         drawable = null
