@@ -8,9 +8,12 @@ import java.lang.reflect.Type
 
 
 /**
- * Description:使用GSON完成json相关转换<br>
- * Author:邹高原<br>
- * Date:11/20 0020<br>
+ * Description:使用GSON完成json相关转换
+ *
+ * Author:邹高原
+ *
+ * Date:11/20 0020
+ *
  * Email:441008824@qq.com
  */
 object JsonTools {

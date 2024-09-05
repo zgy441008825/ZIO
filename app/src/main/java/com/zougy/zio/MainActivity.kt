@@ -10,6 +10,7 @@ import android.os.Environment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Button
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import androidx.viewpager.widget.PagerAdapter
@@ -20,17 +21,15 @@ import com.chad.library.adapter4.loadState.LoadState
 import com.chad.library.adapter4.loadState.trailing.TrailingLoadStateAdapter
 import com.chad.library.adapter4.viewholder.QuickViewHolder
 import com.zougy.log.LogUtils
-import com.zougy.tools.ThreadUtils
+import com.zougy.ui.views.onClickOnShake
+import com.zougy.ui.widget.setting.IOnItemClick
 import com.zougy.ui.widget.setting.SettingTabControl
-import com.zougy.ziolib.files.FileTypeEnum
-import com.zougy.ziolib.files.ZFileTools
 import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers
 import io.reactivex.rxjava3.core.Flowable
 import io.reactivex.rxjava3.schedulers.Schedulers
 import org.xutils.x
 import java.io.File
 import java.util.concurrent.Executors
-import java.util.concurrent.TimeUnit
 
 
 class MyViewPagerAdapter : PagerAdapter() {
@@ -79,35 +78,25 @@ class MainActivity : BaseActivity() {
 
     private lateinit var adapterHelper: QuickAdapterHelper
 
+    var clickCnt = -1
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
-
-        ThreadUtils.runBackgroundThread {
-            val fileList = ZFileTools.searchFile("/storage/emulated/0/Pictures", FileTypeEnum.FILE_TYPE_IMG, null, true, true)
-            LogUtils.i(TAG, "onCreate fileList:${fileList.size}")
-            fileList.forEach {
-                LogUtils.i(TAG, "onCreate file:$it")
+        val menu = findViewById<SettingTabControl>(R.id.acMainMenu)
+        clickCnt = 0
+        menu.checkIndex(0)
+        findViewById<Button>(R.id.acMainBt).onClickOnShake {
+            clickCnt = (clickCnt + 1) % 4
+            LogUtils.i(TAG, "onCreate click cnt:$clickCnt")
+            menu.checkIndex(clickCnt)
+        }
+        menu.onItemClick = object : IOnItemClick {
+            override fun onItemClick(index: Int, tag: String?) {
+                LogUtils.i(TAG, "onItemClick index:$index")
             }
-        }
-//        val acMainTabControl = findViewById<SettingTabControl>(R.id.acMainTabControl)
 
-        /*val list = mutableListOf<FileBean>()
-        for (i in 0..10) {
-            list.add(FileBean(File("123.txt"), 0, 0, 0))
         }
-        val recyclerView = findViewById<RecyclerView>(R.id.acMainRecyclerView)
-        myAdapter.submitList(list)
-        recyclerView.adapter = myAdapter
-        val de = RecyclerViewItemDecoration(this)
-        de.apply {
-            setDrawable(R.color.colorAccent)
-            setPadding(10, 10, 10, 10)
-            spaceSize = 1
-        }
-        recyclerView.addItemDecoration(de)
-//        recyclerView.layoutManager = LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false)
-        recyclerView.layoutManager = GridLayoutManager(this, 4)*/
     }
 
     private fun initFiles() {

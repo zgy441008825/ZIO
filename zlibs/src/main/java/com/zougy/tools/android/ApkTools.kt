@@ -1,6 +1,8 @@
 package com.zougy.tools.android
 
 import android.app.Activity
+import android.app.ActivityManager
+import android.content.ComponentName
 import android.content.Context
 import android.content.Intent
 import android.content.pm.PackageInfo
@@ -16,7 +18,6 @@ import java.io.File
  * Date:11/19 0019<br>
  * Email:441008824@qq.com
  */
-
 
 fun Context.getPackageInfo(packageName: String = this.packageName): PackageInfo {
     return if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
@@ -57,4 +58,13 @@ inline fun <reified T : Activity> Context.startActivity(black: (intent: Intent) 
     intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
     black(intent)
     startActivity(intent)
+}
+
+fun getTopActivity(context: Context): ComponentName? {
+    val am = context.getSystemService(Context.ACTIVITY_SERVICE) as ActivityManager
+    return try {
+        am.getRunningTasks(1)[0].topActivity
+    } catch (e: Exception) {
+        null
+    }
 }

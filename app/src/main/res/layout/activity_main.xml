@@ -12,7 +12,7 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent" />-->
 
-    <com.zougy.ui.views.ProgressView
+    <!--<com.zougy.ui.views.ProgressView
         android:layout_width="wrap_content"
         android:layout_height="500dp"
         app:progressViewBgColor="@color/cutLine"
@@ -65,6 +65,22 @@
             app:progressViewValue="60"
             app:progressViewValueInt="true"
             app:progressViewValueTextSize="@dimen/dp_30" />
-    </LinearLayout>
+    </LinearLayout>-->
+
+    <com.zougy.ui.widget.setting.SettingTabControl
+        android:id="@+id/acMainMenu"
+        android:layout_width="@dimen/dp_200"
+        android:layout_height="match_parent"
+        app:itemBackground="@drawable/drawable_menu_item_bg"
+        app:itemTextSize="@dimen/dp_30"
+        app:tabItemsTexts="@array/items" />
+
+    <Button
+        android:id="@+id/acMainBt"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="@dimen/dp_20"
+        android:text="选择"
+        android:textSize="@dimen/dp_30" />
 
 </LinearLayout>

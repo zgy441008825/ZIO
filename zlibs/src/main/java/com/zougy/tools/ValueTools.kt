@@ -60,16 +60,7 @@ fun Long.formatSize(): String {
  * 转换文件大小,根据大小自动添加单位。保留2位小数。
  */
 fun Int.formatSize(): String {
-    if (this == 0) {
-        return "0B"
-    }
-    val df = DecimalFormat("#.00")
-    return when {
-        this < 1024 -> df.format(this.toDouble()) + "B"
-        this < 1048576 -> df.format(this.toDouble() / 1024) + "K"
-        this < 1073741824 -> df.format(this.toDouble() / 1048576) + "M"
-        else -> df.format(this.toDouble() / 1073741824) + "G"
-    }
+    return toLong().formatSize()
 }
 
 /**

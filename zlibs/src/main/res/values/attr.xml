@@ -86,6 +86,8 @@
     <declare-styleable name="SettingTabControl">
         <!-- 菜单项 设置数组资源 -->
         <attr name="tabItemsTexts" format="reference" />
+        <!-- 菜单项 设置数组资源 -->
+        <attr name="tabItemsTags" format="reference" />
         <!-- 菜单项 设置图标数组资源 -->
         <attr name="tabItemIcons" format="reference" />
         <!-- 菜单每项的文字大小 -->
