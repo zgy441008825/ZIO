@@ -2,14 +2,11 @@ package com.zougy.ziolib.files
 
 import android.text.TextUtils
 import com.zougy.log.LogUtils
-import org.xutils.common.Callback
 import java.io.Closeable
 import java.io.File
 import java.io.FileFilter
 import java.io.FileInputStream
-import java.io.FileNotFoundException
 import java.io.FileOutputStream
-import java.io.IOException
 import java.io.InputStream
 import java.io.InputStreamReader
 import java.io.OutputStream
@@ -27,15 +24,20 @@ object ZFileTools {
 
     private const val TAG = "ZFileTools"
 
-    fun close(closeable: Closeable?) {
+    fun close(cl: Closeable) {
         try {
-            closeable?.close()
+            cl.close()
         } catch (e: Exception) {
+            LogUtils.e(TAG, "close error:${e.message}")
         }
     }
 
+    fun copy(inputStream: InputStream, outputStream: OutputStream) {
+        inputStream.copyTo(outputStream)
+    }
+
     /**
-     * 创建文件，可以是目录或者文件
+     * 创建文件
      */
     fun createFile(filePath: String): Boolean {
         val file = File(filePath)
@@ -52,7 +54,7 @@ object ZFileTools {
     }
 
     /**
-     * 创建文件，可以是目录或者文件
+     * 创建文件
      */
     fun createDir(filePath: String): Boolean {
         val file = File(filePath)
@@ -66,13 +68,16 @@ object ZFileTools {
     fun deleteFileOrDir(file: File): Boolean {
         if (!file.exists()) return false
         if (file.isFile) return file.delete()
-        val fileList = searchFile(file)
-        if (fileList == null || fileList.isEmpty()) return file.delete()
-        for (f in fileList) {
-            if (f.isFile) {
-                if (!f.delete()) return false
-            } else {
-                if (!deleteFileOrDir(f)) return false
+        val fileList = file.listFiles()
+        if (fileList.isNullOrEmpty()) {
+            return file.delete()
+        } else {
+            for (f in fileList) {
+                if (f.isFile) {
+                    if (!f.delete()) return false
+                } else {
+                    if (!deleteFileOrDir(f)) return false
+                }
             }
         }
         return file.delete()
@@ -101,71 +106,59 @@ object ZFileTools {
         }
     }
 
+    /**
+     * 搜索目录path下的文件
+     * @param path 要搜索的目录
+     * @param filter:扫描时文件的过滤规则
+     * @param child 是否递归进入子目录
+     * @param showHidden 是否包含隐藏文件和目录
+     * @param excludeNoMedia 是否排除媒体文件目录（目录中包含.nomedia文件） 如果要排除则设置为true
+     * @return 返回目录下面的文件和目录，如果child=true则包含子目录中的内容。
+     */
     fun searchFile(
         path: String,
-        typeEnum: FileTypeEnum? = null,
         filter: FileFilter? = null,
         child: Boolean = true,
         showHidden: Boolean = false,
-        containNoMedia: Boolean = false,
-        log: Boolean = false,
-        callback: SearchFileCallback? = null
-    ): List<File> {
-        return searchFile(File(path), typeEnum, filter, child, showHidden, containNoMedia, log, callback)
-    }
-
-    private fun printSearchFile(msg: String, log: Boolean) {
-        if (log) {
-            LogUtils.i(TAG, msg)
-        }
+        excludeNoMedia: Boolean = false
+    ): List<File>? {
+        return searchFile(File(path), filter, child, showHidden, excludeNoMedia)
     }
 
     /**
      * 搜索目录path下的文件
      * @param path 要搜索的目录
-     * @param typeEnum 文件类型，可为空。为空时返回所有文件和目录
+     * @param filter:扫描时文件的过滤规则,filter回调是会将扫描到的文件和目录名都进行回调判断
      * @param child 是否递归进入子目录
      * @param showHidden 是否包含隐藏文件和目录
+     * @param excludeNoMedia 是否排除媒体文件目录（目录中包含.nomedia文件） 如果要排除则设置为true
      * @return 返回目录下面的文件和目录，如果child=true则包含子目录中的内容。
      */
     fun searchFile(
         path: File,
-        typeEnum: FileTypeEnum? = null,
         filter: FileFilter? = null,
         child: Boolean = true,
         showHidden: Boolean = false,
-        containNoMedia: Boolean = false,
-        log: Boolean = false,
-        callback: SearchFileCallback? = null
-    ): List<File> {
-        val fileList = mutableListOf<File>()
+        excludeNoMedia: Boolean = true
+    ): List<File>? {
         if (!path.exists() || path.isFile) {
-            printSearchFile("searchFile path is not exists or path is File:$path", log)
-            return fileList
+            return null
+        }
+        val noMediaFile = File(path, ".nomedia")
+        if (excludeNoMedia && noMediaFile.exists()) {
+            return null
         }
 
-        val noMediaFile = path.listFiles { _, name ->
-            TextUtils.equals(name.lowercase(), ".nomedia")
-        }
-        if (!containNoMedia && !noMediaFile.isNullOrEmpty()) {
-            printSearchFile("searchFile has no mediaFile:$path", log)
-            return fileList
-        }
-
-        val fileFilter: FileFilter = filter ?: FileFilterHelper.getFileFilter(typeEnum, showHidden)
-        val files = path.listFiles() ?: return fileList
-        printSearchFile("searchFile $path files:${files.size}", log)
+        val fileList = mutableListOf<File>()
+        val fileFilter: FileFilter = filter ?: FileFilter { true }
+        val files = path.listFiles(fileFilter) ?: return null
         for (f in files) {
-            if (f.isFile) {
-                if (fileFilter.accept(f)) {
+            if (fileFilter.accept(f)) {
+                if (f.isFile) {
                     fileList.add(f)
-                    callback?.onFind(f)
-                }
-            } else if (f.isDirectory) {
-                if (child) {
-                    callback?.onInDir(f)
-                    val fList = searchFile(f, typeEnum, fileFilter, true, showHidden, containNoMedia, log, callback)
-                    if (fList.isNotEmpty())
+                } else if (f.isDirectory && child) {
+                    val fList = searchFile(f, fileFilter, true, showHidden, excludeNoMedia)
+                    if (!fList.isNullOrEmpty())
                         fileList.addAll(fList)
                 }
             }
@@ -191,11 +184,11 @@ object ZFileTools {
         val reader = InputStreamReader(inputStream, charset)
         val sb = StringBuilder()
         var len: Int
-        val charArray = CharArray(1024)
+        val charArray = CharArray(1024 * 4)
         while (true) {
             len = reader.read(charArray)
             if (len == -1) break
-            sb.append(charArray, 0, len)
+            sb.appendRange(charArray, 0, len)
         }
         return sb.toString()
     }
@@ -233,92 +226,62 @@ object ZFileTools {
     }
 
     /**
-     * 异步拷贝文件<br>
-     *     @param srcFile:源文件
-     *     @param desFile:目标文件，如果不存在则创建
-     *     @param override: 如果目标文件存在是否覆盖。true 删除源文件再复制，false 直接跳过。
+     * 拷贝文件
+     * @param srcFile:源文件
+     *
+     * @param desFile:目标文件，如果不存在则创建
+     *
+     * @param override: 如果目标文件存在是否覆盖。true 删除源文件再复制，false 直接跳过。
      */
-    fun copyFile(srcFile: File, desFile: File, override: Boolean = true, callback: Callback.ProgressCallback<File>?) {
+    fun copyFile(srcFile: File, desFile: File, override: Boolean = true) {
         if (!srcFile.exists()) {
-            callback?.onError(FileNotFoundException("$srcFile not found"), false)
             return
         }
         if (desFile.exists()) {//如果目标文件存在，并且需要覆盖又删除目标文件失败则返回false
             if (override) {
-                if (!desFile.delete())
-                    callback?.onError(IOException("delete $desFile error"), false)
+                desFile.delete()
             } else {
-                callback?.onSuccess(desFile)
                 return
             }
         } else if (!createFile(desFile.absolutePath)) {
-            callback?.onError(IOException("create $desFile error"), false)
             return
         }
-        Thread {
-            kotlin.run {
-                try {
-                    val inputStream = FileInputStream(srcFile)
-                    val outputStream = FileOutputStream(desFile)
-                    var readLen: Int
-                    val byteArray = ByteArray(1024 * 1024)
-                    val totalSize = inputStream.available().toLong()
-                    var readCount = 0L
-                    callback?.onStarted()
-                    callback?.onLoading(totalSize, 0, true)
-                    while (true) {
-                        readLen = inputStream.read(byteArray)
-                        if (readLen == -1) break
-                        readCount += readLen
-                        callback?.onLoading(totalSize, readCount, true)
-                        outputStream.write(byteArray, 0, readLen)
-                    }
-                    callback?.onSuccess(desFile)
-                    outputStream.flush()
-                    close(inputStream)
-                    close(outputStream)
-                } catch (e: Exception) {
-                    callback?.onError(e, false)
-                } finally {
-                    callback?.onFinished()
-                }
-            }
-        }.start()
-    }
-
-    fun copyFiles(srcFiles: List<File>, desDir: File, override: Boolean = true, callBack: IDirCallback?) {
-        if (srcFiles.isEmpty()) {
-            callBack?.onFinished()
-            return
-        }
-        for (f in srcFiles) {
-            callBack?.onFileChange(f)
-            if (f.isFile) {
-                copyFile(f, File(desDir, f.name), override, callBack)
-            } else {
-                copyDir(f, File(desDir, f.name), override, callBack)
-            }
+        try {
+            val inputStream = FileInputStream(srcFile)
+            val outputStream = FileOutputStream(desFile)
+            copy(inputStream, outputStream)
+            close(inputStream)
+            close(outputStream)
+        } catch (e: Exception) {
+            LogUtils.e(TAG, "copyFile error:${e.message}")
         }
     }
 
-    fun copyDir(srcDir: File, desDir: File, override: Boolean = true, callBack: IDirCallback?) {
-        if (srcDir.isFile || desDir.isFile) {
-            callBack?.onError(IOException("must be dir"), false)
+    /**
+     * 拷贝目录
+     *
+     * @param srcDir 原文件目录
+     *
+     * @param desDir 目录路径目录
+     *
+     * @param override 如果目录路径有同名文件是否覆盖
+     */
+    fun copyDir(srcDir: File, desDir: File, override: Boolean = true) {
+        if (srcDir.isFile) {
+            copyFile(srcDir, desDir, override)
             return
         }
         if (!desDir.exists()) createDir(desDir.absolutePath)
-        val fileList = searchFile(srcDir, null, null, false)
-        if (fileList == null || fileList.isEmpty()) {
-            callBack?.onFinished()
+        val fileList = srcDir.listFiles()
+        if (fileList.isNullOrEmpty()) {
             return
         }
-        copyFiles(fileList, desDir, override, callBack)
-    }
-
-    interface SearchFileCallback {
-
-        fun onFind(file: File)
-
-        fun onInDir(dir: File)
+        fileList.forEach {
+            if (it.isFile) {
+                copyFile(it, File(desDir, it.name))
+            } else {
+                copyDir(it, File(desDir, it.name))
+            }
+        }
     }
 }
