@@ -8,6 +8,7 @@ import android.widget.Toast
 import com.zougy.ui.views.ViewClickDelay.hash
 import com.zougy.ui.views.ViewClickDelay.lastClickTime
 import com.zougy.ui.views.ViewExtend.clickDelay
+import kotlin.math.abs
 
 /**
  * Description:定义View的扩展方法<br>
@@ -40,7 +41,7 @@ fun View.onClickOnShake(time: Long = clickDelay, block: (View) -> Unit) {
             block(it)
         } else {
             val currentTime = System.currentTimeMillis()
-            if (currentTime - lastClickTime > time) {
+            if (abs(currentTime - lastClickTime) > time) {
                 lastClickTime = System.currentTimeMillis()
                 block(it)
             }
@@ -54,7 +55,7 @@ fun View.onClickOnShake(time: Long = clickDelay, block: (View) -> Unit) {
 fun View.onClickOnSinge(time: Long = clickDelay, block: (View) -> Unit) {
     setOnClickListener {
         val currentTime = System.currentTimeMillis()
-        if (currentTime - lastClickTime > time) {
+        if (abs(currentTime - lastClickTime) > time) {
             lastClickTime = System.currentTimeMillis()
             block(it)
         }
@@ -67,7 +68,7 @@ fun View.onClickOnSinge(time: Long = clickDelay, block: (View) -> Unit) {
 fun CompoundButton.onCheckChangeSinge(time: Long = clickDelay, block: (buttonView: CompoundButton, isChecked: Boolean) -> Unit) {
     setOnCheckedChangeListener { buttonView, isChecked ->
         val currentTime = System.currentTimeMillis()
-        if (currentTime - lastClickTime > time) {
+        if (abs(currentTime - lastClickTime) > time) {
             lastClickTime = System.currentTimeMillis()
             block(buttonView, isChecked)
         }
