@@ -4,13 +4,15 @@ import android.Manifest
 import android.annotation.SuppressLint
 import android.content.Context
 import android.content.pm.PackageManager
+import android.graphics.Color
 import android.media.MediaMetadataRetriever
 import android.os.Bundle
 import android.os.Environment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Button
+import android.view.animation.AnimationUtils
+import android.widget.TextSwitcher
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import androidx.viewpager.widget.PagerAdapter
@@ -21,15 +23,13 @@ import com.chad.library.adapter4.loadState.LoadState
 import com.chad.library.adapter4.loadState.trailing.TrailingLoadStateAdapter
 import com.chad.library.adapter4.viewholder.QuickViewHolder
 import com.zougy.log.LogUtils
-import com.zougy.ui.views.onClickOnShake
-import com.zougy.ui.widget.setting.IOnItemClick
-import com.zougy.ui.widget.setting.SettingTabControl
 import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers
 import io.reactivex.rxjava3.core.Flowable
 import io.reactivex.rxjava3.schedulers.Schedulers
 import org.xutils.x
 import java.io.File
 import java.util.concurrent.Executors
+import java.util.concurrent.TimeUnit
 
 
 class MyViewPagerAdapter : PagerAdapter() {
@@ -80,10 +80,11 @@ class MainActivity : BaseActivity() {
 
     var clickCnt = -1
 
+    @SuppressLint("CheckResult")
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
-        val menu = findViewById<SettingTabControl>(R.id.acMainMenu)
+        /*val menu = findViewById<SettingTabControl>(R.id.acMainMenu)
         clickCnt = 0
         menu.checkIndex(0)
         findViewById<Button>(R.id.acMainBt).onClickOnShake {
@@ -96,7 +97,32 @@ class MainActivity : BaseActivity() {
                 LogUtils.i(TAG, "onItemClick index:$index")
             }
 
+        }*/
+        /*var clickCnt = 0
+        findViewById<EnableStateButton>(R.id.acMainButton).setOnClickListener({
+            Log.i(TAG, "onCreate: onclick")
+            clickCnt = 0
+        }, {
+            LogUtils.i(TAG, "onCreate check clickCnt:$clickCnt")
+            clickCnt++ < 30
+        })*/
+        val textSwitcher = findViewById<TextSwitcher>(R.id.acMainTextSwitcher)
+        textSwitcher.setFactory {
+            val textView = TextView(x.app())
+            textView.setTextColor(Color.BLUE)
+            textView.textSize = 30f
+            textView
         }
+        textSwitcher.setCurrentText("0000000")
+        textSwitcher.inAnimation = AnimationUtils.loadAnimation(this, R.anim.button_in)
+        textSwitcher.outAnimation = AnimationUtils.loadAnimation(this, R.anim.top_out)
+        Flowable.interval(2, TimeUnit.SECONDS)
+            .subscribeOn(Schedulers.single())
+            .observeOn(AndroidSchedulers.mainThread())
+            .subscribe {
+                LogUtils.i(TAG, "onCreate onNext")
+                textSwitcher.setText("---$it")
+            }
     }
 
     private fun initFiles() {
