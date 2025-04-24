@@ -35,6 +35,26 @@ fun Context.getPackageInfo(packageName: String = this.packageName): PackageInfo 
     }
 }
 
+/**
+ * 通过apk文件获取包名
+ */
+fun Context.getPackageNameFromApkFile(apkFile: File): String? {
+    return try {
+        // 获取APK的PackageInfo
+        val packageArchiveInfo = packageManager.getPackageArchiveInfo(
+            apkFile.absolutePath,
+            PackageManager.GET_META_DATA
+        )
+        // 设置正确的源Dir以确保正确解析
+        packageArchiveInfo?.applicationInfo?.sourceDir = apkFile.absolutePath
+        // 返回包名
+        packageArchiveInfo?.packageName
+    } catch (e: Exception) {
+        e.printStackTrace()
+        null
+    }
+}
+
 fun Context.getApkVersionName(packageName: String = this.packageName): String {
     return getPackageInfo(packageName).versionName
 }
@@ -77,64 +97,80 @@ fun getTopActivity(context: Context): ComponentName? {
     }
 }
 
-/**
- * 使用系统root权限静默安装应用
- */
-object installer {
+@RequiresApi(Build.VERSION_CODES.LOLLIPOP)
+class ApkInstaller {
 
-    private const val TAG = "ApkTools"
+    companion object {
+        private const val TAG = "ApkInstaller"
 
-    fun getPackageNameFromApkFile(context: Context, apkFile: File): String? {
-        val packageManager = context.packageManager
-        return try {
-            // 获取APK的PackageInfo
-            val packageArchiveInfo = packageManager.getPackageArchiveInfo(
-                apkFile.absolutePath,
-                PackageManager.GET_META_DATA
-            )
-            // 设置正确的源Dir以确保正确解析
-            packageArchiveInfo?.applicationInfo?.sourceDir = apkFile.absolutePath
-            // 返回包名
-            packageArchiveInfo?.packageName
-        } catch (e: Exception) {
-            e.printStackTrace()
-            null
+        val instance: ApkInstaller by lazy(LazyThreadSafetyMode.SYNCHRONIZED) {
+            ApkInstaller()
         }
     }
 
-    @RequiresApi(Build.VERSION_CODES.LOLLIPOP)
-    fun silenceInstall(apkFile: File, context: Context) {
-        val pkgName = getPackageNameFromApkFile(context, apkFile)
-        LogUtils.i(TAG, "silenceInstall pkgName:$pkgName")
-        val packageInstaller = context.packageManager.packageInstaller
-        packageInstaller.registerSessionCallback(object : PackageInstaller.SessionCallback() {
-            override fun onCreated(sessionId: Int) {
-                LogUtils.i(TAG, "onCreated sessionId:$sessionId")
-            }
+    interface InstallCallback {
 
-            override fun onBadgingChanged(sessionId: Int) {
-                LogUtils.i(TAG, "onBadgingChanged sessionId:$sessionId")
-            }
+        fun onCreated(sessionId: Int) {
 
-            override fun onActiveChanged(sessionId: Int, active: Boolean) {
-                LogUtils.i(TAG, "onActiveChanged sessionId:$sessionId active:$active")
-            }
+        }
 
-            override fun onProgressChanged(sessionId: Int, progress: Float) {
-                LogUtils.i(TAG, "onProgressChanged sessionId:$sessionId progress:$progress")
-            }
+        fun onProgress(sessionId: Int, progress: Float) {
 
-            override fun onFinished(sessionId: Int, success: Boolean) {
-                LogUtils.i(TAG, "onFinished sessionId:$sessionId success:$success")
-            }
+        }
 
-        })
+        fun onFinished(sessionId: Int, success: Boolean) {
+
+        }
+    }
+
+    var installCallback: InstallCallback? = null
+
+    private lateinit var packageInstaller: PackageInstaller
+
+    private val sessionCallback = object : PackageInstaller.SessionCallback() {
+        override fun onCreated(sessionId: Int) {
+            installCallback?.onCreated(sessionId)
+        }
+
+        override fun onBadgingChanged(sessionId: Int) {
+        }
+
+        override fun onActiveChanged(sessionId: Int, active: Boolean) {
+        }
+
+        override fun onProgressChanged(sessionId: Int, progress: Float) {
+            installCallback?.onProgress(sessionId, progress)
+        }
+
+        override fun onFinished(sessionId: Int, success: Boolean) {
+            installCallback?.onFinished(sessionId, success)
+        }
+    }
+
+    /**
+     * 静默安装应用
+     *
+     * 需要ROOT权限
+     *
+     * @param apkFile 安装包文件
+     * @param context 上下文对象
+     *
+     * @return 安装会话ID，如果安装失败则为-1
+     */
+    fun silenceInstall(
+        apkFile: File,
+        context: Context
+    ): Int {
+        if (!::packageInstaller.isInitialized) {
+            packageInstaller = context.packageManager.packageInstaller
+            packageInstaller.registerSessionCallback(sessionCallback)
+        }
 
         try {
             val sessionParams = PackageInstaller.SessionParams(PackageInstaller.SessionParams.MODE_FULL_INSTALL)
             val sessionId = packageInstaller.createSession(sessionParams)
 
-            packageInstaller.openSession(sessionId).use { session ->
+            packageInstaller.openSession(sessionId).also { session ->
                 val inStream = FileInputStream(apkFile)
                 val outStream = session.openWrite("COSU", 0, -1)
                 inStream.copyTo(outStream)
@@ -142,7 +178,7 @@ object installer {
                 inStream.close()
 
                 val intent = Intent(context, InstallReceiver::class.java)
-                intent.action = "com.example.ACTION_INSTALL_COMPLETE"
+                intent.action = "com.cym.commonTools.ACTION_APK_INSTALL_COMPLETE"
                 val pendingIntent = PendingIntent.getBroadcast(
                     context,
                     sessionId,
@@ -151,14 +187,11 @@ object installer {
                 )
                 session.commit(pendingIntent.intentSender)
             }
+            return sessionId
         } catch (e: Exception) {
             e.printStackTrace()
+            return -1
         }
-
-    }
-
-    private fun copyData(inputStream: InputStream, outputStream: OutputStream) {
-        inputStream.copyTo(outputStream)
     }
 
     // 定义广播接收器以处理安装结果
@@ -166,7 +199,9 @@ object installer {
 
         override fun onReceive(context: Context?, intent: Intent?) {
             // 处理安装完成后的逻辑
-            LogUtils.i(TAG, "onReceive intent:$intent")
+            intent?.also {
+                context?.sendBroadcast(it)
+            }
         }
     }
 }

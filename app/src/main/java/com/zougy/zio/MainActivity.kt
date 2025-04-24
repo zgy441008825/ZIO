@@ -15,8 +15,6 @@ import android.view.animation.AnimationUtils
 import android.widget.TextSwitcher
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
-import androidx.viewpager.widget.PagerAdapter
-import com.bm.library.PhotoView
 import com.chad.library.adapter4.BaseQuickAdapter
 import com.chad.library.adapter4.QuickAdapterHelper
 import com.chad.library.adapter4.loadState.LoadState
@@ -30,35 +28,6 @@ import org.xutils.x
 import java.io.File
 import java.util.concurrent.Executors
 import java.util.concurrent.TimeUnit
-
-
-class MyViewPagerAdapter : PagerAdapter() {
-
-    override fun instantiateItem(container: ViewGroup, position: Int): Any {
-        val photoView = PhotoView(x.app())
-        photoView.enable()
-        photoView.maxScale = 3f
-        container.addView(photoView)
-        /*Glide.with(photoView)
-            .load(R.drawable.img_test)
-            .into(photoView)*/
-        return photoView
-    }
-
-
-    override fun destroyItem(container: ViewGroup, position: Int, `object`: Any) {
-        container.removeView(`object` as PhotoView)
-    }
-
-    override fun getCount(): Int {
-        return 10
-    }
-
-    override fun isViewFromObject(view: View, `object`: Any): Boolean {
-        return view.equals(`object`)
-    }
-
-}
 
 class MainActivity : BaseActivity() {
 
