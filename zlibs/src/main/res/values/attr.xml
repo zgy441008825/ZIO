@@ -199,4 +199,30 @@
         <!-- 最小值 -->
         <attr name="android:min" format="integer" />
     </declare-styleable>
+
+    <declare-styleable name="TaggedTextView">
+        <!-- 正常文本 -->
+        <attr name="normalText" format="string" />
+        <!-- 标签文本 -->
+        <attr name="tagText" format="string" />
+        <!-- 正常文本颜色 -->
+        <attr name="normalTextColor" format="color" />
+        <!-- 标签文本颜色 -->
+        <attr name="tagTextColor" format="color" />
+        <!-- 正常文本大小 -->
+        <attr name="normalTextSize" format="dimension" />
+        <!-- 标签文本大小 -->
+        <attr name="tagTextSize" format="dimension" />
+        <!-- 标签位置：LEFT(0)/RIGHT(1) -->
+        <attr name="tagPosition" format="integer">
+            <enum name="left" value="0" />
+            <enum name="right" value="1" />
+        </attr>
+        <!-- 垂直对齐：TOP(0)/CENTER(1)/BOTTOM(2) -->
+        <attr name="tagVerticalAlignment" format="integer">
+            <enum name="top" value="0" />
+            <enum name="center" value="1" />
+            <enum name="bottom" value="2" />
+        </attr>
+    </declare-styleable>
 </resources>

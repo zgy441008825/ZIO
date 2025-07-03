@@ -14,6 +14,7 @@ import android.util.AttributeSet
 import android.view.MotionEvent
 import android.view.View
 import com.zougy.log.LogUtils
+import com.zougy.ziolib.R
 import kotlin.math.PI
 import kotlin.math.cos
 import kotlin.math.max

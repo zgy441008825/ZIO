@@ -3,7 +3,6 @@ package com.zougy.tools
 import android.content.Context
 import android.content.pm.PackageManager
 import android.os.Build
-import org.xutils.common.util.FileUtil
 import java.io.File
 import java.io.FileWriter
 import java.io.PrintWriter
@@ -11,7 +10,7 @@ import java.io.PrintWriter
 class DefaultApkCrashHandler private constructor(val context: Context) : Thread.UncaughtExceptionHandler {
 
     private val exceptionHandler = Thread.getDefaultUncaughtExceptionHandler()
-    private var crashLogSavePath: String? = FileUtil.getCacheDir("crash").absolutePath
+    private var crashLogSavePath: String? = ""
     private var exceptionToDo: (Throwable.() -> Unit)? = null
 
     companion object {

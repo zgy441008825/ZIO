@@ -1,9 +1,12 @@
 package com.zougy.zio
 
 import android.app.Application
+import com.zougy.ZTools
 import com.zougy.log.LogUtils
-import com.zougy.tools.DefaultApkCrashHandler
-import org.xutils.x
+
+object App {
+    lateinit var instance: Application
+}
 
 /**
  * Description:<br>
@@ -14,7 +17,8 @@ import org.xutils.x
 class MyApplication : Application() {
     override fun onCreate() {
         super.onCreate()
+        App.instance = this
+        ZTools.application = this
         LogUtils.tagPrefix = "ZIO-${BuildConfig.VERSION_NAME}"
-        x.Ext.init(this)
     }
 }

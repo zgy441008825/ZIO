@@ -3,7 +3,7 @@ package com.zougy.tools.android
 import android.content.Context
 import android.content.SharedPreferences
 import androidx.core.content.edit
-import org.xutils.x
+import com.zougy.ZTools
 
 /**
  * Description:<br>
@@ -13,7 +13,7 @@ import org.xutils.x
  */
 class SharePreTools private constructor() {
 
-    val sharedPreferences: SharedPreferences = x.app().getSharedPreferences("ZSharePreferences", Context.MODE_PRIVATE)
+    val sharedPreferences: SharedPreferences = ZTools.application.getSharedPreferences("ZSharePreferences", Context.MODE_PRIVATE)
 
     companion object {
         val instance = ShareHolder.holder

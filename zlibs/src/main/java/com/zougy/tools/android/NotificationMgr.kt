@@ -6,7 +6,7 @@ import android.app.NotificationManager
 import android.content.Context
 import android.os.Build
 import androidx.annotation.RequiresApi
-import org.xutils.x
+import com.zougy.ZTools
 
 class NotificationMgr private constructor() {
 
@@ -25,7 +25,7 @@ class NotificationMgr private constructor() {
 
         private val channelKeys = mutableMapOf<String, String>()
 
-        private val notificationManager = x.app().getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
+        private val notificationManager = ZTools.application.getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
 
         /**
          * 向系统注册channelGroup
